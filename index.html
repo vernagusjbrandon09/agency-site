@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentFlow | AI-Powered Recruitment & Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <!-- Firebase SDKs (Compatibility Version) -->
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --brand-primary: #6366f1;
+            --brand-secondary: #0ea5e9;
+            --bg-dark: #020617;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .input-focus:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- LOGO SECTION -->
+                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.reload()">
+                    <div class="relative">
+                        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="100" rx="24" fill="url(#logo-grad)" />
+                            <path d="M50 20L30 55H50L45 80L75 40H55L65 20H50Z" fill="white" />
+                            <defs>
+                                <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#6366F1" />
+                                    <stop offset="1" stop-color="#0EA5E9" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-extrabold tracking-tighter text-white">Talent<span class="text-indigo-400">Flow</span></span>
+                </div>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <button onclick="scrollToPortal('employer')" class="text-sm font-semibold text-slate-300 hover:text-white transition">For Employers</button>
+                    <button onclick="scrollToPortal('candidate')" class="text-sm font-semibold text-slate-300 hover:text-white transition">For Candidates</button>
+                    <button onclick="showSection('admin-login')" class="text-xs font-bold text-slate-500 uppercase tracking-widest hover:text-indigo-400 transition">
+                        <i class="fas fa-lock mr-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative pt-44 pb-32 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent -z-10"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h1 class="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-none">
+                Recruitment, <br><span class="gradient-text">Fully Automated.</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-400 font-medium mb-12 max-w-3xl mx-auto leading-relaxed">
+                Scale your agency with infrastructure that sources and vets the top 1% of talent.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <button onclick="scrollToPortal('employer')" class="btn-glow bg-white text-slate-950 px-10 py-5 rounded-2xl font-bold text-lg transition-all">
+                    I'm Hiring Talent
+                </button>
+                <button onclick="scrollToPortal('candidate')" class="btn-glow glass-card text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all">
+                    I'm a Candidate
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTAL -->
+    <main id="main-portal" class="py-24 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-center mb-16 p-2 bg-slate-900/50 rounded-2xl border border-white/5 w-fit mx-auto">
+                <button id="tab-employer" onclick="switchTab('employer')" class="px-8 py-3 rounded-xl font-bold transition-all bg-indigo-600 text-white shadow-lg">Employers</button>
+                <button id="tab-candidate" onclick="switchTab('candidate')" class="px-8 py-3 rounded-xl font-bold transition-all text-slate-400 hover:text-white">Candidates</button>
+            </div>
+
+            <!-- EMPLOYER FORM -->
+            <div id="view-employer" class="fade-in">
+                <div class="glass-card p-10 rounded-[2.5rem]">
+                    <h3 class="text-3xl font-bold text-white mb-8 text-center">Hire Better, Faster</h3>
+                    <form id="form-employer" class="space-y-6">
+                        <input type="text" id="emp-company" placeholder="Company Name" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
+                        <input type="email" id="emp-email" placeholder="Business Email" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
+                        <textarea id="emp-roles" rows="3" placeholder="What roles are you looking for?" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus"></textarea>
+                        <button type="submit" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-extrabold text-xl btn-glow transition-all">Request Pipeline</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CANDIDATE FORM -->
+            <div id="view-candidate" class="hidden fade-in">
+                <div class="glass-card p-10 rounded-[2.5rem]">
+                    <h3 class="text-3xl font-bold text-white mb-8 text-center">Join Our Network</h3>
+                    <form id="form-candidate" class="space-y-6">
+                        <input type="text" id="cand-name" placeholder="Full Name" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
+                        <input type="email" id="cand-email" placeholder="Email Address" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
+                        <input type="url" id="cand-url" placeholder="LinkedIn URL" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
+                        <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-extrabold text-xl btn-glow transition-all">Get Discovered</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-login" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 p-6">
+        <div class="glass-card p-8 rounded-[2rem] w-full max-w-md">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">Admin Access</h2>
+            <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 mb-4 text-white" placeholder="Passcode (Default: admin123)">
+            <button onclick="handleLogin()" class="w-full bg-indigo-600 py-4 rounded-2xl font-bold text-white mb-4">Login</button>
+            <button onclick="hideSection('admin-login')" class="w-full text-slate-500">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin-dashboard" class="hidden fixed inset-0 z-[110] bg-slate-950 overflow-y-auto">
+        <div class="max-w-7xl mx-auto p-8">
+            <div class="flex justify-between items-center mb-12">
+                <h1 class="text-3xl font-bold text-white">Inquiry Management</h1>
+                <button onclick="location.reload()" class="bg-white/10 px-6 py-2 rounded-xl text-white">Logout</button>
+            </div>
+            
+            <div class="glass-card rounded-[2rem] overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 text-slate-400 text-xs font-bold uppercase tracking-widest">
+                        <tr>
+                            <th class="px-8 py-6">Type</th>
+                            <th class="px-8 py-6">Name/Company</th>
+                            <th class="px-8 py-6">Email</th>
+                            <th class="px-8 py-6">Details</th>
+                            <th class="px-8 py-6 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-body" class="divide-y divide-white/5"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = JSON.parse(__firebase_config);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'talentflow-prod';
+
+        auth.signInAnonymously();
+
+        function switchTab(type) {
+            document.getElementById('view-employer').classList.toggle('hidden', type !== 'employer');
+            document.getElementById('view-candidate').classList.toggle('hidden', type !== 'candidate');
+            document.getElementById('tab-employer').className = type === 'employer' ? 'px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white' : 'px-8 py-3 rounded-xl font-bold text-slate-400';
+            document.getElementById('tab-candidate').className = type === 'candidate' ? 'px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white' : 'px-8 py-3 rounded-xl font-bold text-slate-400';
+        }
+
+        function scrollToPortal(tab) { switchTab(tab); document.getElementById('main-portal').scrollIntoView(); }
+        function showSection(id) { document.getElementById(id).classList.remove('hidden'); }
+        function hideSection(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function handleLogin() {
+            if (document.getElementById('admin-pass').value === "admin123") {
+                hideSection('admin-login');
+                showSection('admin-dashboard');
+                loadLeads();
+            } else { alert("Wrong Passcode"); }
+        }
+
+        async function submitForm(type, data) {
+            await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').add({
+                ...data, type, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Thank you! Inquiry received.");
+            location.reload();
+        }
+
+        document.getElementById('form-employer').onsubmit = (e) => { e.preventDefault(); submitForm('Employer', { company: document.getElementById('emp-company').value, email: document.getElementById('emp-email').value, details: document.getElementById('emp-roles').value }); };
+        document.getElementById('form-candidate').onsubmit = (e) => { e.preventDefault(); submitForm('Candidate', { name: document.getElementById('cand-name').value, email: document.getElementById('cand-email').value, details: document.getElementById('cand-url').value }); };
+
+        function loadLeads() {
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').onSnapshot(snap => {
+                const body = document.getElementById('leads-body');
+                body.innerHTML = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    body.innerHTML += `
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-8 py-6 text-xs font-bold text-indigo-400">${d.type}</td>
+                            <td class="px-8 py-6 text-white">${d.company || d.name}</td>
+                            <td class="px-8 py-6 text-slate-400">${d.email}</td>
+                            <td class="px-8 py-6 text-slate-500 italic truncate max-w-xs">${d.details}</td>
+                            <td class="px-8 py-6 text-right"><button onclick="deleteLead('${doc.id}')" class="text-slate-600 hover:text-red-500"><i class="fas fa-trash"></i></button></td>
+                        </tr>`;
+                });
+            });
+        }
+        async function deleteLead(id) { if(confirm("Delete?")) await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').doc(id).delete(); }
+    </script>
+</body>
+</html>
