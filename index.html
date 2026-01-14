@@ -3,245 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalentFlow | AI-Powered Recruitment & Automation</title>
+    <title>Pathway Bridge Solutions | Fair Chance Talent Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <!-- Firebase SDKs (Compatibility Version) -->
-    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         
-        :root {
-            --brand-primary: #6366f1;
-            --brand-secondary: #0ea5e9;
-            --bg-dark: #020617;
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark);
-            color: #f1f5f9;
+        body {
+            font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .fair-chance-gradient {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
         }
 
-        .btn-glow:hover {
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
+        .nav-link {
+            position: relative;
+            cursor: pointer;
         }
 
-        .input-focus:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: width 0.3s;
         }
 
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .signature-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-white text-slate-900">
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <!-- LOGO SECTION -->
-                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.reload()">
-                    <div class="relative">
-                        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="100" height="100" rx="24" fill="url(#logo-grad)" />
-                            <path d="M50 20L30 55H50L45 80L75 40H55L65 20H50Z" fill="white" />
-                            <defs>
-                                <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#6366F1" />
-                                    <stop offset="1" stop-color="#0EA5E9" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
-                    <span class="text-2xl font-extrabold tracking-tighter text-white">Talent<span class="text-indigo-400">Flow</span></span>
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center text-white font-bold text-xs">PBS</div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">Pathway Bridge</span>
                 </div>
-
-                <div class="hidden md:flex items-center gap-8">
-                    <button onclick="scrollToPortal('employer')" class="text-sm font-semibold text-slate-300 hover:text-white transition">For Employers</button>
-                    <button onclick="scrollToPortal('candidate')" class="text-sm font-semibold text-slate-300 hover:text-white transition">For Candidates</button>
-                    <button onclick="showSection('admin-login')" class="text-xs font-bold text-slate-500 uppercase tracking-widest hover:text-indigo-400 transition">
-                        <i class="fas fa-lock mr-2"></i>Admin
-                    </button>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <span onclick="showPage('employers')" class="nav-link hover:text-blue-600 transition">For Employers</span>
+                    <span onclick="showPage('seekers')" class="nav-link hover:text-blue-600 transition">For Job Seekers</span>
+                    <span onclick="showPage('mission')" class="nav-link hover:text-blue-600 transition font-semibold text-blue-600">Fair Chance Mission</span>
+                    <a href="#contact" class="px-5 py-2.5 rounded-lg gradient-bg text-white hover:shadow-lg transition">Get Started</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section id="hero" class="relative pt-44 pb-32 overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent -z-10"></div>
+    <!-- Content Sections -->
+    <main id="main-content">
         
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <h1 class="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-none">
-                Recruitment, <br><span class="gradient-text">Fully Automated.</span>
-            </h1>
-            <p class="text-xl md:text-2xl text-slate-400 font-medium mb-12 max-w-3xl mx-auto leading-relaxed">
-                Scale your agency with infrastructure that sources and vets the top 1% of talent.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                <button onclick="scrollToPortal('employer')" class="btn-glow bg-white text-slate-950 px-10 py-5 rounded-2xl font-bold text-lg transition-all">
-                    I'm Hiring Talent
-                </button>
-                <button onclick="scrollToPortal('candidate')" class="btn-glow glass-card text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all">
-                    I'm a Candidate
-                </button>
+        <!-- Home Page -->
+        <div id="home-page" class="page-section">
+            <header class="relative pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center gap-2 mb-6">
+                            <span class="signature-badge">Our Signature</span>
+                            <span class="text-sm font-semibold text-blue-600 uppercase tracking-widest">Fair Chance Staffing</span>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-[1.1]">
+                            Talent is Universal. <br>
+                            <span class="text-blue-600">Opportunity</span> is Not.
+                        </h1>
+                        <p class="text-xl text-slate-600 mb-10 leading-relaxed">
+                            We specialize in <strong>Fair Chance Hiring</strong>, connecting forward-thinking companies with motivated individuals ready for their next chapter.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="showPage('employers')" class="px-8 py-4 rounded-xl gradient-bg text-white font-bold hover:scale-[1.02] transition-transform shadow-xl shadow-blue-200">
+                                Build a Diverse Team
+                            </button>
+                            <button onclick="showPage('mission')" class="px-8 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 transition">
+                                Explore Our Mission
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+            </header>
+        </div>
+
+        <!-- Mission Page -->
+        <div id="mission-page" class="page-section hidden">
+            <section class="py-20 fair-chance-gradient">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <div class="space-y-6">
+                            <span class="signature-badge">The Signature Mission</span>
+                            <h2 class="text-4xl md:text-5xl font-bold text-slate-900">Why We Champion <br><span class="text-blue-600">Fair Chance Hiring</span></h2>
+                            <p class="text-lg text-slate-600 leading-relaxed">
+                                Over 70 million Americans have a criminal record. By excluding this population, companies miss out on a massive pool of loyal, high-performing talent. At Pathway Bridge, we advocate for the person, not the paper.
+                            </p>
+                            <div class="space-y-6 mt-8">
+                                <div class="flex gap-4">
+                                    <div class="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xl">Higher Retention Rates</h4>
+                                        <p class="text-slate-500">Fair chance employees show 30% higher loyalty rates, reducing long-term turnover costs for your business.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xl">De-Risked Hiring</h4>
+                                        <p class="text-slate-500">We utilize federal bonding programs and WOTC tax credits to ensure your hire is backed by financial security.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100">
+                            <h3 class="text-2xl font-bold mb-6">Our Success Philosophy</h3>
+                            <ul class="space-y-4 mb-8">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span class="text-slate-600"><strong>Holistic Vetting:</strong> We interview for character, resilience, and readiness.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span class="text-slate-600"><strong>Direct Advocacy:</strong> We present candidates as people with stories, not just files.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span class="text-slate-600"><strong>Support Ecosystem:</strong> We provide onboarding guidance for both sides.</span>
+                                </li>
+                            </ul>
+                            <div class="p-6 bg-blue-50 rounded-2xl">
+                                <p class="text-blue-800 font-medium text-center">"We are redefining professional readiness by valuing resilience as a skill."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Employers Page -->
+        <div id="employers-page" class="page-section hidden">
+            <section class="py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-3xl mb-16">
+                        <span class="signature-badge mb-4 inline-block">Employer Partner Program</span>
+                        <h2 class="text-4xl font-bold text-slate-900 mb-6">Staffing with Social Impact</h2>
+                        <p class="text-xl text-slate-600">Expand your talent pool and meet your DEI goals through our specialized Fair Chance pipeline. We handle the vetting, you reap the rewards of a motivated workforce.</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200">
+                            <h3 class="text-2xl font-bold mb-4 text-blue-600">Zero-Risk Fee Structure</h3>
+                            <p class="text-slate-600">No upfront costs. You only pay when we find the right match who stays. We align our success with your business outcomes.</p>
+                        </div>
+                        <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200">
+                            <h3 class="text-2xl font-bold mb-4 text-blue-600">Post-Placement Support</h3>
+                            <p class="text-slate-600">We don't vanish after day one. We stay involved to ensure the transition is smooth for both the candidate and your team.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Seekers Page -->
+        <div id="seekers-page" class="page-section hidden">
+            <section class="py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-3xl mb-16">
+                        <span class="signature-badge mb-4 inline-block">Candidate Support</span>
+                        <h2 class="text-4xl font-bold text-slate-900 mb-6">Your Next Chapter Starts Here</h2>
+                        <p class="text-xl text-slate-600">We work with individuals who have a background but are ready to work. We specialize in finding employers who value your future over your past.</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
+                            <h4 class="font-bold text-lg mb-2">Advocacy</h4>
+                            <p class="text-slate-500 text-sm">We explain your story so you don't have to fight the system alone.</p>
+                        </div>
+                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
+                            <h4 class="font-bold text-lg mb-2">Guidance</h4>
+                            <p class="text-slate-500 text-sm">Interview prep specifically tailored for background-related questions.</p>
+                        </div>
+                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
+                            <h4 class="font-bold text-lg mb-2">Access</h4>
+                            <p class="text-slate-500 text-sm">Direct lines to hiring managers at companies that practice fair chance hiring.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Global Philosophy (Visible on all pages) -->
+    <section class="py-24 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-12">The Pathway Promise</h2>
+            <div class="grid md:grid-cols-3 gap-12 text-left">
+                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <h3 class="font-bold text-xl mb-4 text-blue-400">Integrity</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Transparency is our currency. We build trust by being honest with candidates and employers alike.</p>
+                </div>
+                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <h3 class="font-bold text-xl mb-4 text-blue-400">Resilience</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">We believe that people who have navigated the justice system possess a unique grit that makes them incredible employees.</p>
+                </div>
+                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <h3 class="font-bold text-xl mb-4 text-blue-400">Impact</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Success for us is measured in families supported, cycles broken, and businesses strengthened.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- PORTAL -->
-    <main id="main-portal" class="py-24 px-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-center mb-16 p-2 bg-slate-900/50 rounded-2xl border border-white/5 w-fit mx-auto">
-                <button id="tab-employer" onclick="switchTab('employer')" class="px-8 py-3 rounded-xl font-bold transition-all bg-indigo-600 text-white shadow-lg">Employers</button>
-                <button id="tab-candidate" onclick="switchTab('candidate')" class="px-8 py-3 rounded-xl font-bold transition-all text-slate-400 hover:text-white">Candidates</button>
-            </div>
-
-            <!-- EMPLOYER FORM -->
-            <div id="view-employer" class="fade-in">
-                <div class="glass-card p-10 rounded-[2.5rem]">
-                    <h3 class="text-3xl font-bold text-white mb-8 text-center">Hire Better, Faster</h3>
-                    <form id="form-employer" class="space-y-6">
-                        <input type="text" id="emp-company" placeholder="Company Name" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
-                        <input type="email" id="emp-email" placeholder="Business Email" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
-                        <textarea id="emp-roles" rows="3" placeholder="What roles are you looking for?" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus"></textarea>
-                        <button type="submit" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-extrabold text-xl btn-glow transition-all">Request Pipeline</button>
-                    </form>
+    <!-- Contact CTA -->
+    <section id="contact" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4 text-slate-900">Start the Conversation</h2>
+            <p class="text-slate-600 max-w-xl mx-auto mb-12">Join the Fair Chance movement. Let's build a bridge to your next great hire or your next career step.</p>
+            <div class="bg-slate-50 p-8 rounded-3xl max-w-2xl mx-auto text-left border border-slate-200">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
+                        <input type="text" placeholder="John Doe" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+                        <input type="email" placeholder="john@company.com" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
                 </div>
-            </div>
-
-            <!-- CANDIDATE FORM -->
-            <div id="view-candidate" class="hidden fade-in">
-                <div class="glass-card p-10 rounded-[2.5rem]">
-                    <h3 class="text-3xl font-bold text-white mb-8 text-center">Join Our Network</h3>
-                    <form id="form-candidate" class="space-y-6">
-                        <input type="text" id="cand-name" placeholder="Full Name" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
-                        <input type="email" id="cand-email" placeholder="Email Address" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
-                        <input type="url" id="cand-url" placeholder="LinkedIn URL" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white input-focus">
-                        <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-extrabold text-xl btn-glow transition-all">Get Discovered</button>
-                    </form>
-                </div>
+                <button class="w-full mt-8 py-4 bg-slate-900 text-white hover:bg-slate-800 rounded-xl font-bold transition-all">Submit Inquiry</button>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="admin-login" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 p-6">
-        <div class="glass-card p-8 rounded-[2rem] w-full max-w-md">
-            <h2 class="text-2xl font-bold text-white mb-6 text-center">Admin Access</h2>
-            <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 mb-4 text-white" placeholder="Passcode (Default: admin123)">
-            <button onclick="handleLogin()" class="w-full bg-indigo-600 py-4 rounded-2xl font-bold text-white mb-4">Login</button>
-            <button onclick="hideSection('admin-login')" class="w-full text-slate-500">Cancel</button>
-        </div>
-    </div>
-
-    <!-- ADMIN DASHBOARD -->
-    <div id="admin-dashboard" class="hidden fixed inset-0 z-[110] bg-slate-950 overflow-y-auto">
-        <div class="max-w-7xl mx-auto p-8">
-            <div class="flex justify-between items-center mb-12">
-                <h1 class="text-3xl font-bold text-white">Inquiry Management</h1>
-                <button onclick="location.reload()" class="bg-white/10 px-6 py-2 rounded-xl text-white">Logout</button>
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-12 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8 text-sm text-slate-500">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+                <div class="w-6 h-6 gradient-bg rounded flex items-center justify-center text-white text-[8px] font-bold">PBS</div>
+                <span class="font-bold text-slate-900">Pathway Bridge Solutions</span>
             </div>
-            
-            <div class="glass-card rounded-[2rem] overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-white/5 text-slate-400 text-xs font-bold uppercase tracking-widest">
-                        <tr>
-                            <th class="px-8 py-6">Type</th>
-                            <th class="px-8 py-6">Name/Company</th>
-                            <th class="px-8 py-6">Email</th>
-                            <th class="px-8 py-6">Details</th>
-                            <th class="px-8 py-6 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leads-body" class="divide-y divide-white/5"></tbody>
-                </table>
+            <div class="flex gap-8">
+                <span onclick="showPage('employers')" class="cursor-pointer hover:text-blue-600">Employers</span>
+                <span onclick="showPage('seekers')" class="cursor-pointer hover:text-blue-600">Seekers</span>
+                <span onclick="showPage('mission')" class="cursor-pointer hover:text-blue-600">Mission</span>
+                <span>&copy; 2026 Pathway Bridge</span>
             </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = JSON.parse(__firebase_config);
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'talentflow-prod';
-
-        auth.signInAnonymously();
-
-        function switchTab(type) {
-            document.getElementById('view-employer').classList.toggle('hidden', type !== 'employer');
-            document.getElementById('view-candidate').classList.toggle('hidden', type !== 'candidate');
-            document.getElementById('tab-employer').className = type === 'employer' ? 'px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white' : 'px-8 py-3 rounded-xl font-bold text-slate-400';
-            document.getElementById('tab-candidate').className = type === 'candidate' ? 'px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white' : 'px-8 py-3 rounded-xl font-bold text-slate-400';
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.add('hidden'));
+            
+            // Show target page
+            const targetPage = document.getElementById(pageId + '-page');
+            if(targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        function scrollToPortal(tab) { switchTab(tab); document.getElementById('main-portal').scrollIntoView(); }
-        function showSection(id) { document.getElementById(id).classList.remove('hidden'); }
-        function hideSection(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function handleLogin() {
-            if (document.getElementById('admin-pass').value === "admin123") {
-                hideSection('admin-login');
-                showSection('admin-dashboard');
-                loadLeads();
-            } else { alert("Wrong Passcode"); }
-        }
-
-        async function submitForm(type, data) {
-            await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').add({
-                ...data, type, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert("Thank you! Inquiry received.");
-            location.reload();
-        }
-
-        document.getElementById('form-employer').onsubmit = (e) => { e.preventDefault(); submitForm('Employer', { company: document.getElementById('emp-company').value, email: document.getElementById('emp-email').value, details: document.getElementById('emp-roles').value }); };
-        document.getElementById('form-candidate').onsubmit = (e) => { e.preventDefault(); submitForm('Candidate', { name: document.getElementById('cand-name').value, email: document.getElementById('cand-email').value, details: document.getElementById('cand-url').value }); };
-
-        function loadLeads() {
-            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').onSnapshot(snap => {
-                const body = document.getElementById('leads-body');
-                body.innerHTML = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    body.innerHTML += `
-                        <tr class="hover:bg-white/5 transition">
-                            <td class="px-8 py-6 text-xs font-bold text-indigo-400">${d.type}</td>
-                            <td class="px-8 py-6 text-white">${d.company || d.name}</td>
-                            <td class="px-8 py-6 text-slate-400">${d.email}</td>
-                            <td class="px-8 py-6 text-slate-500 italic truncate max-w-xs">${d.details}</td>
-                            <td class="px-8 py-6 text-right"><button onclick="deleteLead('${doc.id}')" class="text-slate-600 hover:text-red-500"><i class="fas fa-trash"></i></button></td>
-                        </tr>`;
-                });
-            });
-        }
-        async function deleteLead(id) { if(confirm("Delete?")) await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('leads').doc(id).delete(); }
     </script>
 </body>
 </html>
