@@ -1,292 +1,761 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathway Bridge Solutions | Fair Chance Talent Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
+import React, { useState, useEffect } from 'react';
+import { 
+  Briefcase, 
+  Users, 
+  Shield, 
+  Lock, 
+  LogOut,
+  X,
+  Search,
+  ShieldAlert,
+  CheckCircle2,
+  Heart,
+  Award,
+  ArrowRight,
+  Handshake,
+  Menu,
+  Zap,
+  Building2,
+  Send,
+  FileText,
+  Mail,
+  Phone,
+  Clock,
+  Trash2,
+  Star,
+  Target,
+  Rocket,
+  ShieldCheck,
+  Scale,
+  Eye
+} from 'lucide-react';
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
-        }
+// Firebase Imports
+import { initializeApp } from 'firebase/app';
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  doc, 
+  deleteDoc,
+  serverTimestamp 
+} from 'firebase/firestore';
+import { 
+  getAuth, 
+  signInAnonymously, 
+  signInWithCustomToken, 
+  onAuthStateChanged 
+} from 'firebase/auth';
 
-        .fair-chance-gradient {
-            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-        }
+// Firebase Configuration
+const firebaseConfig = JSON.parse(__firebase_config);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'pathway-bridge-default';
 
-        .nav-link {
-            position: relative;
-            cursor: pointer;
-        }
+const Logo = ({ className = "w-10 h-10" }) => (
+  <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 80C20 80 20 40 50 40C80 40 80 80 80 80" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+    <path d="M10 80H90" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+    <path d="M50 20V40" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+    <circle cx="50" cy="15" r="5" fill="currentColor"/>
+  </svg>
+);
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #2563eb;
-            transition: width 0.3s;
-        }
+const App = () => {
+  const [page, setPage] = useState('home');
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLegalModal, setShowLegalModal] = useState(null); // 'privacy' or 'terms'
+  const [adminKeyInput, setAdminKeyInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Data States
+  const [seekers, setSeekers] = useState([]);
+  const [inquiries, setInquiries] = useState([]);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-        .nav-link:hover::after {
-            width: 100%;
-        }
+  // Updated Access Key
+  const SECURE_ADMIN_KEY = "Bellamylove09";
 
-        .signature-badge {
-            background: #dcfce7;
-            color: #166534;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+  // Auth Handling
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
         }
-    </style>
-</head>
-<body class="bg-white text-slate-900">
+      } catch (err) {
+        console.error("Auth Error:", err);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currUser) => {
+      setUser(currUser);
+      if (localStorage.getItem('pathway_auth_status') === 'authenticated') {
+        setIsAdmin(true);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
-    <!-- Navigation -->
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-                    <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center text-white font-bold text-xs">PBS</div>
-                    <span class="text-xl font-bold tracking-tight text-slate-900">Pathway Bridge</span>
-                </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-                    <span onclick="showPage('employers')" class="nav-link hover:text-blue-600 transition">For Employers</span>
-                    <span onclick="showPage('seekers')" class="nav-link hover:text-blue-600 transition">For Job Seekers</span>
-                    <span onclick="showPage('mission')" class="nav-link hover:text-blue-600 transition font-semibold text-blue-600">Fair Chance Mission</span>
-                    <a href="#contact" class="px-5 py-2.5 rounded-lg gradient-bg text-white hover:shadow-lg transition">Get Started</a>
-                </div>
-            </div>
+  // Firestore Listeners
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    const seekersRef = collection(db, 'artifacts', appId, 'public', 'data', 'seekers');
+    const inquiriesRef = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
+
+    const unsubSeekers = onSnapshot(seekersRef, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setSeekers(data);
+    }, (err) => console.error("Seeker Fetch Error:", err));
+
+    const unsubInquiries = onSnapshot(inquiriesRef, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setInquiries(data);
+    }, (err) => console.error("Inquiry Fetch Error:", err));
+
+    return () => {
+      unsubSeekers();
+      unsubInquiries();
+    };
+  }, [user, isAdmin]);
+
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (adminKeyInput === SECURE_ADMIN_KEY) {
+      setIsAdmin(true);
+      setShowLoginModal(false);
+      localStorage.setItem('pathway_auth_status', 'authenticated');
+      setAdminKeyInput('');
+      setPage('admin');
+    } else {
+      setLoginError('Incorrect Access Key.');
+      setAdminKeyInput('');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAdmin(false);
+    localStorage.removeItem('pathway_auth_status');
+    setPage('home');
+  };
+
+  const saveToFirestore = async (collectionName, data) => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const targetRef = collection(db, 'artifacts', appId, 'public', 'data', collectionName);
+      await addDoc(targetRef, {
+        ...data,
+        createdAt: serverTimestamp(),
+        userId: user.uid
+      });
+      setFormSubmitted(true);
+      setTimeout(() => setFormSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Submission Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteRecord = async (collectionName, id) => {
+    try {
+      const docRef = doc(db, 'artifacts', appId, 'public', 'data', collectionName, id);
+      await deleteDoc(docRef);
+    } catch (err) {
+      console.error("Delete Error:", err);
+    }
+  };
+
+  const NavLink = ({ target, label }) => (
+    <button 
+      onClick={() => { setPage(target); setIsMenuOpen(false); }}
+      className={`text-sm font-bold transition-all ${page === target ? 'text-emerald-600 underline underline-offset-8 decoration-2' : 'text-slate-500 hover:text-emerald-600'}`}
+    >
+      {label}
+    </button>
+  );
+
+  const Navigation = () => (
+    <nav className="bg-white border-b sticky top-0 z-40 backdrop-blur-md bg-white/90">
+      <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+        <div className="flex items-center cursor-pointer group" onClick={() => setPage('home')}>
+          <div className="bg-emerald-600 p-2 rounded-xl mr-3 shadow-lg shadow-emerald-100 group-hover:scale-105 transition-transform">
+            <Logo className="text-white w-7 h-7" />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="text-xl font-black text-slate-900 tracking-tight italic">PATHWAY BRIDGE</span>
+            <span className="text-[10px] font-bold text-emerald-600 tracking-[0.3em] uppercase">Solutions</span>
+          </div>
         </div>
+        
+        <div className="hidden md:flex items-center space-x-10">
+          <NavLink target="seeker" label="Career Help" />
+          <NavLink target="employer" label="For Employers" />
+          <NavLink target="about" label="Our Vision" />
+          
+          <div className="h-6 w-px bg-slate-200"></div>
+
+          {isAdmin ? (
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={() => setPage('admin')} 
+                className={`flex items-center px-5 py-2.5 rounded-xl text-sm font-black transition-all ${page === 'admin' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700'}`}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Staff Portal
+              </button>
+              <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-red-500 transition-colors"><LogOut className="w-5 h-5" /></button>
+            </div>
+          ) : (
+            <button onClick={() => setShowLoginModal(true)} className="p-2 text-slate-300 hover:text-emerald-600 transition-colors"><Lock className="w-5 h-5" /></button>
+          )}
+        </div>
+
+        <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <Menu className="w-6 h-6 text-slate-600" />
+        </button>
+      </div>
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white border-b px-4 py-6 flex flex-col space-y-4 animate-in slide-in-from-top duration-300">
+          <button onClick={() => {setPage('seeker'); setIsMenuOpen(false)}} className="text-left font-bold text-slate-900 py-2">Career Help</button>
+          <button onClick={() => {setPage('employer'); setIsMenuOpen(false)}} className="text-left font-bold text-slate-900 py-2">For Employers</button>
+          <button onClick={() => {setPage('about'); setIsMenuOpen(false)}} className="text-left font-bold text-slate-900 py-2">Our Vision</button>
+          {isAdmin && <button onClick={() => {setPage('admin'); setIsMenuOpen(false)}} className="text-left font-bold text-emerald-600 py-2">Staff Portal</button>}
+        </div>
+      )}
     </nav>
+  );
 
-    <!-- Content Sections -->
-    <main id="main-content">
+  const HomeHero = () => (
+    <div className="bg-slate-50 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-emerald-100 rounded-full blur-[120px] opacity-50"></div>
+      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-100 rounded-full blur-[120px] opacity-50"></div>
+
+      <div className="max-w-7xl mx-auto px-4 pt-24 pb-32 lg:pt-32 grid lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
+        <div>
+          <div className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-widest mb-8 border border-emerald-200">
+            <Star className="w-3 h-3 mr-2 fill-emerald-800" /> Second Chances. First Class Talent.
+          </div>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 leading-[0.95] mb-8">
+            The Bridge Between <span className="text-emerald-600">Past</span> and <span className="text-emerald-600">Future.</span>
+          </h1>
+          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed mb-10 max-w-lg">
+            We don't just fill jobs; we build careers. Pathway Bridge Solutions specializes in connecting resilient individuals with companies committed to Fair Chance hiring.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <button onClick={() => setPage('seeker')} className="bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center justify-center">
+              Find My Career <ArrowRight className="ml-2 w-5 h-5" />
+            </button>
+            <button onClick={() => setPage('employer')} className="bg-white border-2 border-slate-200 text-slate-900 px-10 py-5 rounded-2xl font-black text-lg hover:border-emerald-600 transition-all flex items-center justify-center group">
+              Hire Resilient Talent <Building2 className="ml-2 w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
+            </button>
+          </div>
+          
+          <div className="flex items-center space-x-8 opacity-60">
+            <div className="flex flex-col">
+              <span className="text-2xl font-black text-slate-900">90-Day</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest">Risk-Free Guarantee</span>
+            </div>
+            <div className="w-px h-8 bg-slate-300"></div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black text-slate-900">100%</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest">Fair Chance Focus</span>
+            </div>
+          </div>
+        </div>
         
-        <!-- Home Page -->
-        <div id="home-page" class="page-section">
-            <header class="relative pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div class="max-w-3xl">
-                        <div class="inline-flex items-center gap-2 mb-6">
-                            <span class="signature-badge">Our Signature</span>
-                            <span class="text-sm font-semibold text-blue-600 uppercase tracking-widest">Fair Chance Staffing</span>
-                        </div>
-                        <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-[1.1]">
-                            Talent is Universal. <br>
-                            <span class="text-blue-600">Opportunity</span> is Not.
-                        </h1>
-                        <p class="text-xl text-slate-600 mb-10 leading-relaxed">
-                            We specialize in <strong>Fair Chance Hiring</strong>, connecting forward-thinking companies with motivated individuals ready for their next chapter.
-                        </p>
-                        <div class="flex flex-wrap gap-4">
-                            <button onclick="showPage('employers')" class="px-8 py-4 rounded-xl gradient-bg text-white font-bold hover:scale-[1.02] transition-transform shadow-xl shadow-blue-200">
-                                Build a Diverse Team
-                            </button>
-                            <button onclick="showPage('mission')" class="px-8 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 transition">
-                                Explore Our Mission
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
-            </header>
-        </div>
-
-        <!-- Mission Page -->
-        <div id="mission-page" class="page-section hidden">
-            <section class="py-20 fair-chance-gradient">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="grid lg:grid-cols-2 gap-16 items-center">
-                        <div class="space-y-6">
-                            <span class="signature-badge">The Signature Mission</span>
-                            <h2 class="text-4xl md:text-5xl font-bold text-slate-900">Why We Champion <br><span class="text-blue-600">Fair Chance Hiring</span></h2>
-                            <p class="text-lg text-slate-600 leading-relaxed">
-                                Over 70 million Americans have a criminal record. By excluding this population, companies miss out on a massive pool of loyal, high-performing talent. At Pathway Bridge, we advocate for the person, not the paper.
-                            </p>
-                            <div class="space-y-6 mt-8">
-                                <div class="flex gap-4">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-xl">Higher Retention Rates</h4>
-                                        <p class="text-slate-500">Fair chance employees show 30% higher loyalty rates, reducing long-term turnover costs for your business.</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-xl">De-Risked Hiring</h4>
-                                        <p class="text-slate-500">We utilize federal bonding programs and WOTC tax credits to ensure your hire is backed by financial security.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100">
-                            <h3 class="text-2xl font-bold mb-6">Our Success Philosophy</h3>
-                            <ul class="space-y-4 mb-8">
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 font-bold">✓</span>
-                                    <span class="text-slate-600"><strong>Holistic Vetting:</strong> We interview for character, resilience, and readiness.</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 font-bold">✓</span>
-                                    <span class="text-slate-600"><strong>Direct Advocacy:</strong> We present candidates as people with stories, not just files.</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 font-bold">✓</span>
-                                    <span class="text-slate-600"><strong>Support Ecosystem:</strong> We provide onboarding guidance for both sides.</span>
-                                </li>
-                            </ul>
-                            <div class="p-6 bg-blue-50 rounded-2xl">
-                                <p class="text-blue-800 font-medium text-center">"We are redefining professional readiness by valuing resilience as a skill."</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Employers Page -->
-        <div id="employers-page" class="page-section hidden">
-            <section class="py-20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-3xl mb-16">
-                        <span class="signature-badge mb-4 inline-block">Employer Partner Program</span>
-                        <h2 class="text-4xl font-bold text-slate-900 mb-6">Staffing with Social Impact</h2>
-                        <p class="text-xl text-slate-600">Expand your talent pool and meet your DEI goals through our specialized Fair Chance pipeline. We handle the vetting, you reap the rewards of a motivated workforce.</p>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200">
-                            <h3 class="text-2xl font-bold mb-4 text-blue-600">Zero-Risk Fee Structure</h3>
-                            <p class="text-slate-600">No upfront costs. You only pay when we find the right match who stays. We align our success with your business outcomes.</p>
-                        </div>
-                        <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200">
-                            <h3 class="text-2xl font-bold mb-4 text-blue-600">Post-Placement Support</h3>
-                            <p class="text-slate-600">We don't vanish after day one. We stay involved to ensure the transition is smooth for both the candidate and your team.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Seekers Page -->
-        <div id="seekers-page" class="page-section hidden">
-            <section class="py-20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-3xl mb-16">
-                        <span class="signature-badge mb-4 inline-block">Candidate Support</span>
-                        <h2 class="text-4xl font-bold text-slate-900 mb-6">Your Next Chapter Starts Here</h2>
-                        <p class="text-xl text-slate-600">We work with individuals who have a background but are ready to work. We specialize in finding employers who value your future over your past.</p>
-                    </div>
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
-                            <h4 class="font-bold text-lg mb-2">Advocacy</h4>
-                            <p class="text-slate-500 text-sm">We explain your story so you don't have to fight the system alone.</p>
-                        </div>
-                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
-                            <h4 class="font-bold text-lg mb-2">Guidance</h4>
-                            <p class="text-slate-500 text-sm">Interview prep specifically tailored for background-related questions.</p>
-                        </div>
-                        <div class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm text-center">
-                            <h4 class="font-bold text-lg mb-2">Access</h4>
-                            <p class="text-slate-500 text-sm">Direct lines to hiring managers at companies that practice fair chance hiring.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Global Philosophy (Visible on all pages) -->
-    <section class="py-24 bg-slate-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold mb-12">The Pathway Promise</h2>
-            <div class="grid md:grid-cols-3 gap-12 text-left">
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
-                    <h3 class="font-bold text-xl mb-4 text-blue-400">Integrity</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Transparency is our currency. We build trust by being honest with candidates and employers alike.</p>
-                </div>
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
-                    <h3 class="font-bold text-xl mb-4 text-blue-400">Resilience</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">We believe that people who have navigated the justice system possess a unique grit that makes them incredible employees.</p>
-                </div>
-                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
-                    <h3 class="font-bold text-xl mb-4 text-blue-400">Impact</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Success for us is measured in families supported, cycles broken, and businesses strengthened.</p>
-                </div>
+        <div className="relative">
+          <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl relative border border-slate-100 transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div className="absolute -top-6 -right-6 bg-emerald-600 text-white p-6 rounded-3xl shadow-xl transform rotate-3 z-20">
+              <ShieldCheck className="w-8 h-8" />
             </div>
+            <h3 className="text-3xl font-black text-slate-900 italic mb-6">Our 90-Day Guarantee</h3>
+            <p className="text-slate-500 font-bold mb-8 text-lg leading-relaxed">
+              We are so confident in the <span className="text-slate-900 underline decoration-emerald-400">resilience and loyalty</span> of our candidates that we offer a full 90-day placement guarantee. If it's not a fit, we replace at zero cost.
+            </p>
+            <ul className="space-y-4">
+              {['Vetted for Work Readiness', 'Soft-Skills Training Included', 'Long-term Retention Focus'].map((item, i) => (
+                <li key={i} className="flex items-center text-slate-700 font-bold">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 mr-3 shrink-0" /> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Decorative floating card */}
+          <div className="absolute -bottom-10 -left-10 bg-slate-900 text-white p-8 rounded-3xl shadow-2xl max-w-xs hidden md:block transform -rotate-2 z-20">
+            <Heart className="text-emerald-400 w-8 h-8 mb-4" />
+            <p className="font-bold text-sm italic">"Loyalty is the highest value in business. Our candidates offer it in abundance."</p>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  );
 
-    <!-- Contact CTA -->
-    <section id="contact" class="py-24 bg-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl font-bold mb-4 text-slate-900">Start the Conversation</h2>
-            <p class="text-slate-600 max-w-xl mx-auto mb-12">Join the Fair Chance movement. Let's build a bridge to your next great hire or your next career step.</p>
-            <div class="bg-slate-50 p-8 rounded-3xl max-w-2xl mx-auto text-left border border-slate-200">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name</label>
-                        <input type="text" placeholder="John Doe" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
-                        <input type="email" placeholder="john@company.com" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                </div>
-                <button class="w-full mt-8 py-4 bg-slate-900 text-white hover:bg-slate-800 rounded-xl font-bold transition-all">Submit Inquiry</button>
-            </div>
-        </div>
-    </section>
+  const SeekerPage = () => {
+    const handleSeekerSubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      saveToFirestore('seekers', {
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        email: formData.get('email'),
+        experience: formData.get('experience'),
+        type: 'active_seeker'
+      });
+    };
 
-    <!-- Footer -->
-    <footer class="bg-slate-50 py-12 border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8 text-sm text-slate-500">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-                <div class="w-6 h-6 gradient-bg rounded flex items-center justify-center text-white text-[8px] font-bold">PBS</div>
-                <span class="font-bold text-slate-900">Pathway Bridge Solutions</span>
-            </div>
-            <div class="flex gap-8">
-                <span onclick="showPage('employers')" class="cursor-pointer hover:text-blue-600">Employers</span>
-                <span onclick="showPage('seekers')" class="cursor-pointer hover:text-blue-600">Seekers</span>
-                <span onclick="showPage('mission')" class="cursor-pointer hover:text-blue-600">Mission</span>
-                <span>&copy; 2026 Pathway Bridge</span>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page-section');
-            pages.forEach(page => page.classList.add('hidden'));
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-24 animate-in fade-in duration-500">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div>
+            <span className="text-emerald-600 font-black uppercase tracking-widest text-sm block mb-4">For the Career Seekers</span>
+            <h2 className="text-5xl font-black text-slate-900 mb-6 leading-tight">Your Past is History. <br/>Your Future is <span className="italic">Yours.</span></h2>
+            <p className="text-xl text-slate-500 font-medium mb-12">We specialize in helping individuals with barriers to employment find high-quality, long-term careers. We provide the bridge; you bring the drive.</p>
             
-            // Show target page
-            const targetPage = document.getElementById(pageId + '-page');
-            if(targetPage) {
-                targetPage.classList.remove('hidden');
-            }
+            <div className="grid gap-8">
+              {[
+                { icon: <Briefcase className="w-6 h-6" />, title: "Direct Employer Access", desc: "Skip the automated HR filters. We put your resume directly in front of Fair Chance decision-makers." },
+                { icon: <Award className="w-6 h-6" />, title: "Interview Coaching", desc: "Learn how to own your story and highlight your resilience as a competitive advantage." },
+                { icon: <Shield className="w-6 h-6" />, title: "Advocacy Support", desc: "We don't just drop you in a job; we advocate for your success throughout the hiring process." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex gap-6 items-start">
+                  <div className="bg-emerald-50 p-4 rounded-2xl text-emerald-600 shrink-0">{item.icon}</div>
+                  <div>
+                    <h4 className="text-lg font-black text-slate-900 mb-1">{item.title}</h4>
+                    <p className="text-slate-500 font-medium">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white border-2 border-slate-100 p-10 md:p-14 rounded-[3rem] shadow-2xl relative lg:sticky lg:top-32">
+            {formSubmitted ? (
+              <div className="text-center py-12 animate-in zoom-in">
+                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto mb-6" />
+                <h3 className="text-3xl font-black text-slate-900 mb-4">Profile Submitted!</h3>
+                <p className="text-slate-500 font-bold">A placement specialist will review your details and reach out within 48 hours.</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-8">
+                  <h3 className="text-2xl font-black text-slate-900 mb-2">Let's Build Your Path</h3>
+                  <p className="text-slate-400 font-bold text-sm">Fill out the form below to join our talent network.</p>
+                </div>
+                <form onSubmit={handleSeekerSubmit} className="space-y-5">
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-2">Full Name</label>
+                      <input name="name" required placeholder="John Doe" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600 transition-colors" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-2">Phone</label>
+                      <input name="phone" required placeholder="(555) 000-0000" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600 transition-colors" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-2">Email Address</label>
+                    <input name="email" type="email" required placeholder="john@example.com" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600 transition-colors" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-2">Career Goals / Barriers</label>
+                    <textarea name="experience" required placeholder="Briefly share your story and what kind of work you're looking for..." className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600 h-32 transition-colors"></textarea>
+                  </div>
+                  <button disabled={loading} className="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-200/50 disabled:opacity-50">
+                    {loading ? "Connecting to Cloud..." : "Create My Profile"}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const EmployerPage = () => {
+    const handleEmployerSubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      saveToFirestore('inquiries', {
+        company: formData.get('company'),
+        contact: formData.get('contact'),
+        email: formData.get('email'),
+        needs: formData.get('needs')
+      });
+    };
+
+    return (
+      <div className="animate-in fade-in duration-500">
+        {/* Marketing Header */}
+        <div className="bg-slate-900 text-white py-24">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <span className="text-emerald-400 font-black uppercase tracking-[0.3em] text-xs block mb-6">Strategic Hiring Solutions</span>
+            <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight italic">Resilience is a <br/><span className="text-emerald-500 underline decoration-white underline-offset-8">Business Asset.</span></h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed">
+              We bridge the gap between untapped talent pools and industries facing labor shortages. Our candidates don't just want a job—they are fighting for a future, resulting in <span className="text-white font-black">30% higher retention rates</span> than traditional hires.
+            </p>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 py-24">
+          <div className="grid lg:grid-cols-3 gap-8 mb-24">
+            {[
+              { title: "Reduce Turnover", desc: "Fair Chance hires are statistically more loyal, reducing your long-term training and recruitment costs.", icon: <Target className="w-6 h-6" /> },
+              { title: "Tax Incentives", desc: "We help your business qualify for Work Opportunity Tax Credits (WOTC) for every eligible hire.", icon: <Zap className="w-6 h-6" /> },
+              { title: "Zero Risk", desc: "Our 90-Day Placement Guarantee means you only pay for success. No more bad hire expenses.", icon: <ShieldCheck className="w-6 h-6" /> }
+            ].map((feature, i) => (
+              <div key={i} className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 hover:scale-105 transition-transform">
+                <div className="text-emerald-600 mb-6">{feature.icon}</div>
+                <h4 className="text-2xl font-black text-slate-900 mb-4">{feature.title}</h4>
+                <p className="text-slate-500 font-bold leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-16 items-center">
+            <div className="flex-1 space-y-8">
+              <h2 className="text-4xl font-black text-slate-900">Partner with the <span className="text-emerald-600 italic">Bridge.</span></h2>
+              <p className="text-lg text-slate-500 font-medium">Ready to diversify your workforce with high-retention talent? Our streamlined process takes the complexity out of Fair Chance hiring.</p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4 bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                  <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-black">1</div>
+                  <p className="font-bold text-slate-700 italic">Submit your hiring needs via our secure cloud portal.</p>
+                </div>
+                <div className="flex items-center space-x-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center text-white font-black">2</div>
+                  <p className="font-bold text-slate-700 italic">We source, screen, and vet candidates specifically for your roles.</p>
+                </div>
+              </div>
+            </div>
             
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
-</body>
-</html>
+            <div className="flex-1 w-full">
+              <div className="bg-white border-2 border-slate-100 p-10 rounded-[3rem] shadow-2xl">
+                {formSubmitted ? (
+                  <div className="text-center py-12">
+                    <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto mb-6" />
+                    <h3 className="text-2xl font-black text-slate-900">Inquiry Received.</h3>
+                    <p className="text-slate-500 mt-2 font-bold">Our account team will be in touch shortly.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleEmployerSubmit} className="space-y-5">
+                    <input name="company" required placeholder="Company Name" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input name="contact" required placeholder="Lead Contact" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600" />
+                      <input name="email" required type="email" placeholder="Business Email" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none focus:border-emerald-600" />
+                    </div>
+                    <textarea name="needs" required placeholder="Hiring needs (e.g., General Labor, Logistics, 5 roles...)" className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-slate-200 font-bold outline-none h-32 focus:border-emerald-600"></textarea>
+                    <button disabled={loading} className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-emerald-600 transition-all shadow-xl disabled:opacity-50">
+                      {loading ? "Processing Inquiry..." : "Access Talent Pool"}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AboutPage = () => (
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-4xl mx-auto px-4 py-32 text-center">
+        <span className="text-emerald-600 font-black uppercase tracking-[0.4em] text-xs block mb-8">Our Foundation</span>
+        <h2 className="text-6xl md:text-8xl font-black text-slate-900 italic mb-12">We Believe in <span className="text-emerald-600 underline decoration-slate-900 underline-offset-[12px]">Bridges.</span></h2>
+        <p className="text-2xl text-slate-500 font-medium leading-relaxed mb-16 italic">"A barrier is only as strong as the bridge built to cross it."</p>
+        
+        <div className="grid md:grid-cols-2 gap-12 text-left">
+          <div className="bg-slate-50 p-12 rounded-[3rem]">
+            <h3 className="text-3xl font-black text-slate-900 mb-6">The "Why"</h3>
+            <p className="text-slate-600 font-bold leading-relaxed">
+              Traditional hiring systems are broken for millions of Americans with a background. They are often the hardest workers, yet are filtered out before an interview. We founded Pathway Bridge Solutions to disrupt this cycle.
+            </p>
+          </div>
+          <div className="bg-emerald-600 p-12 rounded-[3rem] text-white">
+            <h3 className="text-3xl font-black mb-6">The Mission</h3>
+            <p className="text-emerald-50 font-bold leading-relaxed opacity-90">
+              To transform the perception of Fair Chance talent by proving that resilience, when given a pathway, becomes the most powerful engine for business growth and community restoration.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-24">
+          <div className="inline-block bg-white p-1 rounded-full border border-slate-100 shadow-xl mb-8">
+            <div className="flex -space-x-4 px-4 py-2">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-slate-200 overflow-hidden flex items-center justify-center">
+                  <Users className="w-6 h-6 text-slate-400" />
+                </div>
+              ))}
+              <div className="w-12 h-12 rounded-full border-4 border-white bg-emerald-600 flex items-center justify-center text-white text-xs font-black">+1k</div>
+            </div>
+          </div>
+          <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Join thousands of individuals finding a new start.</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const AdminPanel = () => (
+    <div className="max-w-7xl mx-auto px-4 py-16 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div>
+          <h2 className="text-4xl font-black text-slate-900 tracking-tight italic">Live Staff Portal</h2>
+          <p className="text-slate-500 font-bold uppercase tracking-widest text-xs flex items-center">
+            <ShieldCheck className="w-3 h-3 mr-2 text-emerald-600" /> SECURE REAL-TIME PIPELINE ACTIVE
+          </p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <div className="hidden sm:flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-100">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse mr-2"></div> SYNCED
+          </div>
+          <button onClick={handleLogout} className="bg-red-50 text-red-600 px-6 py-3 rounded-xl font-black text-sm hover:bg-red-100 transition-all flex items-center">
+            <LogOut className="w-4 h-4 mr-2" /> Log Out
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* Seeker List */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between px-4">
+            <h3 className="text-xl font-black text-slate-900 flex items-center uppercase tracking-tight">
+              <Users className="w-5 h-5 mr-3 text-emerald-600" /> Seeker Queue
+            </h3>
+            <span className="bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-black">{seekers.length}</span>
+          </div>
+          <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2 scroll-smooth">
+            {seekers.length === 0 ? (
+              <div className="bg-slate-50 rounded-[2.5rem] p-16 text-center border-2 border-dashed border-slate-200">
+                <Users className="w-10 h-10 text-slate-200 mx-auto mb-4" />
+                <p className="text-slate-400 font-bold">Waiting for new talent applications...</p>
+              </div>
+            ) : seekers.map(s => (
+              <div key={s.id} className="bg-white p-8 rounded-[2rem] border-2 border-slate-50 shadow-sm hover:border-emerald-100 hover:shadow-xl hover:shadow-emerald-500/5 transition-all group relative">
+                <button onClick={() => deleteRecord('seekers', s.id)} className="absolute top-6 right-6 p-2 text-slate-200 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h4 className="font-black text-slate-900 text-xl tracking-tight">{s.name}</h4>
+                    <p className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.2em] mt-1">{s.email}</p>
+                  </div>
+                  <span className="text-[10px] font-black text-slate-400 flex items-center"><Clock className="w-3 h-3 mr-1" /> JUST NOW</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-slate-50 p-3 rounded-xl flex items-center text-xs font-bold text-slate-600"><Phone className="w-3 h-3 mr-2 text-emerald-600" /> {s.phone}</div>
+                  <div className="bg-slate-50 p-3 rounded-xl flex items-center text-xs font-bold text-slate-600"><Briefcase className="w-3 h-3 mr-2 text-emerald-600" /> READY</div>
+                </div>
+                <div className="bg-slate-50 p-6 rounded-2xl text-xs font-medium text-slate-600 leading-relaxed border border-slate-100 italic relative overflow-hidden">
+                  <span className="block text-[8px] font-black text-slate-300 absolute top-2 right-4">STORY/EXPERIENCE</span>
+                  "{s.experience}"
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Inquiries List */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between px-4">
+            <h3 className="text-xl font-black text-slate-900 flex items-center uppercase tracking-tight">
+              <Building2 className="w-5 h-5 mr-3 text-emerald-600" /> Partner Pipeline
+            </h3>
+            <span className="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-black">{inquiries.length}</span>
+          </div>
+          <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2">
+             {inquiries.length === 0 ? (
+              <div className="bg-slate-50 rounded-[2.5rem] p-16 text-center border-2 border-dashed border-slate-200">
+                <Building2 className="w-10 h-10 text-slate-200 mx-auto mb-4" />
+                <p className="text-slate-400 font-bold">Awaiting corporate partnerships...</p>
+              </div>
+            ) : inquiries.map(i => (
+              <div key={i.id} className="bg-slate-900 p-8 rounded-[2rem] border-2 border-slate-800 shadow-sm hover:border-emerald-900/50 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full"></div>
+                <button onClick={() => deleteRecord('inquiries', i.id)} className="absolute top-6 right-6 p-2 text-slate-700 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 z-10">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h4 className="font-black text-white text-xl tracking-tight italic">{i.company}</h4>
+                    <p className="text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em] mt-1">Lead: {i.contact}</p>
+                  </div>
+                </div>
+                <div className="space-y-3 relative z-10">
+                  <div className="flex items-center text-xs font-bold text-slate-400 bg-slate-800/50 p-3 rounded-xl"><Mail className="w-3 h-3 mr-2 text-emerald-500" /> {i.email}</div>
+                  <div className="bg-slate-800 p-6 rounded-2xl text-xs font-medium text-slate-300 leading-relaxed border border-slate-700/50 min-h-[100px]">
+                    <span className="block text-[8px] uppercase font-black text-emerald-500 mb-3 tracking-[0.3em]">Hiring Needs</span>
+                    {i.needs}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-900">
+      <Navigation />
+      <main className="flex-grow">
+        {page === 'home' && <HomeHero />}
+        {page === 'seeker' && <SeekerPage />}
+        {page === 'employer' && <EmployerPage />}
+        {page === 'about' && <AboutPage />}
+        {page === 'admin' && isAdmin && <AdminPanel />}
+      </main>
+
+      {/* Compliance & Legal Summary Bar */}
+      <section className="bg-slate-900 py-12 px-4 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-slate-400">
+          <div>
+            <div className="flex items-center text-white font-black mb-4 uppercase tracking-widest text-xs">
+              <Scale className="w-4 h-4 mr-2 text-emerald-500" /> Fair Chance Compliance
+            </div>
+            <p className="text-[11px] leading-relaxed font-bold">
+              Pathway Bridge Solutions operates in strict adherence to EEOC guidelines and the Fair Credit Reporting Act (FCRA). We advocate for individualized assessments and "ban-the-box" principles to ensure talent is judged on merit, not history.
+            </p>
+          </div>
+          <div>
+            <div className="flex items-center text-white font-black mb-4 uppercase tracking-widest text-xs">
+              <Eye className="w-4 h-4 mr-2 text-emerald-500" /> Privacy & Protection
+            </div>
+            <p className="text-[11px] leading-relaxed font-bold">
+              Your sensitive data is protected via industry-standard encryption. We never sell seeker data to third parties. Information shared is used solely for the purpose of professional career placement and employer matching.
+            </p>
+          </div>
+          <div className="flex flex-col justify-center">
+            <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+              <span className="block text-emerald-500 text-[10px] font-black mb-2 uppercase tracking-widest">E-Verify & WOTC Ready</span>
+              <p className="text-[10px] text-slate-300 italic font-medium">We assist partners in administrative compliance for federal hiring incentives and work authorization verification.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-slate-50 border-t border-slate-100 py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-16">
+            <div className="col-span-2">
+              <div className="flex items-center mb-6">
+                <Logo className="text-emerald-600 w-8 h-8 mr-3" />
+                <span className="text-xl font-black italic">PATHWAY BRIDGE</span>
+              </div>
+              <p className="text-slate-500 font-bold max-w-sm leading-relaxed mb-6">
+                Pioneering Fair Chance recruitment through resilience-based hiring. Every barrier is a bridge in the making.
+              </p>
+              <div className="flex space-x-4">
+                <div className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"><Mail className="w-4 h-4" /></div>
+                <div className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"><Phone className="w-4 h-4" /></div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Quick Links</h4>
+              <ul className="space-y-4 font-bold text-slate-600 text-sm">
+                <li className="hover:text-emerald-600 cursor-pointer" onClick={() => setPage('home')}>Home</li>
+                <li className="hover:text-emerald-600 cursor-pointer" onClick={() => setPage('seeker')}>Career Help</li>
+                <li className="hover:text-emerald-600 cursor-pointer" onClick={() => setPage('employer')}>For Employers</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Governance</h4>
+              <ul className="space-y-4 font-bold text-slate-600 text-sm">
+                <li className="hover:text-emerald-600 cursor-pointer" onClick={() => setShowLegalModal('privacy')}>Privacy Policy</li>
+                <li className="hover:text-emerald-600 cursor-pointer" onClick={() => setShowLegalModal('terms')}>Terms of Service</li>
+                <li className="hover:text-emerald-600 cursor-pointer flex items-center" onClick={() => setShowLoginModal(true)}>
+                  <Lock className="w-3 h-3 mr-2" /> Staff Login
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+            <span>&copy; 2024 PATHWAY BRIDGE SOLUTIONS LLC</span>
+            <span className="mt-4 md:mt-0 italic">Built for Second Chances.</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* Staff Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="bg-white rounded-[3rem] w-full max-w-md p-12 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <button onClick={() => setShowLoginModal(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-900"><X className="w-6 h-6" /></button>
+            <div className="text-center mb-10">
+              <div className="bg-emerald-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Lock className="text-white w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900">Staff Gateway</h3>
+              <p className="text-sm font-bold text-slate-400 mt-2">Internal Authentication Required</p>
+            </div>
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <input 
+                type="password" 
+                placeholder="ACCESS KEY" 
+                value={adminKeyInput}
+                onChange={(e) => setAdminKeyInput(e.target.value)}
+                className="w-full px-8 py-5 rounded-2xl bg-slate-50 border-2 border-slate-100 outline-none focus:border-emerald-600 font-mono text-center tracking-[0.3em] uppercase text-xs"
+              />
+              {loginError && <p className="text-red-500 text-[10px] font-black text-center uppercase tracking-wider">{loginError}</p>}
+              <button type="submit" className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-emerald-600 transition-all">Verify Key</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Legal Content Modal */}
+      {showLegalModal && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="bg-white rounded-[3rem] w-full max-w-2xl p-12 shadow-2xl relative animate-in zoom-in-95 duration-200 max-h-[80vh] overflow-y-auto">
+            <button onClick={() => setShowLegalModal(null)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-900"><X className="w-6 h-6" /></button>
+            <h3 className="text-3xl font-black text-slate-900 mb-8 italic uppercase tracking-tighter">
+              {showLegalModal === 'privacy' ? 'Privacy Commitment' : 'Terms of Service'}
+            </h3>
+            <div className="prose prose-slate font-bold text-slate-500 text-sm leading-relaxed space-y-6">
+              {showLegalModal === 'privacy' ? (
+                <>
+                  <p>At Pathway Bridge Solutions, your privacy is a cornerstone of our trust-based model. Because we work with individuals transitioning into careers, we handle all personal information with extreme discretion.</p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li>We only collect information necessary for career placement.</li>
+                    <li>We do not sell or trade your personal data to advertisers.</li>
+                    <li>Information is shared with potential employers only after an initial vetting process.</li>
+                    <li>All data is stored in secure, encrypted cloud environments.</li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <p>By using this platform, you agree to engage with Pathway Bridge Solutions in a professional and honest manner.</p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li>Seekers: You agree that the information provided regarding your history and skills is accurate.</li>
+                    <li>Employers: You agree to adhere to Fair Chance hiring laws and provide a non-discriminatory environment.</li>
+                    <li>Pathway Bridge Solutions provides placement advocacy but does not guarantee employment.</li>
+                    <li>All platform branding and logic are the intellectual property of Pathway Bridge Solutions.</li>
+                  </ul>
+                </>
+              )}
+            </div>
+            <button onClick={() => setShowLegalModal(null)} className="mt-10 w-full bg-slate-900 text-white py-4 rounded-xl font-black">Close</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
