@@ -1,38 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
-  ChevronRight, 
   Mail, 
   Lock,
   CheckCircle2,
-  FileText,
-  DollarSign,
-  Info,
-  Scale,
-  ShieldAlert,
   Calculator,
-  BookOpen,
   ArrowRight,
-  Handshake,
-  BarChart3,
-  Sparkles,
-  ArrowUpRight,
-  Building2,
-  Cpu,
-  History,
-  Users,
-  Briefcase,
-  Zap,
-  Globe,
-  Star,
-  ExternalLink,
-  MessageSquare,
   Target,
   Shield,
-  Phone,
-  Clock,
-  ChevronDown,
-  MapPin
+  MapPin,
+  Scale,
+  Star
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -40,9 +18,7 @@ import {
   collection, 
   addDoc, 
   onSnapshot, 
-  serverTimestamp,
-  query,
-  orderBy
+  serverTimestamp
 } from 'firebase/firestore';
 import { 
   getAuth, 
@@ -114,12 +90,12 @@ export default function App() {
         status: 'unread',
         location: 'Mesa Area'
       });
-      showToast("Submission successful! Our team will reach out shortly.");
+      showToast("Submission successful!");
       setPage('home');
       window.scrollTo(0,0);
     } catch (err) {
       console.error(err);
-      showToast("Something went wrong. Please try again.");
+      showToast("Submission failed.");
     }
   };
 
@@ -135,52 +111,52 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-indigo-600 selection:text-white overflow-x-hidden">
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3 animate-bounce">
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3">
           <CheckCircle2 size={18} className="text-emerald-400" />
           <span className="font-bold text-sm uppercase tracking-widest">{notification}</span>
         </div>
       )}
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <nav className="fixed top-0 w-full z-50 bg-white border-b border-slate-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
           <div 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2 cursor-pointer group shrink-0"
             onClick={() => {setPage('home'); window.scrollTo(0,0);}}
           >
-            <div className="bg-indigo-600 p-2 rounded-lg group-hover:rotate-12 transition-transform shadow-lg shadow-indigo-100">
-              <ShieldCheck className="text-white" size={24} />
+            <div className="bg-indigo-600 p-2 rounded-lg shadow-lg">
+              <ShieldCheck className="text-white" size={20} />
             </div>
-            <span className="font-black text-xl tracking-tighter uppercase italic">
+            <span className="font-black text-lg md:text-xl tracking-tighter uppercase italic whitespace-nowrap">
               Pathway<span className="text-indigo-600">Bridge</span>
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden lg:flex items-center gap-8">
             {['Employer', 'JobSeeker', 'Compliance', 'About'].map((item) => (
               <button 
                 key={item}
                 onClick={() => setPage(item.toLowerCase())}
-                className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-indigo-600 transition-colors"
+                className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors"
               >
                 {item}
               </button>
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => {setIsAdminMode(true); setPage('admin');}}
-              className="p-2 text-slate-300 hover:text-slate-900 transition-colors"
+              className="p-2 text-slate-300 hover:text-slate-900"
             >
-              <Lock size={18} />
+              <Lock size={16} />
             </button>
             <button 
               onClick={() => setPage('employer')}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all active:scale-95 shadow-xl shadow-indigo-50"
+              className="bg-indigo-600 text-white px-4 md:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 shadow-lg shadow-indigo-100 whitespace-nowrap"
             >
               Hire Talent
             </button>
@@ -192,40 +168,41 @@ export default function App() {
         {renderContent()}
       </main>
 
-      <footer className="bg-slate-50 border-t border-slate-100 pt-32 pb-12 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
+      {/* Updated Footer with the new email */}
+      <footer className="bg-slate-50 border-t border-slate-100 pt-20 pb-12 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
-            <h4 className="font-black text-2xl uppercase italic mb-6">Pathway<span className="text-indigo-600">Bridge</span></h4>
-            <p className="text-slate-500 font-medium max-w-sm leading-relaxed text-lg">
-              Empowering the Mesa community and beyond. We connect high-demand industrial roles with high-potential, fair-chance talent.
+            <h4 className="font-black text-2xl uppercase italic mb-4">Pathway<span className="text-indigo-600">Bridge</span></h4>
+            <p className="text-slate-500 font-medium max-w-sm leading-relaxed">
+              Empowering Mesa and the Greater Arizona region. Connecting high-demand industries with loyal, fair-chance talent.
             </p>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h5 className="font-black uppercase tracking-widest text-xs text-slate-400">Directory</h5>
-            <ul className="space-y-3 font-bold text-sm">
+            <ul className="space-y-2 font-bold text-sm">
               <li><button onClick={() => setPage('employer')} className="hover:text-indigo-600">Employers</button></li>
               <li><button onClick={() => setPage('jobseeker')} className="hover:text-indigo-600">Job Seekers</button></li>
-              <li><button onClick={() => setPage('compliance')} className="hover:text-indigo-600">Legal Hub</button></li>
+              <li><button onClick={() => setPage('compliance')} className="hover:text-indigo-600">Compliance</button></li>
             </ul>
           </div>
-          <div className="space-y-6">
-            <h5 className="font-black uppercase tracking-widest text-xs text-slate-400">Connect</h5>
+          <div className="space-y-4">
+            <h5 className="font-black uppercase tracking-widest text-xs text-slate-400">Contact Us</h5>
             <ul className="space-y-3 font-bold text-sm text-slate-500">
-              <li className="flex items-center gap-2 group">
-                <Mail size={16} /> 
+              <li className="flex items-start gap-2">
+                <Mail size={16} className="mt-1 shrink-0" /> 
                 <a href="mailto:contactpathwaybridesolutions@gmail.com" className="hover:text-indigo-600 break-all transition-colors">
                   contactpathwaybridesolutions@gmail.com
                 </a>
               </li>
-              <li className="flex items-center gap-2"><MapPin size={16} /> Serving Mesa, AZ & Region</li>
+              <li className="flex items-center gap-2"><MapPin size={16} /> Mesa, Arizona</li>
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 Pathway Bridge Solutions LLC. All Rights Reserved.</p>
-          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
-            <button className="hover:text-slate-900">Privacy Policy</button>
-            <button className="hover:text-slate-900">Terms of Service</button>
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+          <p>© 2026 Pathway Bridge Solutions LLC.</p>
+          <div className="flex gap-6">
+            <button className="hover:text-slate-900">Privacy</button>
+            <button className="hover:text-slate-900">Terms</button>
           </div>
         </div>
       </footer>
@@ -238,83 +215,61 @@ export default function App() {
 function HomePage({ setPage }) {
   return (
     <div className="animate-in fade-in duration-700">
-      {/* Hero */}
-      <section className="relative px-6 pt-32 pb-48 overflow-hidden bg-white">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-50/30 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
-        <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest mb-10 shadow-sm border border-indigo-100">
-            <MapPin size={14} /> Local Support in Mesa, Arizona
+      <section className="relative px-6 pt-24 pb-32 md:pb-48 overflow-hidden bg-white">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest mb-8 border border-indigo-100">
+            <MapPin size={14} /> Headquartered in Mesa, AZ
           </div>
-          <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter leading-[0.8] text-slate-900 mb-12">
-            STRENGTH IN <br/>
-            <span className="text-indigo-600 underline decoration-indigo-100 underline-offset-[16px] decoration-8">LOYALTY.</span>
+          <h1 className="text-5xl md:text-8xl lg:text-[7rem] font-black tracking-tighter leading-[0.9] text-slate-900 mb-8 uppercase">
+            Strength <br/>
+            <span className="text-indigo-600">In Loyalty.</span>
           </h1>
-          <p className="text-xl md:text-3xl text-slate-500 max-w-4xl font-medium leading-relaxed mb-16">
-            Connecting Mesa's industrial leaders with a vetted, high-loyalty workforce. We specialize in reducing turnover through fair-chance staffing.
+          <p className="text-lg md:text-2xl text-slate-500 max-w-3xl font-medium leading-relaxed mb-12">
+            Mesa's premier fair-chance staffing agency. We provide a vetted, high-loyalty workforce to industrial leaders, significantly reducing turnover.
           </p>
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col sm:flex-row gap-4">
             <button 
               onClick={() => setPage('employer')}
-              className="bg-indigo-600 text-white px-12 py-7 rounded-2xl font-black text-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-4 group shadow-2xl shadow-indigo-100"
+              className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-slate-900 transition-all flex items-center justify-center gap-3 shadow-xl shadow-indigo-100"
             >
-              Partner with Us <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+              Hire Talent <ArrowRight size={20} />
             </button>
             <button 
               onClick={() => setPage('jobseeker')}
-              className="bg-white border-2 border-slate-100 text-slate-900 px-12 py-7 rounded-2xl font-black text-xl hover:border-indigo-600 transition-all"
+              className="bg-white border-2 border-slate-100 text-slate-900 px-10 py-5 rounded-2xl font-black text-lg hover:border-indigo-600 transition-all"
             >
-              Find a Career
+              Find a Job
             </button>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-24 bg-slate-900">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+      <section className="py-20 bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
           <div>
-            <p className="text-5xl font-black text-white mb-2 tracking-tighter">91%</p>
-            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">90-Day Retention</p>
+            <p className="text-4xl md:text-5xl font-black mb-1">91%</p>
+            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Retention Rate</p>
           </div>
           <div>
-            <p className="text-5xl font-black text-white mb-2 tracking-tighter">$9.6K</p>
+            <p className="text-4xl md:text-5xl font-black mb-1">$9.6K</p>
             <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">WOTC Potential</p>
           </div>
           <div>
-            <p className="text-5xl font-black text-white mb-2 tracking-tighter">40%</p>
-            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Turnover Reduction</p>
+            <p className="text-4xl md:text-5xl font-black mb-1">40%</p>
+            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Lower Turnover</p>
           </div>
           <div>
-            <p className="text-5xl font-black text-white mb-2 tracking-tighter">100%</p>
-            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Mesa Vetted & Bonded</p>
+            <p className="text-4xl md:text-5xl font-black mb-1">100%</p>
+            <p className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Mesa Focused</p>
           </div>
         </div>
       </section>
 
-      {/* Grid Features */}
-      <section className="py-32 bg-slate-50 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-20">
-            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter uppercase mb-4">Risk Mitigation <br/>By Design.</h2>
-            <div className="h-2 w-24 bg-indigo-600"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard 
-              icon={<Shield size={32} />}
-              title="Federal Bonding"
-              desc="We provide DOL bonding coverage for every placement, eliminating financial liability for Mesa businesses."
-            />
-            <FeatureCard 
-              icon={<Calculator size={32} />}
-              title="Tax Automation"
-              desc="Full WOTC paperwork handling to ensure your business captures maximum federal tax credits."
-            />
-            <FeatureCard 
-              icon={<Target size={32} />}
-              title="Retention Coaching"
-              desc="90 days of personalized mentorship for every hire to ensure workplace success and stability."
-            />
-          </div>
+      <section className="py-24 bg-slate-50 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <FeatureCard icon={<Shield size={32} />} title="Federal Bonding" desc="We manage DOL bonding to eliminate liability for your business." />
+          <FeatureCard icon={<Calculator size={32} />} title="Tax Credits" desc="Full assistance in capturing WOTC tax incentives for every hire." />
+          <FeatureCard icon={<Target size={32} />} title="Retention" desc="Post-placement coaching ensures long-term employee success." />
         </div>
       </section>
     </div>
@@ -323,22 +278,19 @@ function HomePage({ setPage }) {
 
 function EmployerPage({ onSubmit }) {
   return (
-    <div className="animate-in slide-in-from-bottom-10 duration-700 bg-white">
-      <header className="bg-slate-900 py-32 text-center text-white px-6">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase mb-6">Mesa Staffing</h1>
-        <p className="text-indigo-400 font-black uppercase tracking-[0.5em] text-xs">Vetted Talent for Arizona Industry</p>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-24 items-start">
-        <div className="space-y-12">
-          <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-[0.9] uppercase">The Loyalty <br/><span className="text-indigo-600">Competitive Advantage.</span></h2>
-          <p className="text-slate-500 font-medium text-xl leading-relaxed">
-            In the heart of the Southwest, reliable labor is the hardest asset to secure. Pathway Bridge provides Mesa with a motivated workforce that is statistically more loyal and eager to advance.
+    <div className="animate-in slide-in-from-bottom-5 duration-700 bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-start">
+        <div className="pt-10">
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter uppercase mb-6 leading-none">
+            Scale Your <span className="text-indigo-600">Workforce.</span>
+          </h1>
+          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
+            Partner with Mesa's experts in fair-chance employment. Secure the labor you need while benefiting from tax incentives and DOL bonding.
           </p>
           <div className="space-y-6">
-            <FeatureLine title="Automatic EEOC Compliance" desc="Individualized assessments handled for you." />
-            <FeatureLine title="Liability Shield" desc="Federal Bonding and local support." />
-            <FeatureLine title="Mesa Talent Hub" desc="Pre-screened local talent pools ready for immediate roles." />
+            <FeatureLine title="Vetted Talent" desc="Every candidate undergoes a local screening process." />
+            <FeatureLine title="Compliance Handled" desc="We manage the paperwork and EEOC guidelines." />
+            <FeatureLine title="Turnover Reduction" desc="Access a more grateful and loyal talent pool." />
           </div>
         </div>
         <InquiryForm type="employer" onSubmit={onSubmit} />
@@ -349,25 +301,22 @@ function EmployerPage({ onSubmit }) {
 
 function JobSeekerPage({ onSubmit }) {
   return (
-    <div className="animate-in slide-in-from-bottom-10 duration-700 bg-white">
-      <header className="bg-indigo-600 py-32 text-center text-white px-6">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase mb-6">Mesa Careers</h1>
-        <p className="text-indigo-200 font-black uppercase tracking-[0.5em] text-xs">Your Past doesn't define your career</p>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-24 items-start">
-        <div className="space-y-12">
-          <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-[0.9] uppercase">Build A <br/><span className="text-indigo-600">Local Career.</span></h2>
-          <p className="text-slate-500 font-medium text-xl leading-relaxed">
-            We partner with Mesa's best companies to open doors that were previously closed. Our goal is to see you succeed right here in your community.
+    <div className="animate-in slide-in-from-bottom-5 duration-700 bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-start">
+        <div className="pt-10">
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter uppercase mb-6 leading-none">
+            A New <span className="text-indigo-600">Beginning.</span>
+          </h1>
+          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
+            Your past shouldn't stop your future. We work with employers in Mesa who value your hard work over your history.
           </p>
-          <div className="bg-slate-900 rounded-[2.5rem] p-12 text-white shadow-2xl shadow-indigo-100">
-             <h3 className="font-black uppercase tracking-widest text-xs mb-8 text-indigo-400">Available Support</h3>
-             <div className="space-y-8">
-                <ResourceItem title="Interview Coaching" desc="Learn how to discuss your story professionally." />
-                <ResourceItem title="OSHA Certification" desc="Industry-recognized safety training grants." />
-                <ResourceItem title="Mentorship" desc="Connected with local re-entry veterans in Mesa." />
-             </div>
+          <div className="bg-slate-900 p-10 rounded-3xl text-white">
+             <h3 className="font-black uppercase tracking-widest text-indigo-400 text-xs mb-6">Candidate Benefits</h3>
+             <ul className="space-y-6">
+               <li><h4 className="font-bold text-lg mb-1">Direct Placement</h4><p className="text-slate-400 text-sm">Real jobs at real Mesa companies.</p></li>
+               <li><h4 className="font-bold text-lg mb-1">Career Mentorship</h4><p className="text-slate-400 text-sm">Support for your first 90 days on the job.</p></li>
+               <li><h4 className="font-bold text-lg mb-1">Skills Training</h4><p className="text-slate-400 text-sm">Access to local industrial certifications.</p></li>
+             </ul>
           </div>
         </div>
         <InquiryForm type="jobseeker" onSubmit={onSubmit} />
@@ -378,24 +327,17 @@ function JobSeekerPage({ onSubmit }) {
 
 function CompliancePage() {
   return (
-    <div className="animate-in fade-in duration-700 bg-white pb-32">
-      <header className="bg-slate-900 py-32 text-center text-white">
-        <h1 className="text-6xl font-black tracking-tighter uppercase">Legal & Ethics</h1>
-        <p className="text-indigo-400 font-black uppercase tracking-widest text-xs mt-4">Arizona & Federal Standards</p>
-      </header>
-      <div className="max-w-4xl mx-auto px-6 pt-24 space-y-20">
-        <section>
-          <div className="flex items-center gap-4 text-indigo-600 mb-8">
-            <Scale size={40} />
-            <h2 className="text-3xl font-black uppercase tracking-tighter">Our Compliance Mandate</h2>
+    <div className="py-24 px-6 max-w-4xl mx-auto">
+      <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8 text-center">Compliance Hub</h1>
+      <div className="space-y-12">
+        <section className="bg-slate-50 p-10 rounded-3xl border border-slate-100">
+          <div className="flex items-center gap-4 text-indigo-600 mb-6">
+            <Scale size={32} />
+            <h2 className="text-2xl font-black uppercase tracking-tighter">Legal Standards</h2>
           </div>
-          <p className="text-slate-600 font-medium text-lg leading-relaxed mb-8">
-            Pathway Bridge Solutions LLC operates in full compliance with the <strong>EEOC Enforcement Guidance</strong>. We utilize an individualized assessment model that ensures hiring policies in Mesa and beyond do not result in disparate impact.
+          <p className="text-slate-600 font-medium text-lg leading-relaxed">
+            Pathway Bridge Solutions LLC operates in full compliance with the EEOC Enforcement Guidance and Arizona fair chance employment laws. We handle the "individualized assessment" requirements for you.
           </p>
-          <div className="grid md:grid-cols-2 gap-8">
-            <ComplianceCard title="Individualized Assessment" desc="Evaluation of offense nature, time passed, and job relevance." />
-            <ComplianceCard title="Arizona Fair Chance" desc="We manage all local and federal disclosure timing requirements." />
-          </div>
         </section>
       </div>
     </div>
@@ -408,19 +350,14 @@ function AdminPanel({ inquiries, exit }) {
 
   if (!isAuthed) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center px-6 bg-slate-50">
-        <div className="bg-white p-12 rounded-[3.5rem] shadow-2xl border border-slate-100 w-full max-w-md text-center">
-          <Lock size={40} className="mx-auto mb-8 text-indigo-600" />
-          <h2 className="text-3xl font-black mb-10 uppercase tracking-tighter">Restricted Access</h2>
+      <div className="min-h-[60vh] flex items-center justify-center px-6">
+        <div className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md text-center">
+          <h2 className="text-2xl font-black mb-8 uppercase tracking-tighter">Admin Access</h2>
           <input 
             type="password"
-            placeholder="ADMIN PIN"
-            className="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-black text-2xl mb-8 focus:border-indigo-600 transition-colors outline-none"
-            value={pass}
-            onChange={(e) => {
-              setPass(e.target.value);
-              if (e.target.value === 'admin123') setIsAuthed(true);
-            }}
+            placeholder="PIN"
+            className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl text-center font-black text-xl mb-6 outline-none"
+            onChange={(e) => { if (e.target.value === 'admin123') setIsAuthed(true); }}
           />
         </div>
       </div>
@@ -428,32 +365,21 @@ function AdminPanel({ inquiries, exit }) {
   }
 
   return (
-    <div className="py-24 max-w-7xl mx-auto px-6 animate-in fade-in">
-      <div className="flex justify-between items-end mb-16">
-        <div>
-          <h2 className="text-5xl font-black text-slate-900 tracking-tighter uppercase italic">Control Room</h2>
-          <p className="text-indigo-600 font-black uppercase tracking-[0.3em] text-[10px] mt-2">Active Inquiries: {inquiries.length}</p>
-        </div>
-        <button onClick={exit} className="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest">Exit Portal</button>
+    <div className="py-16 max-w-7xl mx-auto px-6">
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-3xl font-black uppercase italic">Leads</h2>
+        <button onClick={exit} className="text-xs font-black uppercase tracking-widest text-slate-400">Exit</button>
       </div>
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         {inquiries.map((iq) => (
-          <div key={iq.id} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row justify-between items-start group hover:border-indigo-600 transition-all shadow-sm">
-            <div className="flex-grow pr-8">
-              <div className="flex items-center gap-4 mb-4">
-                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${iq.type === 'employer' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-900 text-white'}`}>
-                  {iq.type}
-                </span>
-                <span className="text-slate-300 font-bold text-[10px] uppercase tracking-widest">
-                  {iq.timestamp ? new Date(iq.timestamp.seconds * 1000).toLocaleDateString() : 'Just now'}
-                </span>
-              </div>
-              <h3 className="text-3xl font-black text-slate-900 mb-1">{iq.name}</h3>
-              <p className="text-indigo-600 font-bold text-lg mb-6">{iq.email} • {iq.phone}</p>
-              <div className="bg-slate-50 p-6 rounded-2xl italic font-medium text-slate-600">
-                "{iq.details}"
-              </div>
+          <div key={iq.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <div className="flex justify-between mb-2">
+               <span className="text-[10px] font-black uppercase text-indigo-600">{iq.type}</span>
+               <span className="text-[10px] font-bold text-slate-400">{iq.timestamp ? new Date(iq.timestamp.seconds * 1000).toLocaleDateString() : 'recent'}</span>
             </div>
+            <h3 className="font-black text-lg">{iq.name}</h3>
+            <p className="text-sm font-bold text-slate-500 mb-4">{iq.email} • {iq.phone}</p>
+            <p className="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl italic">"{iq.details}"</p>
           </div>
         ))}
       </div>
@@ -461,14 +387,14 @@ function AdminPanel({ inquiries, exit }) {
   );
 }
 
-// --- Utils ---
+// --- Shared UI Components ---
 
 function FeatureCard({ icon, title, desc }) {
   return (
-    <div className="p-12 bg-white rounded-[3.5rem] border border-slate-100 hover:border-indigo-600 transition-all group">
-      <div className="text-indigo-600 mb-8 group-hover:scale-110 transition-transform inline-block">{icon}</div>
-      <h4 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tighter leading-none">{title}</h4>
-      <p className="text-slate-500 font-medium leading-relaxed">{desc}</p>
+    <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
+      <div className="text-indigo-600 mb-6">{icon}</div>
+      <h4 className="text-xl font-black text-slate-900 mb-3 uppercase tracking-tighter">{title}</h4>
+      <p className="text-slate-500 font-medium text-sm leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -476,29 +402,11 @@ function FeatureCard({ icon, title, desc }) {
 function FeatureLine({ title, desc }) {
   return (
     <div className="flex gap-4 items-start">
-      <div className="bg-indigo-600 p-1 rounded mt-1 text-white"><CheckCircle2 size={16} /></div>
+      <CheckCircle2 size={18} className="text-indigo-600 mt-1 shrink-0" />
       <div>
         <p className="font-black uppercase tracking-widest text-[10px] text-slate-900">{title}</p>
         <p className="text-slate-500 text-sm font-medium">{desc}</p>
       </div>
-    </div>
-  );
-}
-
-function ResourceItem({ title, desc }) {
-  return (
-    <div>
-      <h4 className="font-black uppercase tracking-widest text-indigo-400 text-[10px] mb-1">{title}</h4>
-      <p className="text-slate-400 text-sm font-medium">{desc}</p>
-    </div>
-  );
-}
-
-function ComplianceCard({ title, desc }) {
-  return (
-    <div className="p-8 bg-slate-50 border border-slate-100 rounded-2xl">
-      <h3 className="font-black uppercase tracking-widest text-[10px] text-indigo-600 mb-2">{title}</h3>
-      <p className="text-slate-600 font-medium text-sm leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -515,41 +423,14 @@ function InquiryForm({ type, onSubmit }) {
   };
 
   return (
-    <form 
-      onSubmit={submit}
-      className="bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl border border-slate-50 flex flex-col gap-8 sticky top-32"
-    >
-      <div className="space-y-2">
-        <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">Get Connected</h3>
-        <p className="text-indigo-600 font-black uppercase text-[10px] tracking-widest">Mesa Priority Processing</p>
-      </div>
-      <div className="space-y-5">
-        <input 
-          required placeholder="Full Name"
-          className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-indigo-600 transition-all font-bold outline-none text-slate-900"
-          onChange={e => setFd({...fd, name: e.target.value})}
-        />
-        <input 
-          type="email" required placeholder="Email Address"
-          className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-indigo-600 transition-all font-bold outline-none text-slate-900"
-          onChange={e => setFd({...fd, email: e.target.value})}
-        />
-        <input 
-          type="tel" required placeholder="Phone Number"
-          className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-indigo-600 transition-all font-bold outline-none text-slate-900"
-          onChange={e => setFd({...fd, phone: e.target.value})}
-        />
-        <textarea 
-          required rows="4" placeholder="How can we help in Mesa?"
-          className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-indigo-600 transition-all font-bold outline-none text-slate-900"
-          onChange={e => setFd({...fd, details: e.target.value})}
-        ></textarea>
-      </div>
-      <button 
-        disabled={loading}
-        className="w-full py-7 bg-indigo-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-900 transition-all shadow-xl shadow-indigo-100 active:scale-95 disabled:opacity-50"
-      >
-        {loading ? 'Processing...' : 'Send Inquiry'}
+    <form onSubmit={submit} className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] border border-slate-100 flex flex-col gap-6 shadow-sm">
+      <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter mb-2">Connect in Mesa</h3>
+      <input required placeholder="Name" className="p-5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 font-bold" onChange={e => setFd({...fd, name: e.target.value})} />
+      <input required type="email" placeholder="Email" className="p-5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 font-bold" onChange={e => setFd({...fd, email: e.target.value})} />
+      <input required type="tel" placeholder="Phone" className="p-5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 font-bold" onChange={e => setFd({...fd, phone: e.target.value})} />
+      <textarea required placeholder="How can we help?" className="p-5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 font-bold min-h-[120px]" onChange={e => setFd({...fd, details: e.target.value})}></textarea>
+      <button disabled={loading} className="py-5 bg-indigo-600 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-slate-900 disabled:opacity-50 transition-colors">
+        {loading ? 'Sending...' : 'Send Inquiry'}
       </button>
     </form>
   );
@@ -557,45 +438,29 @@ function InquiryForm({ type, onSubmit }) {
 
 function AboutPage() {
   return (
-    <div className="animate-in fade-in duration-700 px-6 py-32 bg-white">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-24 items-center">
+    <div className="py-20 px-6 max-w-7xl mx-auto">
+      <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div>
-           <span className="text-indigo-600 font-black uppercase tracking-[0.4em] text-[10px] mb-6 block">Our Mission</span>
-           <h1 className="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter uppercase mb-10 leading-[0.9]">The Pathway <br/>Standard.</h1>
-           <p className="text-slate-500 font-medium text-2xl leading-relaxed mb-12">
-             We were founded on the belief that human potential is infinite when systemic barriers are replaced with professional pathways. Our specialized staffing model focuses on Mesa's industrial growth.
-           </p>
-           <div className="grid grid-cols-2 gap-8">
-              <div className="p-8 bg-slate-50 rounded-3xl text-center">
-                <p className="text-4xl font-black text-indigo-600 mb-2">Local</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Mesa Expertise</p>
-              </div>
-              <div className="p-8 bg-slate-50 rounded-3xl text-center">
-                <p className="text-4xl font-black text-indigo-600 mb-2">AZ</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Regional Coverage</p>
-              </div>
-           </div>
-        </div>
-        <div className="relative">
-          <div className="bg-slate-900 p-12 md:p-20 rounded-[5rem] text-white relative z-10 shadow-2xl">
-             <h3 className="text-3xl font-black uppercase mb-12 italic tracking-widest">Why Mesa <br/>Industry Trusts Us</h3>
-             <ul className="space-y-10">
-                <li className="flex gap-6">
-                  <div className="p-3 bg-indigo-600 rounded-2xl h-fit"><ShieldCheck size={24}/></div>
-                  <div>
-                    <h5 className="font-black uppercase tracking-widest text-sm mb-2">Total Compliance</h5>
-                    <p className="text-slate-400 font-medium">We manage the complexity of Arizona and Federal fair chance laws.</p>
-                  </div>
-                </li>
-                <li className="flex gap-6">
-                  <div className="p-3 bg-indigo-600 rounded-2xl h-fit"><Star size={24}/></div>
-                  <div>
-                    <h5 className="font-black uppercase tracking-widest text-sm mb-2">Vetted Loyalty</h5>
-                    <p className="text-slate-500 font-medium">Supporting the Mesa workforce through sustainable career pathways.</p>
-                  </div>
-                </li>
-             </ul>
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 uppercase tracking-tighter mb-8 leading-none">Our <span className="text-indigo-600">Mission.</span></h1>
+          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
+            Pathway Bridge Solutions LLC was built on the foundation of second chances. We believe the strongest companies in Mesa are built by the most loyal employees.
+          </p>
+          <div className="flex gap-4">
+             <div className="bg-indigo-50 p-6 rounded-2xl flex-1 text-center">
+                <Star className="mx-auto text-indigo-600 mb-2" size={24} />
+                <p className="font-black text-[10px] uppercase tracking-widest">Quality Placements</p>
+             </div>
+             <div className="bg-indigo-50 p-6 rounded-2xl flex-1 text-center">
+                <ShieldCheck className="mx-auto text-indigo-600 mb-2" size={24} />
+                <p className="font-black text-[10px] uppercase tracking-widest">Risk Protected</p>
+             </div>
           </div>
+        </div>
+        <div className="bg-slate-900 p-12 rounded-[3rem] text-white">
+           <h3 className="text-3xl font-black uppercase italic mb-8">The Mesa Standard</h3>
+           <p className="text-slate-400 font-medium text-lg leading-relaxed">
+             We don't just staff; we bridge the gap between high-demand industrial jobs and motivated workers. Our presence in the Mesa community ensures local support for both the business and the employee.
+           </p>
         </div>
       </div>
     </div>
