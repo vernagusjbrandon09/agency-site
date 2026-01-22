@@ -9,7 +9,6 @@ import {
   Target,
   Shield,
   MapPin,
-  Scale,
   Star,
   Menu,
   X
@@ -36,12 +35,16 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'pathway-bridge-solutions';
 
+/**
+ * PATHWAY BRIDGE SOLUTIONS - MESA, AZ
+ * Bulletproof Responsive Layout
+ */
+
 export default function App() {
   const [page, setPage] = useState('home');
   const [user, setUser] = useState(null);
   const [inquiries, setInquiries] = useState([]);
   const [isAdminMode, setIsAdminMode] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Auth Lifecycle (Rule 3)
@@ -65,22 +68,21 @@ export default function App() {
   // Data Fetching (Rule 1 & 2)
   useEffect(() => {
     if (!user || !isAdminMode) return;
-    
     const inquiryCollection = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
     const unsubscribe = onSnapshot(inquiryCollection, 
       (snapshot) => {
         const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const sorted = docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-        setInquiries(sorted);
+        setInquiries(docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0)));
       },
       (err) => console.error("Firestore Error:", err)
     );
     return () => unsubscribe();
   }, [user, isAdminMode]);
 
-  const showToast = (msg) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 4000);
+  const navigateTo = (p) => {
+    setPage(p);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleInquirySubmit = async (formData) => {
@@ -89,309 +91,253 @@ export default function App() {
       await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'inquiries'), {
         ...formData,
         timestamp: serverTimestamp(),
-        userId: user.uid,
-        status: 'unread',
-        location: 'Mesa Area'
+        userId: user.uid
       });
-      showToast("Submission successful!");
+      alert("Inquiry Sent Successfully!");
       setPage('home');
-      window.scrollTo(0,0);
     } catch (err) {
       console.error(err);
-      showToast("Submission failed.");
-    }
-  };
-
-  const navigateTo = (p) => {
-    setPage(p);
-    setMobileMenuOpen(false);
-    window.scrollTo(0, 0);
-  };
-
-  const renderContent = () => {
-    switch(page) {
-      case 'employer': return <EmployerPage onSubmit={handleInquirySubmit} />;
-      case 'jobseeker': return <JobSeekerPage onSubmit={handleInquirySubmit} />;
-      case 'compliance': return <CompliancePage />;
-      case 'admin': return <AdminPanel inquiries={inquiries} exit={() => setPage('home')} />;
-      case 'about': return <AboutPage />;
-      default: return <HomePage setPage={navigateTo} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-indigo-600 selection:text-white">
-      {/* Toast Notification */}
-      {notification && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3">
-          <CheckCircle2 size={18} className="text-emerald-400" />
-          <span className="font-bold text-xs uppercase tracking-widest">{notification}</span>
-        </div>
-      )}
-
-      {/* Navigation - FIXED OVERLAP ISSUES */}
-      <nav className="fixed top-0 w-full z-50 bg-white border-b border-slate-100 shadow-sm h-20">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+    <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-x-hidden">
+      
+      {/* NAVIGATION BAR - Simplified for max compatibility */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-slate-100 shadow-sm h-20 md:h-24 px-4">
+        <div className="max-w-7xl mx-auto h-full flex items-center justify-between gap-4">
           
-          {/* Company Identity (Always Visible) */}
+          {/* BRANDING */}
           <div 
-            className="flex items-center gap-2 md:gap-3 cursor-pointer shrink-0"
+            className="flex items-center gap-2 md:gap-3 cursor-pointer group flex-shrink-0"
             onClick={() => navigateTo('home')}
           >
-            <div className="bg-indigo-600 p-1.5 md:p-2 rounded-lg shadow-lg">
-              <ShieldCheck className="text-white" size={18} />
+            <div className="bg-indigo-600 p-1.5 md:p-2 rounded-lg shadow-md group-hover:bg-slate-900 transition-colors">
+              <ShieldCheck className="text-white" size={20} />
             </div>
-            <div className="flex flex-col leading-tight">
-              <span className="font-black text-sm md:text-lg tracking-tight uppercase italic text-slate-900">
+            <div className="flex flex-col">
+              <h1 className="font-black text-sm md:text-xl tracking-tighter uppercase italic text-slate-900 leading-none">
                 Pathway<span className="text-indigo-600">Bridge</span>
-              </span>
-              <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-slate-400">
+              </h1>
+              <p className="font-black text-[8px] md:text-[10px] tracking-[0.3em] uppercase text-slate-400">
                 Solutions
-              </span>
+              </p>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
+          {/* DESKTOP LINKS */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-10">
             {['Employer', 'JobSeeker', 'Compliance', 'About'].map((item) => (
               <button 
                 key={item}
                 onClick={() => navigateTo(item.toLowerCase())}
-                className={`text-[10px] font-black uppercase tracking-widest transition-colors ${page === item.toLowerCase() ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}
+                className={`text-[10px] font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors ${page === item.toLowerCase() ? 'text-indigo-600' : 'text-slate-500'}`}
               >
                 {item === 'JobSeeker' ? 'Job Seeker' : item}
               </button>
             ))}
           </div>
 
-          {/* Action Area */}
-          <div className="flex items-center gap-2">
+          {/* ACTIONS */}
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => navigateTo('employer')}
-              className="hidden xs:block bg-indigo-600 text-white px-4 py-2 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-md shadow-indigo-100"
+              className="hidden xs:block bg-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-indigo-100"
             >
-              Hire Now
+              Hire Talent
             </button>
             
-            <button 
-              onClick={() => {setIsAdminMode(true); navigateTo('admin');}}
-              className="p-2 text-slate-200 hover:text-slate-400"
-            >
-              <Lock size={12} />
-            </button>
-
-            {/* Mobile Toggle (Hamburger) */}
             <button 
               className="lg:hidden p-2 text-slate-600"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+            
+            <button 
+              onClick={() => {setIsAdminMode(true); navigateTo('admin');}}
+              className="opacity-10 hover:opacity-50 transition-opacity p-2"
+            >
+              <Lock size={12} />
+            </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* MOBILE MENU */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 flex flex-col p-6 gap-2 animate-in slide-in-from-top-2 duration-200 shadow-2xl">
+          <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 shadow-2xl p-6 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-200">
             {['Employer', 'JobSeeker', 'Compliance', 'About'].map((item) => (
               <button 
                 key={item}
                 onClick={() => navigateTo(item.toLowerCase())}
-                className="text-left font-black uppercase tracking-widest text-xs text-slate-600 py-3 border-b border-slate-50"
+                className="text-left font-black uppercase tracking-widest text-xs text-slate-600 py-3"
               >
                 {item === 'JobSeeker' ? 'Job Seeker' : item}
               </button>
             ))}
-            <button 
-              onClick={() => navigateTo('employer')}
-              className="w-full bg-indigo-600 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest mt-4"
-            >
-              Get Started
-            </button>
           </div>
         )}
       </nav>
 
-      <main className="pt-20">
-        {renderContent()}
+      {/* PAGE CONTENT */}
+      <main className="flex-grow pt-20 md:pt-24">
+        {page === 'home' && <HomePage setPage={navigateTo} />}
+        {page === 'employer' && <EmployerPage onSubmit={handleInquirySubmit} />}
+        {page === 'jobseeker' && <JobSeekerPage onSubmit={handleInquirySubmit} />}
+        {page === 'compliance' && <CompliancePage />}
+        {page === 'about' && <AboutPage />}
+        {page === 'admin' && <AdminPanel inquiries={inquiries} exit={() => setPage('home')} />}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-50 border-t border-slate-100 pt-20 pb-12 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="md:col-span-2">
-            <div className="flex flex-col mb-4">
-              <h4 className="font-black text-2xl uppercase italic leading-none">Pathway<span className="text-indigo-600">Bridge</span></h4>
-              <span className="font-black text-[11px] tracking-[0.3em] uppercase text-slate-400">Solutions</span>
-            </div>
-            <p className="text-slate-500 font-medium max-w-sm leading-relaxed">
-              Based in Mesa, AZ. We connect high-demand industries with loyal, fair-chance talent.
-            </p>
+      {/* FOOTER */}
+      <footer className="bg-slate-900 text-white py-20 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="lg:col-span-2">
+            <h2 className="font-black text-2xl uppercase italic text-white mb-2">Pathway<span className="text-indigo-600">Bridge</span></h2>
+            <p className="font-black text-[10px] tracking-[0.3em] uppercase text-slate-500 mb-6">Solutions</p>
+            <p className="text-slate-400 max-w-sm font-medium">Serving Mesa, Arizona and the surrounding regions with fair-chance industrial staffing.</p>
           </div>
           <div className="space-y-4">
-            <h5 className="font-black uppercase tracking-widest text-xs text-slate-400">Links</h5>
-            <ul className="space-y-2 font-bold text-sm">
-              <li><button onClick={() => navigateTo('employer')} className="hover:text-indigo-600 text-slate-600">For Employers</button></li>
-              <li><button onClick={() => navigateTo('jobseeker')} className="hover:text-indigo-600 text-slate-600">For Job Seekers</button></li>
-              <li><button onClick={() => navigateTo('compliance')} className="hover:text-indigo-600 text-slate-600">Compliance</button></li>
-            </ul>
-          </div>
-          <div className="space-y-4">
-            <h5 className="font-black uppercase tracking-widest text-xs text-slate-400">Contact</h5>
-            <ul className="space-y-3 font-bold text-sm text-slate-500">
-              <li className="flex items-start gap-2 group">
-                <Mail size={16} className="mt-1 shrink-0 text-indigo-600" /> 
-                <a href="mailto:contactpathwaybridesolutions@gmail.com" className="hover:text-indigo-600 break-all transition-colors underline decoration-slate-200">
-                  contactpathwaybridesolutions@gmail.com
-                </a>
-              </li>
-              <li className="flex items-center gap-2"><MapPin size={16} className="text-indigo-600" /> Mesa, Arizona</li>
-            </ul>
+            <h3 className="font-black uppercase tracking-widest text-[10px] text-indigo-500">Contact</h3>
+            <p className="text-sm font-bold flex items-center gap-2"><Mail size={16}/> contactpathwaybridesolutions@gmail.com</p>
+            <p className="text-sm font-bold flex items-center gap-2"><MapPin size={16}/> Mesa, AZ</p>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
-          <p>© 2026 Pathway Bridge Solutions LLC.</p>
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>© 2026 Pathway Bridge Solutions LLC. Mesa, Arizona.</p>
         </div>
       </footer>
     </div>
   );
 }
 
-// --- Page Components ---
+// --- SUB-COMPONENTS ---
 
 function HomePage({ setPage }) {
   return (
-    <div className="animate-in fade-in duration-700">
-      <section className="relative px-6 pt-12 pb-20 md:pt-32 md:pb-48 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-full font-black text-[9px] uppercase tracking-widest mb-8 border border-indigo-100">
-            <MapPin size={14} /> Mesa Area Operations
-          </div>
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter leading-[0.9] text-slate-900 mb-8 uppercase">
-            Workforce <br/>
-            <span className="text-indigo-600">Refined.</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-slate-500 max-w-2xl font-medium leading-relaxed mb-12">
-            Mesa's premier fair-chance staffing agency. We connect industrial leaders with high-loyalty talent.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button 
-              onClick={() => setPage('employer')}
-              className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-black text-sm hover:bg-slate-900 transition-all flex items-center justify-center gap-3 shadow-xl shadow-indigo-100"
-            >
-              Hire Talent <ArrowRight size={20} />
-            </button>
-            <button 
-              onClick={() => setPage('jobseeker')}
-              className="bg-white border-2 border-slate-100 text-slate-900 px-8 py-4 rounded-xl font-black text-sm hover:border-indigo-600 transition-all"
-            >
-              Get Hired
-            </button>
-          </div>
+    <div className="animate-in fade-in duration-500">
+      <section className="px-6 py-16 md:py-32 max-w-7xl mx-auto">
+        <div className="inline-block bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest mb-8">
+          Mesa, AZ Based
+        </div>
+        <h2 className="text-5xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.85] text-slate-900 mb-8">
+          Workforce <br/> <span className="text-indigo-600">Refined.</span>
+        </h2>
+        <p className="text-lg md:text-2xl text-slate-500 max-w-2xl font-medium mb-12">
+          Mesa's premier fair-chance staffing agency. We connect industrial leaders with vetted, high-loyalty talent.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button onClick={() => setPage('employer')} className="bg-indigo-600 text-white px-10 py-5 rounded-xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-slate-900 transition-all">Hire Talent</button>
+          <button onClick={() => setPage('jobseeker')} className="bg-white border-2 border-slate-100 px-10 py-5 rounded-xl font-black text-sm uppercase tracking-widest hover:border-indigo-600 transition-all">Find Work</button>
         </div>
       </section>
 
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-          <StatBox num="91%" label="Retention Rate" />
-          <StatBox num="$9.6K" label="WOTC Potential" />
-          <StatBox num="40%" label="Lower Turnover" />
-          <StatBox num="100%" label="Mesa Local" />
+      <section className="bg-slate-50 py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+          <Card icon={<Shield size={32}/>} title="Federal Bonding" desc="We handle DOL Federal Bonding to protect your business and eliminate liability." />
+          <Card icon={<Calculator size={32}/>} title="Tax Incentives" desc="We help you capture up to $9,600 in tax credits per eligible hire." />
+          <Card icon={<Target size={32}/>} title="Loyalty Coaching" desc="Our candidates receive active coaching during their first 90 days for max stability." />
         </div>
       </section>
+    </div>
+  );
+}
 
-      <section className="py-24 bg-slate-50 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <FeatureCard 
-            icon={<Shield size={32} />} 
-            title="Bonding Provided" 
-            desc="We handle DOL Federal Bonding to eliminate potential liability." 
-          />
-          <FeatureCard 
-            icon={<Calculator size={32} />} 
-            title="Tax Benefits" 
-            desc="Guidance on Work Opportunity Tax Credits (WOTC) to maximize your bottom line." 
-          />
-          <FeatureCard 
-            icon={<Target size={32} />} 
-            title="Support System" 
-            desc="Active coaching for employees during their first 90 days." 
-          />
-        </div>
-      </section>
+function Card({ icon, title, desc }) {
+  return (
+    <div className="p-10 bg-white rounded-3xl border border-slate-100 shadow-sm">
+      <div className="text-indigo-600 mb-6">{icon}</div>
+      <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">{title}</h3>
+      <p className="text-slate-500 font-medium leading-relaxed">{desc}</p>
     </div>
   );
 }
 
 function EmployerPage({ onSubmit }) {
   return (
-    <div className="animate-in slide-in-from-bottom-4 duration-700 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-12 lg:py-24 grid lg:grid-cols-2 gap-16 items-start">
-        <div className="lg:sticky lg:top-32">
-          <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter uppercase mb-6 leading-none">
-            Built for <span className="text-indigo-600">Business.</span>
-          </h1>
-          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
-            Candidates are motivated, grateful, and ready to contribute to your success in Mesa.
-          </p>
-          <div className="space-y-6">
-            <FeatureLine title="Vetted Local Talent" desc="Deep screening process for reliability." />
-            <FeatureLine title="Compliance Guaranteed" desc="We manage all EEOC and federal bonding." />
-            <FeatureLine title="Financial Incentives" desc="Capture thousands in federal tax credits." />
-          </div>
+    <div className="py-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
+      <div>
+        <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">Build a <br/><span className="text-indigo-600">Loyal Team.</span></h2>
+        <p className="text-xl text-slate-500 font-medium mb-10 leading-relaxed">Lower turnover and increase profitability in the Mesa industrial sector.</p>
+        <div className="space-y-6">
+          <CheckItem text="Vetted Local Candidates" />
+          <CheckItem text="EEOC Compliance Handling" />
+          <CheckItem text="WOTC Tax Credit Support" />
         </div>
-        <InquiryForm type="employer" onSubmit={onSubmit} />
       </div>
+      <Form type="employer" onSubmit={onSubmit} />
     </div>
   );
 }
 
 function JobSeekerPage({ onSubmit }) {
   return (
-    <div className="animate-in slide-in-from-bottom-4 duration-700 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-12 lg:py-24 grid lg:grid-cols-2 gap-16 items-start">
-        <div className="lg:sticky lg:top-32">
-          <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter uppercase mb-6 leading-none">
-            A Better <span className="text-indigo-600">Path.</span>
-          </h1>
-          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
-            We connect motivated individuals with Mesa's best industrial employers.
-          </p>
-          <div className="bg-indigo-600 p-8 rounded-3xl text-white shadow-2xl">
-             <h3 className="font-black uppercase tracking-widest text-indigo-200 text-[10px] mb-6">Why Join Us?</h3>
-             <ul className="space-y-6">
-               <li className="flex items-start gap-4">
-                 <Star className="shrink-0 mt-1" size={20} />
-                 <div><h4 className="font-bold text-lg">Stable Roles</h4><p className="text-indigo-100 text-sm">Long-term opportunities.</p></div>
-               </li>
-               <li className="flex items-start gap-4">
-                 <ShieldCheck className="shrink-0 mt-1" size={20} />
-                 <div><h4 className="font-bold text-lg">Advocacy</h4><p className="text-indigo-100 text-sm">We speak for your future.</p></div>
-               </li>
-             </ul>
-          </div>
+    <div className="py-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
+      <div>
+        <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">A Fresh <br/><span className="text-indigo-600">Perspective.</span></h2>
+        <p className="text-xl text-slate-500 font-medium mb-10 leading-relaxed">Connect with employers who value hard work over your past.</p>
+        <div className="bg-indigo-600 p-8 rounded-3xl text-white">
+          <h4 className="font-black uppercase tracking-widest text-xs mb-4">Why Work With Us?</h4>
+          <ul className="space-y-4 font-bold">
+            <li>• Direct placement in industrial roles</li>
+            <li>• Ongoing support and advocacy</li>
+            <li>• 90-day retention coaching</li>
+          </ul>
         </div>
-        <InquiryForm type="jobseeker" onSubmit={onSubmit} />
       </div>
+      <Form type="jobseeker" onSubmit={onSubmit} />
     </div>
+  );
+}
+
+function CheckItem({ text }) {
+  return (
+    <div className="flex items-center gap-3 font-black uppercase tracking-widest text-[10px] text-slate-600">
+      <CheckCircle2 size={16} className="text-indigo-600" /> {text}
+    </div>
+  );
+}
+
+function Form({ type, onSubmit }) {
+  const [fd, setFd] = useState({ name: '', email: '', phone: '', details: '', type });
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(fd); }} className="bg-slate-900 p-8 rounded-3xl flex flex-col gap-4">
+      <h3 className="text-white font-black uppercase tracking-tighter text-2xl mb-2">Get Started</h3>
+      <input required className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Full Name" onChange={e => setFd({...fd, name: e.target.value})} />
+      <input required type="email" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Email" onChange={e => setFd({...fd, email: e.target.value})} />
+      <input required type="tel" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Phone" onChange={e => setFd({...fd, phone: e.target.value})} />
+      <textarea required className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold min-h-[120px]" placeholder="Tell us about yourself..." onChange={e => setFd({...fd, details: e.target.value})}></textarea>
+      <button className="bg-indigo-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white hover:text-indigo-600 transition-all">Submit Inquiry</button>
+    </form>
   );
 }
 
 function CompliancePage() {
   return (
-    <div className="py-24 px-6 max-w-4xl mx-auto animate-in fade-in duration-500">
-      <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-12 text-center text-slate-900">Legal Excellence</h1>
-      <div className="space-y-8">
-        <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] border border-slate-100">
-          <p className="text-slate-600 font-medium text-lg leading-relaxed mb-6">
-            Pathway Bridge Solutions LLC operates in full alignment with EEOC Enforcement Guidance and Arizona fair chance employment standards. 
-          </p>
-          <ul className="grid md:grid-cols-2 gap-4">
-            <li className="flex items-center gap-2 font-bold text-slate-500"><CheckCircle2 size={16} className="text-indigo-600" /> EEOC Compliance</li>
-            <li className="flex items-center gap-2 font-bold text-slate-500"><CheckCircle2 size={16} className="text-indigo-600" /> DOL Federal Bonding</li>
-            <li className="flex items-center gap-2 font-bold text-slate-500"><CheckCircle2 size={16} className="text-indigo-600" /> WOTC Optimization</li>
-            <li className="flex items-center gap-2 font-bold text-slate-500"><CheckCircle2 size={16} className="text-indigo-600" /> Fair Credit Reporting</li>
-          </ul>
+    <div className="py-24 px-6 max-w-4xl mx-auto text-center">
+      <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">Compliance</h2>
+      <div className="bg-slate-50 p-12 rounded-3xl border border-slate-100 text-left">
+        <p className="text-slate-600 font-medium text-lg leading-relaxed mb-6">Pathway Bridge Solutions LLC operates with strict adherence to EEOC guidelines and Arizona employment law.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-black uppercase tracking-widest text-[10px] text-slate-400">
+          <div className="p-4 border rounded-xl flex items-center gap-2"><CheckCircle2 size={16} className="text-indigo-600" /> EEOC Compliant</div>
+          <div className="p-4 border rounded-xl flex items-center gap-2"><CheckCircle2 size={16} className="text-indigo-600" /> Federal Bonding</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AboutPage() {
+  return (
+    <div className="py-24 px-6 max-w-7xl mx-auto">
+      <div className="grid md:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 className="text-6xl font-black uppercase tracking-tighter mb-8 leading-none">The <br/><span className="text-indigo-600">Pathway.</span></h2>
+          <p className="text-xl text-slate-500 font-medium leading-relaxed">We bridge the gap between industrial labor needs and fair-chance talent in the Mesa community.</p>
+        </div>
+        <div className="bg-indigo-50 p-12 rounded-3xl border border-indigo-100">
+          <h4 className="font-black uppercase tracking-tighter text-2xl mb-4 text-indigo-900">Mesa Roots</h4>
+          <p className="text-indigo-800 font-medium">As a Mesa-local agency, we understand the specific industrial landscape of the East Valley and are committed to strengthening our community through employment.</p>
         </div>
       </div>
     </div>
@@ -399,128 +345,32 @@ function CompliancePage() {
 }
 
 function AdminPanel({ inquiries, exit }) {
-  const [isAuthed, setIsAuthed] = useState(false);
-  if (!isAuthed) {
+  const [pass, setPass] = useState('');
+  if (pass !== 'admin123') {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center px-6">
-        <div className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md text-center">
-          <h2 className="text-2xl font-black mb-8 uppercase tracking-tighter">Access</h2>
-          <input 
-            type="password"
-            placeholder="PIN"
-            className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl text-center font-black text-xl mb-6 outline-none"
-            onChange={(e) => { if (e.target.value === 'admin123') setIsAuthed(true); }}
-          />
+      <div className="min-h-[50vh] flex items-center justify-center p-6">
+        <div className="bg-white p-10 rounded-3xl shadow-2xl border w-full max-w-md text-center">
+          <h2 className="text-xl font-black mb-6 uppercase tracking-widest">Admin PIN</h2>
+          <input type="password" placeholder="****" className="w-full p-4 border rounded-xl text-center font-black text-2xl" onChange={e => setPass(e.target.value)} />
         </div>
       </div>
     );
   }
-
   return (
-    <div className="py-16 max-w-7xl mx-auto px-6">
+    <div className="p-10 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-3xl font-black uppercase italic">Dashboard</h2>
-        <button onClick={exit} className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Close</button>
+        <button onClick={exit} className="font-black uppercase tracking-widest text-[10px] text-slate-400">Exit</button>
       </div>
-      <div className="grid gap-6">
-        {inquiries.length === 0 ? (
-          <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-            <p className="font-bold text-slate-400 uppercase tracking-widest">No entries.</p>
-          </div>
-        ) : inquiries.map((iq) => (
-          <div key={iq.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="flex justify-between mb-4">
-               <span className="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600">{iq.type}</span>
-               <span className="text-[8px] font-bold text-slate-400 uppercase">{iq.timestamp ? new Date(iq.timestamp.seconds * 1000).toLocaleString() : 'Recent'}</span>
-            </div>
-            <h3 className="font-black text-xl text-slate-900">{iq.name}</h3>
-            <p className="font-bold text-indigo-600 text-xs mb-4">{iq.email} | {iq.phone}</p>
-            <div className="bg-slate-50 p-4 rounded-xl text-sm font-medium text-slate-600">{iq.details}</div>
+      <div className="space-y-4">
+        {inquiries.map(iq => (
+          <div key={iq.id} className="p-6 bg-white border rounded-2xl shadow-sm">
+            <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-2">{iq.type}</p>
+            <h4 className="font-black text-xl mb-1">{iq.name}</h4>
+            <p className="text-slate-500 text-sm mb-4 font-bold">{iq.email} | {iq.phone}</p>
+            <div className="p-4 bg-slate-50 rounded-xl text-sm font-medium">{iq.details}</div>
           </div>
         ))}
-      </div>
-    </div>
-  );
-}
-
-// --- Helpers ---
-
-function StatBox({ num, label }) {
-  return (
-    <div>
-      <p className="text-3xl md:text-5xl font-black mb-1">{num}</p>
-      <p className="text-indigo-400 font-black text-[9px] uppercase tracking-widest">{label}</p>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, desc }) {
-  return (
-    <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
-      <div className="text-indigo-600 mb-6">{icon}</div>
-      <h4 className="text-xl font-black text-slate-900 mb-3 uppercase tracking-tighter">{title}</h4>
-      <p className="text-slate-500 font-medium text-sm leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function FeatureLine({ title, desc }) {
-  return (
-    <div className="flex gap-4 items-start">
-      <div className="bg-indigo-50 p-1.5 rounded-lg shrink-0">
-        <CheckCircle2 size={16} className="text-indigo-600" />
-      </div>
-      <div>
-        <p className="font-black uppercase tracking-widest text-[10px] text-slate-900 mb-1">{title}</p>
-        <p className="text-slate-500 text-xs font-medium leading-relaxed">{desc}</p>
-      </div>
-    </div>
-  );
-}
-
-function InquiryForm({ type, onSubmit }) {
-  const [fd, setFd] = useState({ name: '', email: '', phone: '', details: '', type });
-  const [loading, setLoading] = useState(false);
-
-  const submit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await onSubmit(fd);
-    setLoading(false);
-  };
-
-  return (
-    <form onSubmit={submit} className="bg-slate-900 p-8 md:p-12 rounded-[2.5rem] flex flex-col gap-5 shadow-2xl">
-      <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">Contact Us</h3>
-      <input required placeholder="Full Name" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none font-bold text-sm" onChange={e => setFd({...fd, name: e.target.value})} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <input required type="email" placeholder="Email" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none font-bold text-sm" onChange={e => setFd({...fd, email: e.target.value})} />
-        <input required type="tel" placeholder="Phone" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none font-bold text-sm" onChange={e => setFd({...fd, phone: e.target.value})} />
-      </div>
-      <textarea required placeholder="Message" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none font-bold text-sm min-h-[120px]" onChange={e => setFd({...fd, details: e.target.value})}></textarea>
-      <button disabled={loading} className="py-5 bg-indigo-600 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white hover:text-indigo-600 transition-all">
-        {loading ? 'Sending...' : 'Submit'}
-      </button>
-    </form>
-  );
-}
-
-function AboutPage() {
-  return (
-    <div className="py-20 px-6 max-w-7xl mx-auto">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <h1 className="text-5xl md:text-7xl font-black text-slate-900 uppercase tracking-tighter mb-8 leading-none">About <br/><span className="text-indigo-600">Pathway.</span></h1>
-          <p className="text-xl text-slate-500 font-medium leading-relaxed mb-10">
-            Fixing the disconnect in Mesa's labor market. We believe people with a past can be the backbone of a successful future.
-          </p>
-        </div>
-        <div className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100">
-           <h3 className="text-2xl font-black uppercase tracking-tighter mb-6">The Mesa Promise</h3>
-           <p className="text-slate-600 font-medium text-lg leading-relaxed">
-             We focus exclusively on Mesa and the East Valley to ensure our placements receive the local support they need to thrive.
-           </p>
-        </div>
       </div>
     </div>
   );
