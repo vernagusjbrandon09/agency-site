@@ -1,377 +1,231 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ShieldCheck, 
-  Mail, 
-  Lock,
-  CheckCircle2,
-  Calculator,
-  ArrowRight,
-  Target,
-  Shield,
-  MapPin,
-  Star,
-  Menu,
-  X
-} from 'lucide-react';
-import { initializeApp } from 'firebase/app';
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  onSnapshot, 
-  serverTimestamp
-} from 'firebase/firestore';
-import { 
-  getAuth, 
-  signInAnonymously, 
-  signInWithCustomToken, 
-  onAuthStateChanged 
-} from 'firebase/auth';
-
-// --- Firebase Configuration ---
-const firebaseConfig = JSON.parse(__firebase_config);
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'pathway-bridge-solutions';
-
-/**
- * PATHWAY BRIDGE SOLUTIONS - MESA, AZ
- * Bulletproof Responsive Layout
- */
-
-export default function App() {
-  const [page, setPage] = useState('home');
-  const [user, setUser] = useState(null);
-  const [inquiries, setInquiries] = useState([]);
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Auth Lifecycle (Rule 3)
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Creative Digital Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --brand-primary: #6366f1;
+            --brand-dark: #0f172a;
         }
-      } catch (err) {
-        console.error("Auth failed:", err);
-      }
-    };
-    initAuth();
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return () => unsubscribe();
-  }, []);
 
-  // Data Fetching (Rule 1 & 2)
-  useEffect(() => {
-    if (!user || !isAdminMode) return;
-    const inquiryCollection = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
-    const unsubscribe = onSnapshot(inquiryCollection, 
-      (snapshot) => {
-        const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setInquiries(docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0)));
-      },
-      (err) => console.error("Firestore Error:", err)
-    );
-    return () => unsubscribe();
-  }, [user, isAdminMode]);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
 
-  const navigateTo = (p) => {
-    setPage(p);
-    setMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
 
-  const handleInquirySubmit = async (formData) => {
-    if (!user) return;
-    try {
-      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'inquiries'), {
-        ...formData,
-        timestamp: serverTimestamp(),
-        userId: user.uid
-      });
-      alert("Inquiry Sent Successfully!");
-      setPage('home');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.1), transparent);
+        }
 
-  return (
-    <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-x-hidden">
-      
-      {/* NAVIGATION BAR - Simplified for max compatibility */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-slate-100 shadow-sm h-20 md:h-24 px-4">
-        <div className="max-w-7xl mx-auto h-full flex items-center justify-between gap-4">
-          
-          {/* BRANDING */}
-          <div 
-            className="flex items-center gap-2 md:gap-3 cursor-pointer group flex-shrink-0"
-            onClick={() => navigateTo('home')}
-          >
-            <div className="bg-indigo-600 p-1.5 md:p-2 rounded-lg shadow-md group-hover:bg-slate-900 transition-colors">
-              <ShieldCheck className="text-white" size={20} />
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900 overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <i data-lucide="zap" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight text-slate-900">NEXUS</span>
             </div>
-            <div className="flex flex-col">
-              <h1 className="font-black text-sm md:text-xl tracking-tighter uppercase italic text-slate-900 leading-none">
-                Pathway<span className="text-indigo-600">Bridge</span>
-              </h1>
-              <p className="font-black text-[8px] md:text-[10px] tracking-[0.3em] uppercase text-slate-400">
-                Solutions
-              </p>
+            
+            <div class="hidden md:flex items-center gap-8 font-medium text-slate-600">
+                <a href="#services" class="hover:text-indigo-600 transition-colors">Services</a>
+                <a href="#work" class="hover:text-indigo-600 transition-colors">Work</a>
+                <a href="#about" class="hover:text-indigo-600 transition-colors">About</a>
+                <a href="#contact" class="bg-indigo-600 text-white px-6 py-2.5 rounded-full hover:bg-indigo-700 transition-all shadow-md">Get Started</a>
             </div>
-          </div>
 
-          {/* DESKTOP LINKS */}
-          <div className="hidden lg:flex items-center gap-6 xl:gap-10">
-            {['Employer', 'JobSeeker', 'Compliance', 'About'].map((item) => (
-              <button 
-                key={item}
-                onClick={() => navigateTo(item.toLowerCase())}
-                className={`text-[10px] font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors ${page === item.toLowerCase() ? 'text-indigo-600' : 'text-slate-500'}`}
-              >
-                {item === 'JobSeeker' ? 'Job Seeker' : item}
-              </button>
-            ))}
-          </div>
-
-          {/* ACTIONS */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <button 
-              onClick={() => navigateTo('employer')}
-              className="hidden xs:block bg-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-indigo-100"
-            >
-              Hire Talent
+            <button class="md:hidden text-slate-900">
+                <i data-lucide="menu"></i>
             </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 md:pt-52 md:pb-32 hero-gradient px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-semibold mb-6">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                </span>
+                Now accepting Q1 projects
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
+                We build <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">digital experiences</span><br>that drive growth.
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+                NEXUS is a full-service agency specializing in design, development, and strategy for forward-thinking brands.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all">View Our Work</a>
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all">Book a Call</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands/Trust -->
+    <section class="py-12 border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-sm font-bold text-slate-400 uppercase tracking-widest mb-8">Trusted by industry leaders</p>
+            <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all">
+                <div class="font-bold text-2xl">VOYAGER</div>
+                <div class="font-bold text-2xl">LUMINA</div>
+                <div class="font-bold text-2xl">APEX</div>
+                <div class="font-bold text-2xl">VELOCITY</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section id="services" class="py-24 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div class="max-w-xl">
+                    <h2 class="text-indigo-600 font-bold tracking-widest uppercase text-sm mb-4">Our Expertise</h2>
+                    <p class="text-3xl md:text-4xl font-extrabold text-slate-900">Solutions tailored for your business needs.</p>
+                </div>
+                <p class="text-slate-500 max-w-sm">From brand identity to complex web applications, we cover the entire digital spectrum.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
+                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
+                        <i data-lucide="layout" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">UI/UX Design</h3>
+                    <p class="text-slate-600 mb-6">User-centric designs that are not only beautiful but conversion-optimized.</p>
+                    <ul class="space-y-3 text-sm font-medium text-slate-500">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500"></i> Interaction Design</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500"></i> Prototyping</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
+                    <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
+                        <i data-lucide="code-2" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Development</h3>
+                    <p class="text-slate-600 mb-6">High-performance web applications built with modern frameworks.</p>
+                    <ul class="space-y-3 text-sm font-medium text-slate-500">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-500"></i> React & Next.js</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-500"></i> E-commerce</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
+                    <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 mb-6">
+                        <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Strategy</h3>
+                    <p class="text-slate-600 mb-6">Data-driven marketing strategies to scale your reach and impact.</p>
+                    <ul class="space-y-3 text-sm font-medium text-slate-500">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-500"></i> SEO Optimization</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-500"></i> Growth Hacking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter/CTA Section -->
+    <section id="contact" class="py-24 px-6">
+        <div class="max-w-5xl mx-auto bg-slate-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+            <!-- Decorative circle -->
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600 opacity-20 rounded-full blur-3xl"></div>
             
-            <button 
-              className="lg:hidden p-2 text-slate-600"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">Ready to start your next project?</h2>
+            <p class="text-indigo-200 text-lg mb-10 max-w-lg mx-auto relative z-10">
+                Join 500+ brands that have scaled their digital presence with NEXUS.
+            </p>
             
-            <button 
-              onClick={() => {setIsAdminMode(true); navigateTo('admin');}}
-              className="opacity-10 hover:opacity-50 transition-opacity p-2"
-            >
-              <Lock size={12} />
-            </button>
-          </div>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto relative z-10" onsubmit="event.preventDefault(); alert('Request received!');">
+                <input type="email" placeholder="Enter your email" class="flex-1 bg-white/10 border border-white/20 rounded-2xl px-6 py-4 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="bg-indigo-500 text-white font-bold px-8 py-4 rounded-2xl hover:bg-indigo-400 transition-all">Submit</button>
+            </form>
         </div>
+    </section>
 
-        {/* MOBILE MENU */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 shadow-2xl p-6 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-200">
-            {['Employer', 'JobSeeker', 'Compliance', 'About'].map((item) => (
-              <button 
-                key={item}
-                onClick={() => navigateTo(item.toLowerCase())}
-                className="text-left font-black uppercase tracking-widest text-xs text-slate-600 py-3"
-              >
-                {item === 'JobSeeker' ? 'Job Seeker' : item}
-              </button>
-            ))}
-          </div>
-        )}
-      </nav>
-
-      {/* PAGE CONTENT */}
-      <main className="flex-grow pt-20 md:pt-24">
-        {page === 'home' && <HomePage setPage={navigateTo} />}
-        {page === 'employer' && <EmployerPage onSubmit={handleInquirySubmit} />}
-        {page === 'jobseeker' && <JobSeekerPage onSubmit={handleInquirySubmit} />}
-        {page === 'compliance' && <CompliancePage />}
-        {page === 'about' && <AboutPage />}
-        {page === 'admin' && <AdminPanel inquiries={inquiries} exit={() => setPage('home')} />}
-      </main>
-
-      {/* FOOTER */}
-      <footer className="bg-slate-900 text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div className="lg:col-span-2">
-            <h2 className="font-black text-2xl uppercase italic text-white mb-2">Pathway<span className="text-indigo-600">Bridge</span></h2>
-            <p className="font-black text-[10px] tracking-[0.3em] uppercase text-slate-500 mb-6">Solutions</p>
-            <p className="text-slate-400 max-w-sm font-medium">Serving Mesa, Arizona and the surrounding regions with fair-chance industrial staffing.</p>
-          </div>
-          <div className="space-y-4">
-            <h3 className="font-black uppercase tracking-widest text-[10px] text-indigo-500">Contact</h3>
-            <p className="text-sm font-bold flex items-center gap-2"><Mail size={16}/> contactpathwaybridesolutions@gmail.com</p>
-            <p className="text-sm font-bold flex items-center gap-2"><MapPin size={16}/> Mesa, AZ</p>
-          </div>
+    <!-- Footer -->
+    <footer class="bg-white pt-20 pb-10 border-t border-slate-100 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
+            <div class="max-w-xs">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="zap" class="text-white w-5 h-5"></i>
+                    </div>
+                    <span class="text-xl font-bold text-slate-900">NEXUS</span>
+                </div>
+                <p class="text-slate-500 mb-6">Transforming digital landscapes through design and innovation.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="linkedin"></i></a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="font-bold mb-6">Company</h4>
+                    <ul class="space-y-4 text-slate-500 font-medium">
+                        <li><a href="#" class="hover:text-indigo-600">About</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Careers</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Product</h4>
+                    <ul class="space-y-4 text-slate-500 font-medium">
+                        <li><a href="#" class="hover:text-indigo-600">Features</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Pricing</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Showcase</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Support</h4>
+                    <ul class="space-y-4 text-slate-500 font-medium">
+                        <li><a href="#" class="hover:text-indigo-600">Contact</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Help Center</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p>© 2026 Pathway Bridge Solutions LLC. Mesa, Arizona.</p>
+        <div class="max-w-7xl mx-auto mt-20 pt-10 border-t border-slate-50 text-center text-slate-400 text-sm">
+            &copy; 2024 NEXUS Digital Agency. All rights reserved.
         </div>
-      </footer>
-    </div>
-  );
-}
+    </footer>
 
-// --- SUB-COMPONENTS ---
-
-function HomePage({ setPage }) {
-  return (
-    <div className="animate-in fade-in duration-500">
-      <section className="px-6 py-16 md:py-32 max-w-7xl mx-auto">
-        <div className="inline-block bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest mb-8">
-          Mesa, AZ Based
-        </div>
-        <h2 className="text-5xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.85] text-slate-900 mb-8">
-          Workforce <br/> <span className="text-indigo-600">Refined.</span>
-        </h2>
-        <p className="text-lg md:text-2xl text-slate-500 max-w-2xl font-medium mb-12">
-          Mesa's premier fair-chance staffing agency. We connect industrial leaders with vetted, high-loyalty talent.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button onClick={() => setPage('employer')} className="bg-indigo-600 text-white px-10 py-5 rounded-xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-slate-900 transition-all">Hire Talent</button>
-          <button onClick={() => setPage('jobseeker')} className="bg-white border-2 border-slate-100 px-10 py-5 rounded-xl font-black text-sm uppercase tracking-widest hover:border-indigo-600 transition-all">Find Work</button>
-        </div>
-      </section>
-
-      <section className="bg-slate-50 py-24 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-          <Card icon={<Shield size={32}/>} title="Federal Bonding" desc="We handle DOL Federal Bonding to protect your business and eliminate liability." />
-          <Card icon={<Calculator size={32}/>} title="Tax Incentives" desc="We help you capture up to $9,600 in tax credits per eligible hire." />
-          <Card icon={<Target size={32}/>} title="Loyalty Coaching" desc="Our candidates receive active coaching during their first 90 days for max stability." />
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function Card({ icon, title, desc }) {
-  return (
-    <div className="p-10 bg-white rounded-3xl border border-slate-100 shadow-sm">
-      <div className="text-indigo-600 mb-6">{icon}</div>
-      <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">{title}</h3>
-      <p className="text-slate-500 font-medium leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function EmployerPage({ onSubmit }) {
-  return (
-    <div className="py-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
-      <div>
-        <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">Build a <br/><span className="text-indigo-600">Loyal Team.</span></h2>
-        <p className="text-xl text-slate-500 font-medium mb-10 leading-relaxed">Lower turnover and increase profitability in the Mesa industrial sector.</p>
-        <div className="space-y-6">
-          <CheckItem text="Vetted Local Candidates" />
-          <CheckItem text="EEOC Compliance Handling" />
-          <CheckItem text="WOTC Tax Credit Support" />
-        </div>
-      </div>
-      <Form type="employer" onSubmit={onSubmit} />
-    </div>
-  );
-}
-
-function JobSeekerPage({ onSubmit }) {
-  return (
-    <div className="py-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
-      <div>
-        <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">A Fresh <br/><span className="text-indigo-600">Perspective.</span></h2>
-        <p className="text-xl text-slate-500 font-medium mb-10 leading-relaxed">Connect with employers who value hard work over your past.</p>
-        <div className="bg-indigo-600 p-8 rounded-3xl text-white">
-          <h4 className="font-black uppercase tracking-widest text-xs mb-4">Why Work With Us?</h4>
-          <ul className="space-y-4 font-bold">
-            <li>• Direct placement in industrial roles</li>
-            <li>• Ongoing support and advocacy</li>
-            <li>• 90-day retention coaching</li>
-          </ul>
-        </div>
-      </div>
-      <Form type="jobseeker" onSubmit={onSubmit} />
-    </div>
-  );
-}
-
-function CheckItem({ text }) {
-  return (
-    <div className="flex items-center gap-3 font-black uppercase tracking-widest text-[10px] text-slate-600">
-      <CheckCircle2 size={16} className="text-indigo-600" /> {text}
-    </div>
-  );
-}
-
-function Form({ type, onSubmit }) {
-  const [fd, setFd] = useState({ name: '', email: '', phone: '', details: '', type });
-  return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(fd); }} className="bg-slate-900 p-8 rounded-3xl flex flex-col gap-4">
-      <h3 className="text-white font-black uppercase tracking-tighter text-2xl mb-2">Get Started</h3>
-      <input required className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Full Name" onChange={e => setFd({...fd, name: e.target.value})} />
-      <input required type="email" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Email" onChange={e => setFd({...fd, email: e.target.value})} />
-      <input required type="tel" className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold" placeholder="Phone" onChange={e => setFd({...fd, phone: e.target.value})} />
-      <textarea required className="p-4 rounded-xl bg-slate-800 text-white border-none outline-none text-sm font-bold min-h-[120px]" placeholder="Tell us about yourself..." onChange={e => setFd({...fd, details: e.target.value})}></textarea>
-      <button className="bg-indigo-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white hover:text-indigo-600 transition-all">Submit Inquiry</button>
-    </form>
-  );
-}
-
-function CompliancePage() {
-  return (
-    <div className="py-24 px-6 max-w-4xl mx-auto text-center">
-      <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">Compliance</h2>
-      <div className="bg-slate-50 p-12 rounded-3xl border border-slate-100 text-left">
-        <p className="text-slate-600 font-medium text-lg leading-relaxed mb-6">Pathway Bridge Solutions LLC operates with strict adherence to EEOC guidelines and Arizona employment law.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-black uppercase tracking-widest text-[10px] text-slate-400">
-          <div className="p-4 border rounded-xl flex items-center gap-2"><CheckCircle2 size={16} className="text-indigo-600" /> EEOC Compliant</div>
-          <div className="p-4 border rounded-xl flex items-center gap-2"><CheckCircle2 size={16} className="text-indigo-600" /> Federal Bonding</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AboutPage() {
-  return (
-    <div className="py-24 px-6 max-w-7xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-16 items-center">
-        <div>
-          <h2 className="text-6xl font-black uppercase tracking-tighter mb-8 leading-none">The <br/><span className="text-indigo-600">Pathway.</span></h2>
-          <p className="text-xl text-slate-500 font-medium leading-relaxed">We bridge the gap between industrial labor needs and fair-chance talent in the Mesa community.</p>
-        </div>
-        <div className="bg-indigo-50 p-12 rounded-3xl border border-indigo-100">
-          <h4 className="font-black uppercase tracking-tighter text-2xl mb-4 text-indigo-900">Mesa Roots</h4>
-          <p className="text-indigo-800 font-medium">As a Mesa-local agency, we understand the specific industrial landscape of the East Valley and are committed to strengthening our community through employment.</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminPanel({ inquiries, exit }) {
-  const [pass, setPass] = useState('');
-  if (pass !== 'admin123') {
-    return (
-      <div className="min-h-[50vh] flex items-center justify-center p-6">
-        <div className="bg-white p-10 rounded-3xl shadow-2xl border w-full max-w-md text-center">
-          <h2 className="text-xl font-black mb-6 uppercase tracking-widest">Admin PIN</h2>
-          <input type="password" placeholder="****" className="w-full p-4 border rounded-xl text-center font-black text-2xl" onChange={e => setPass(e.target.value)} />
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="p-10 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-10">
-        <h2 className="text-3xl font-black uppercase italic">Dashboard</h2>
-        <button onClick={exit} className="font-black uppercase tracking-widest text-[10px] text-slate-400">Exit</button>
-      </div>
-      <div className="space-y-4">
-        {inquiries.map(iq => (
-          <div key={iq.id} className="p-6 bg-white border rounded-2xl shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-2">{iq.type}</p>
-            <h4 className="font-black text-xl mb-1">{iq.name}</h4>
-            <p className="text-slate-500 text-sm mb-4 font-bold">{iq.email} | {iq.phone}</p>
-            <div className="p-4 bg-slate-50 rounded-xl text-sm font-medium">{iq.details}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
