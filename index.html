@@ -37,6 +37,7 @@
             z-index: 50;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
         .active-tab {
@@ -46,6 +47,17 @@
 
         .hidden-section {
             display: none;
+        }
+
+        input, textarea, select {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: #3b82f6 !important;
+            outline: none;
         }
     </style>
 </head>
@@ -136,7 +148,7 @@
                         <li><i class="fas fa-check text-green-500 mr-2"></i> Thorough Background Vetting</li>
                         <li><i class="fas fa-check text-green-500 mr-2"></i> Continuous Placement Support</li>
                     </ul>
-                    <button onclick="openApplyModal()" class="accent-gradient py-4 rounded-xl font-bold">Request a Consultation</button>
+                    <button onclick="openEmployerForm()" class="accent-gradient py-4 rounded-xl font-bold">Request a Consultation</button>
                 </div>
             </div>
         </section>
@@ -169,7 +181,7 @@
                 <div class="text-center bg-blue-600/20 p-12 rounded-3xl border border-blue-500/30">
                     <h3 class="text-3xl font-bold mb-4">Ready to Rebuild?</h3>
                     <p class="text-lg text-slate-300 mb-8">Join the hundreds of Arizonans who have found their pathway back to professional success.</p>
-                    <button onclick="openApplyModal()" class="bg-white text-blue-900 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Apply for Placement</button>
+                    <button onclick="openCandidateForm()" class="bg-white text-blue-900 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Apply for Placement</button>
                 </div>
             </div>
         </section>
@@ -281,16 +293,81 @@
 
     <!-- MODALS -->
 
-    <!-- Apply Modal -->
+    <!-- Apply Initial Choice Modal -->
     <div id="apply-modal" class="modal-overlay">
         <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4">
             <h3 class="text-2xl font-bold mb-4">Start Your Pathway</h3>
             <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
             <div class="space-y-4">
-                <button onclick="closeModals()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Apply as Candidate</button>
-                <button onclick="closeModals()" class="w-full border border-slate-600 py-3 rounded-xl font-bold">Partner as Employer</button>
+                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Apply as Candidate</button>
+                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold">Partner as Employer</button>
                 <button onclick="closeModals()" class="w-full text-slate-500 py-2">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Candidate Inquiry Form Modal -->
+    <div id="candidate-form-modal" class="modal-overlay">
+        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-2">Candidate Intake Form</h3>
+            <p class="text-slate-400 mb-6 text-sm">Your information is handled with absolute confidentiality in accordance with EEOC guidelines.</p>
+            <form id="candidateForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="First Name" required class="w-full p-3 rounded-lg bg-slate-800">
+                    <input type="text" placeholder="Last Name" required class="w-full p-3 rounded-lg bg-slate-800">
+                </div>
+                <input type="email" placeholder="Email Address" required class="w-full p-3 rounded-lg bg-slate-800">
+                <input type="tel" placeholder="Phone Number (Arizona preferred)" required class="w-full p-3 rounded-lg bg-slate-800">
+                <select class="w-full p-3 rounded-lg bg-slate-800 text-slate-400">
+                    <option value="" disabled selected>Primary Skills/Experience</option>
+                    <option value="logistics">Logistics/Warehouse</option>
+                    <option value="construction">Construction/Trades</option>
+                    <option value="hospitality">Hospitality/Service</option>
+                    <option value="admin">Admin/Clerical</option>
+                    <option value="other">Other</option>
+                </select>
+                <textarea placeholder="Briefly describe your career goals..." class="w-full p-3 rounded-lg bg-slate-800 h-24"></textarea>
+                <div class="flex items-center space-x-2 text-xs text-slate-400">
+                    <input type="checkbox" required id="cand-agree">
+                    <label for="cand-agree">I consent to Pathway Bridge Solutions contacting me regarding employment.</label>
+                </div>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold">Submit Application</button>
+                <button type="button" onclick="closeModals()" class="w-full text-slate-500 text-sm">Back</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employer Inquiry Form Modal -->
+    <div id="employer-form-modal" class="modal-overlay">
+        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-2">Business Consultation Request</h3>
+            <p class="text-slate-400 mb-6 text-sm">Let us help you maximize WOTC and Federal Bonding benefits for your Arizona business.</p>
+            <form id="employerForm" class="space-y-4">
+                <input type="text" placeholder="Company Name" required class="w-full p-3 rounded-lg bg-slate-800">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Contact Name" required class="w-full p-3 rounded-lg bg-slate-800">
+                    <input type="text" placeholder="Job Title" required class="w-full p-3 rounded-lg bg-slate-800">
+                </div>
+                <input type="email" placeholder="Business Email" required class="w-full p-3 rounded-lg bg-slate-800">
+                <input type="text" placeholder="Business Location (City, AZ)" required class="w-full p-3 rounded-lg bg-slate-800">
+                <select class="w-full p-3 rounded-lg bg-slate-800 text-slate-400">
+                    <option value="" disabled selected>Est. Monthly Hiring Need</option>
+                    <option value="1-5">1-5 Employees</option>
+                    <option value="6-20">6-20 Employees</option>
+                    <option value="21+">21+ Employees</option>
+                </select>
+                <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-500/20">
+                    <p class="text-xs font-bold text-blue-400 mb-2 uppercase">Areas of Interest:</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                        <label><input type="checkbox"> WOTC Tax Credits</label>
+                        <label><input type="checkbox"> Federal Bonding</label>
+                        <label><input type="checkbox"> 90-Day Trial</label>
+                        <label><input type="checkbox"> Skill Training</label>
+                    </div>
+                </div>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold">Request Consultation</button>
+                <button type="button" onclick="closeModals()" class="w-full text-slate-500 text-sm">Back</button>
+            </form>
         </div>
     </div>
 
@@ -318,20 +395,27 @@
         const ADMIN_KEY = "Bellamylove-09";
 
         function showPage(pageId) {
-            // Hide all pages
             const pages = ['home', 'employers', 'candidates', 'about', 'admin'];
             pages.forEach(p => {
                 const el = document.getElementById(`page-${p}`);
                 if(el) el.classList.add('hidden-section');
             });
-
-            // Show target page
             document.getElementById(`page-${pageId}`).classList.remove('hidden-section');
             window.scrollTo(0, 0);
         }
 
         function openApplyModal() {
             document.getElementById('apply-modal').style.display = 'flex';
+        }
+
+        function openCandidateForm() {
+            closeModals();
+            document.getElementById('candidate-form-modal').style.display = 'flex';
+        }
+
+        function openEmployerForm() {
+            closeModals();
+            document.getElementById('employer-form-modal').style.display = 'flex';
         }
 
         function openAdminModal() {
@@ -352,6 +436,17 @@
                 alert("Unauthorized Access Key.");
             }
         }
+
+        // Handle Form Submissions (Simulated)
+        document.getElementById('candidateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.innerHTML = `<div class="text-center py-10"><i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i><h3 class="text-xl font-bold">Application Received</h3><p class="text-slate-400 mt-2">Our specialists will contact you within 24-48 business hours.</p><button type="button" onclick="closeModals()" class="mt-6 text-blue-400">Close</button></div>`;
+        });
+
+        document.getElementById('employerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.innerHTML = `<div class="text-center py-10"><i class="fas fa-paper-plane text-5xl text-blue-500 mb-4"></i><h3 class="text-xl font-bold">Consultation Requested</h3><p class="text-slate-400 mt-2">A partnership manager will reach out to discuss your WOTC and bonding eligibility.</p><button type="button" onclick="closeModals()" class="mt-6 text-blue-400">Close</button></div>`;
+        });
 
         const legalTexts = {
             eeoc: `
@@ -390,7 +485,6 @@
             document.getElementById('legal-modal').style.display = 'flex';
         }
 
-        // Close modal on outside click
         window.onclick = function(event) {
             if (event.target.classList.contains('modal-overlay')) {
                 closeModals();
