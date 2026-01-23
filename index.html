@@ -70,13 +70,13 @@
                 <span class="text-blue-500">Pathway</span>Bridge
             </div>
             <div class="hidden md:flex space-x-8 items-center">
-                <button onclick="showPage('home')" class="hover:text-blue-400 transition">Home</button>
-                <button onclick="showPage('employers')" class="hover:text-blue-400 transition">Employers</button>
-                <button onclick="showPage('candidates')" class="hover:text-blue-400 transition">Candidates</button>
-                <button onclick="showPage('about')" class="hover:text-blue-400 transition">About</button>
-                <button onclick="openAdminModal()" class="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700 transition">Admin</button>
+                <button onclick="showPage('home')" class="hover:text-blue-400 transition text-sm font-medium">Home</button>
+                <button onclick="showPage('employers')" class="hover:text-blue-400 transition text-sm font-medium">Employers</button>
+                <button onclick="showPage('candidates')" class="hover:text-blue-400 transition text-sm font-medium">Candidates</button>
+                <button onclick="showPage('about')" class="hover:text-blue-400 transition text-sm font-medium">About</button>
+                <button onclick="openAdminModal()" class="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700 transition text-sm font-medium">Admin</button>
             </div>
-            <button onclick="openApplyModal()" class="accent-gradient px-6 py-2 rounded-full font-semibold hover:opacity-90 transition">Apply Now</button>
+            <button onclick="openApplyModal()" class="accent-gradient px-6 py-2 rounded-full font-semibold hover:opacity-90 transition shadow-lg shadow-blue-500/20">Apply Now</button>
         </div>
     </nav>
 
@@ -86,7 +86,7 @@
         <!-- LANDING PAGE -->
         <section id="page-home">
             <header class="py-24 container mx-auto px-6 text-center">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6">Bridging the Gap to <span class="text-blue-500 text-gradient">Second Chances.</span></h1>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">Bridging the Gap to <span class="text-blue-500">Second Chances.</span></h1>
                 <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
                     Pathway Bridge Solutions connects motivated talent with forward-thinking Arizona employers. We reduce risk, maximize incentives, and rebuild lives.
                 </p>
@@ -128,15 +128,15 @@
                 <div class="space-y-6">
                     <h3 class="text-2xl font-bold text-blue-400">Financial Incentives</h3>
                     <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2">Work Opportunity Tax Credit (WOTC)</h4>
+                        <h4 class="font-bold text-xl mb-2 text-white">Work Opportunity Tax Credit (WOTC)</h4>
                         <p class="text-slate-300">Earn up to $2,400 to $9,600 in federal tax credits per eligible second-chance hire.</p>
                     </div>
                     <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2">Federal Bonding Program</h4>
+                        <h4 class="font-bold text-xl mb-2 text-white">Federal Bonding Program</h4>
                         <p class="text-slate-300">Immediate $5,000 fidelity bond coverage for the first 6 months of employment at no cost to you.</p>
                     </div>
                     <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2">Arizona Job Training Program</h4>
+                        <h4 class="font-bold text-xl mb-2 text-white">Arizona Job Training Program</h4>
                         <p class="text-slate-300">Potential reimbursement for customized training costs through state-funded workforce initiatives.</p>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                 </div>
 
                 <div class="text-center bg-blue-600/20 p-12 rounded-3xl border border-blue-500/30">
-                    <h3 class="text-3xl font-bold mb-4">Ready to Rebuild?</h3>
+                    <h3 class="text-3xl font-bold mb-4 text-white">Ready to Rebuild?</h3>
                     <p class="text-lg text-slate-300 mb-8">Join the hundreds of Arizonans who have found their pathway back to professional success.</p>
                     <button onclick="openCandidateForm()" class="bg-white text-blue-900 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Apply for Placement</button>
                 </div>
@@ -189,14 +189,14 @@
         <!-- ABOUT PAGE -->
         <section id="page-about" class="hidden-section py-20 container mx-auto px-6">
             <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-8">Our Vision</h2>
+                <h2 class="text-4xl font-bold mb-8 text-white">Our Vision</h2>
                 <p class="text-2xl font-light text-slate-300 leading-relaxed mb-12">
                     "To create an Arizona where a previous conviction is a milestone of the past, not a barrier to the future. We believe in bridging the gap between untapped potential and industrial need through integrity, support, and proven business logic."
                 </p>
                 <div class="h-1 w-20 bg-blue-500 mx-auto mb-12"></div>
-                <h3 class="text-2xl font-bold mb-6">Contact Us</h3>
+                <h3 class="text-2xl font-bold mb-6 text-white">Contact Us</h3>
                 <div class="glass-card p-6 inline-block rounded-xl">
-                    <p class="text-xl">
+                    <p class="text-xl text-white">
                         <i class="fas fa-envelope text-blue-400 mr-2"></i>
                         contactpathwaybridgesolutions@gmail.com
                     </p>
@@ -207,73 +207,79 @@
         <!-- ADMIN DASHBOARD -->
         <section id="page-admin" class="hidden-section py-20 container mx-auto px-6">
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold">Admin Dashboard</h2>
-                <button onclick="showPage('home')" class="text-slate-400 hover:text-white">Logout</button>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">Admin Dashboard</h2>
+                    <p class="text-slate-400 text-sm">Reviewing live inquiries</p>
+                </div>
+                <div class="flex space-x-4">
+                    <button onclick="downloadCSV()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                        <i class="fas fa-download mr-2"></i>Export CSV
+                    </button>
+                    <button onclick="showPage('home')" class="text-slate-400 hover:text-white text-sm font-medium">Logout</button>
+                </div>
             </div>
             
-            <div class="grid md:grid-cols-4 gap-6 mb-12">
-                <div class="glass-card p-6 rounded-xl">
-                    <p class="text-slate-400 text-sm">Total Candidates</p>
-                    <p class="text-3xl font-bold">1,284</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                <div class="glass-card p-6 rounded-xl border border-slate-700">
+                    <p class="text-slate-400 text-sm">Active Inquiries</p>
+                    <p id="stat-active" class="text-3xl font-bold text-white">0</p>
                 </div>
-                <div class="glass-card p-6 rounded-xl">
-                    <p class="text-slate-400 text-sm">Active 90-Day Trials</p>
-                    <p class="text-3xl font-bold text-blue-400">42</p>
+                <div class="glass-card p-6 rounded-xl border border-slate-700">
+                    <p class="text-slate-400 text-sm">Candidates</p>
+                    <p id="stat-candidates" class="text-3xl font-bold text-blue-400">0</p>
                 </div>
-                <div class="glass-card p-6 rounded-xl">
-                    <p class="text-slate-400 text-sm">Successful Placements</p>
-                    <p class="text-3xl font-bold text-green-500">89%</p>
+                <div class="glass-card p-6 rounded-xl border border-slate-700">
+                    <p class="text-slate-400 text-sm">Employers</p>
+                    <p id="stat-employers" class="text-3xl font-bold text-green-400">0</p>
                 </div>
-                <div class="glass-card p-6 rounded-xl">
-                    <p class="text-slate-400 text-sm">Bonding Applications</p>
-                    <p class="text-3xl font-bold">15</p>
+                <div class="glass-card p-6 rounded-xl border border-slate-700">
+                    <p class="text-slate-400 text-sm">Exportable Rows</p>
+                    <p id="stat-rows" class="text-3xl font-bold text-purple-400">0</p>
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl overflow-hidden">
-                <div class="p-6 border-b border-slate-700 bg-slate-800/50">
-                    <h3 class="font-bold">Recent Applications</h3>
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-700">
+                <div class="p-6 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
+                    <h3 class="font-bold text-white">Live Submission Feed</h3>
+                    <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">In-Memory Data Only</span>
                 </div>
-                <table class="w-full text-left">
-                    <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
-                        <tr>
-                            <th class="p-4">Name</th>
-                            <th class="p-4">Type</th>
-                            <th class="p-4">Date</th>
-                            <th class="p-4">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700">
-                        <tr>
-                            <td class="p-4">Michael R.</td>
-                            <td class="p-4">Candidate</td>
-                            <td class="p-4">Oct 12, 2023</td>
-                            <td class="p-4"><span class="bg-blue-900/50 text-blue-400 px-2 py-1 rounded text-xs">Reviewing</span></td>
-                        </tr>
-                        <tr>
-                            <td class="p-4">Sunstate Logistics</td>
-                            <td class="p-4">Employer</td>
-                            <td class="p-4">Oct 11, 2023</td>
-                            <td class="p-4"><span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Vetted</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
+                            <tr>
+                                <th class="p-4">Name / Company</th>
+                                <th class="p-4">Type</th>
+                                <th class="p-4">Email / Phone</th>
+                                <th class="p-4">Category/Interest</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-slate-700 text-sm">
+                            <!-- Inquiries will populate here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-data-msg" class="p-20 text-center text-slate-500">
+                    <i class="fas fa-inbox text-4xl mb-4 opacity-20"></i>
+                    <p>No inquiries submitted yet this session.</p>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- MODALS (The interactive inquiry forms) -->
+    <!-- MODALS -->
 
     <!-- Step 1: Selection Modal -->
     <div id="apply-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
         <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-4">Start Your Pathway</h3>
+            <h3 class="text-2xl font-bold mb-4 text-white">Start Your Pathway</h3>
             <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
             <div class="space-y-4">
-                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition">Apply as Candidate</button>
-                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold hover:bg-slate-800 transition">Partner as Employer</button>
+                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition text-white">Apply as Candidate</button>
+                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold hover:bg-slate-800 transition text-white">Partner as Employer</button>
             </div>
         </div>
     </div>
@@ -282,34 +288,30 @@
     <div id="candidate-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
         <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-2">Candidate Intake</h3>
+            <h3 class="text-2xl font-bold mb-2 text-white">Candidate Intake</h3>
             <p class="text-slate-400 mb-6 text-sm">Strictly confidential in accordance with Arizona EEOC guidelines.</p>
             
-            <form id="candidateForm" onsubmit="submitForm(event, 'candidate')" class="space-y-4">
+            <form id="candidateForm" onsubmit="handleCandidateSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" placeholder="First Name" required class="w-full p-3 rounded-lg">
-                    <input type="text" placeholder="Last Name" required class="w-full p-3 rounded-lg">
+                    <input type="text" id="cand-fname" placeholder="First Name" required class="w-full p-3 rounded-lg">
+                    <input type="text" id="cand-lname" placeholder="Last Name" required class="w-full p-3 rounded-lg">
                 </div>
-                <input type="email" placeholder="Email Address" required class="w-full p-3 rounded-lg">
-                <input type="tel" placeholder="Phone Number" required class="w-full p-3 rounded-lg">
-                <select class="w-full p-3 rounded-lg text-slate-400" required>
+                <input type="email" id="cand-email" placeholder="Email Address" required class="w-full p-3 rounded-lg">
+                <input type="tel" id="cand-phone" placeholder="Phone Number" required class="w-full p-3 rounded-lg">
+                <select id="cand-category" class="w-full p-3 rounded-lg text-slate-400" required>
                     <option value="" disabled selected>Work Category</option>
-                    <option value="warehouse">Warehouse & Logistics</option>
-                    <option value="construction">Construction & Trades</option>
-                    <option value="hospitality">Hospitality & Dining</option>
-                    <option value="admin">Admin & Office</option>
-                    <option value="general">General Labor</option>
+                    <option value="Warehouse & Logistics">Warehouse & Logistics</option>
+                    <option value="Construction & Trades">Construction & Trades</option>
+                    <option value="Hospitality & Dining">Hospitality & Dining</option>
+                    <option value="Admin & Office">Admin & Office</option>
+                    <option value="General Labor">General Labor</option>
                 </select>
-                <textarea placeholder="Tell us a little about your skills or goals..." class="w-full p-3 rounded-lg h-24" required></textarea>
-                <div class="flex items-start space-x-2 text-xs text-slate-400">
-                    <input type="checkbox" required id="cand-consent" class="mt-1">
-                    <label for="cand-consent">I consent to Pathway Bridge Solutions contacting me about job placement opportunities.</label>
-                </div>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20">Submit Application</button>
+                <textarea id="cand-notes" placeholder="Tell us a little about your skills or goals..." class="w-full p-3 rounded-lg h-24" required></textarea>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 text-white">Submit Application</button>
             </form>
             <div id="candidate-success" class="hidden text-center py-8">
                 <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
-                <h4 class="text-2xl font-bold mb-2">Application Received</h4>
+                <h4 class="text-2xl font-bold mb-2 text-white">Application Received</h4>
                 <p class="text-slate-400">Our team will reach out within 48 hours to discuss your pathway.</p>
                 <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
             </div>
@@ -320,37 +322,28 @@
     <div id="employer-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
         <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-2">Employer Consultation</h3>
+            <h3 class="text-2xl font-bold mb-2 text-white">Employer Consultation</h3>
             <p class="text-slate-400 mb-6 text-sm">Request information about our 90-day trial and WOTC tax credits.</p>
             
-            <form id="employerForm" onsubmit="submitForm(event, 'employer')" class="space-y-4">
-                <input type="text" placeholder="Company Name" required class="w-full p-3 rounded-lg">
+            <form id="employerForm" onsubmit="handleEmployerSubmit(event)" class="space-y-4">
+                <input type="text" id="emp-company" placeholder="Company Name" required class="w-full p-3 rounded-lg">
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" placeholder="Contact Person" required class="w-full p-3 rounded-lg">
-                    <input type="text" placeholder="Job Title" required class="w-full p-3 rounded-lg">
+                    <input type="text" id="emp-contact" placeholder="Contact Person" required class="w-full p-3 rounded-lg">
+                    <input type="text" id="emp-title" placeholder="Job Title" required class="w-full p-3 rounded-lg">
                 </div>
-                <input type="email" placeholder="Business Email" required class="w-full p-3 rounded-lg">
-                <input type="text" placeholder="City/Location (AZ)" required class="w-full p-3 rounded-lg">
-                <select class="w-full p-3 rounded-lg text-slate-400" required>
+                <input type="email" id="emp-email" placeholder="Business Email" required class="w-full p-3 rounded-lg">
+                <input type="text" id="emp-location" placeholder="City/Location (AZ)" required class="w-full p-3 rounded-lg">
+                <select id="emp-capacity" class="w-full p-3 rounded-lg text-slate-400" required>
                     <option value="" disabled selected>Est. Hiring Capacity</option>
                     <option value="1-5">1-5 per month</option>
                     <option value="5-20">5-20 per month</option>
                     <option value="20+">20+ per month</option>
                 </select>
-                <div class="p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-                    <p class="text-xs font-bold text-blue-400 mb-2 uppercase tracking-wide">Incentive Interests:</p>
-                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
-                        <label class="flex items-center"><input type="checkbox" class="mr-2"> WOTC Tax Credit</label>
-                        <label class="flex items-center"><input type="checkbox" class="mr-2"> Federal Bonding</label>
-                        <label class="flex items-center"><input type="checkbox" class="mr-2"> 90-Day Guarantee</label>
-                        <label class="flex items-center"><input type="checkbox" class="mr-2"> Workforce Training</label>
-                    </div>
-                </div>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20">Request My Consultation</button>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 text-white">Request My Consultation</button>
             </form>
             <div id="employer-success" class="hidden text-center py-8">
                 <i class="fas fa-paper-plane text-6xl text-blue-500 mb-4"></i>
-                <h4 class="text-2xl font-bold mb-2">Request Sent</h4>
+                <h4 class="text-2xl font-bold mb-2 text-white">Request Sent</h4>
                 <p class="text-slate-400">An Arizona account manager will contact you shortly to review your hiring needs.</p>
                 <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
             </div>
@@ -361,9 +354,9 @@
     <div id="admin-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
         <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-4">Admin Access</h3>
-            <input type="password" id="admin-pass" placeholder="Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500">
-            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold">Login</button>
+            <h3 class="text-2xl font-bold mb-4 text-white">Admin Access</h3>
+            <input type="password" id="admin-pass" placeholder="Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500 text-white">
+            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold text-white">Login</button>
         </div>
     </div>
 
@@ -372,7 +365,7 @@
         <div class="container mx-auto px-6 text-center md:text-left">
             <div class="grid md:grid-cols-3 gap-12 mb-12">
                 <div class="col-span-1">
-                    <div class="text-2xl font-bold mb-4">Pathway Bridge Solutions</div>
+                    <div class="text-2xl font-bold mb-4 text-white">Pathway Bridge Solutions</div>
                     <p class="text-slate-400">Connecting Arizona's businesses with reliable second-chance talent.</p>
                 </div>
                 <div>
@@ -396,6 +389,9 @@
 
     <script>
         const ADMIN_KEY = "Bellamylove-09";
+        
+        // Data Store (In-memory for now)
+        let inquiries = [];
 
         function showPage(pageId) {
             const pages = ['home', 'employers', 'candidates', 'about', 'admin'];
@@ -404,6 +400,10 @@
                 if(el) el.classList.add('hidden-section');
             });
             document.getElementById(`page-${pageId}`).classList.remove('hidden-section');
+            
+            if(pageId === 'admin') {
+                updateAdminTable();
+            }
             window.scrollTo(0, 0);
         }
 
@@ -443,17 +443,124 @@
         }
 
         // Form Submission Logic
-        function submitForm(event, type) {
-            event.preventDefault();
+        function handleCandidateSubmit(e) {
+            e.preventDefault();
+            const data = {
+                id: Date.now(),
+                type: 'Candidate',
+                name: `${document.getElementById('cand-fname').value} ${document.getElementById('cand-lname').value}`,
+                email: document.getElementById('cand-email').value,
+                phone: document.getElementById('cand-phone').value,
+                meta: document.getElementById('cand-category').value,
+                notes: document.getElementById('cand-notes').value,
+                date: new Date().toLocaleString()
+            };
             
-            // Logic to show success message
-            if (type === 'candidate') {
-                document.getElementById('candidateForm').classList.add('hidden');
-                document.getElementById('candidate-success').classList.remove('hidden');
+            inquiries.unshift(data);
+            document.getElementById('candidateForm').reset();
+            document.getElementById('candidateForm').classList.add('hidden');
+            document.getElementById('candidate-success').classList.remove('hidden');
+            
+            console.log("Candidate inquiry saved:", data);
+        }
+
+        function handleEmployerSubmit(e) {
+            e.preventDefault();
+            const data = {
+                id: Date.now(),
+                type: 'Employer',
+                name: document.getElementById('emp-company').value,
+                email: document.getElementById('emp-email').value,
+                phone: document.getElementById('emp-contact').value + " (" + document.getElementById('emp-title').value + ")",
+                meta: "Capacity: " + document.getElementById('emp-capacity').value,
+                notes: "Location: " + document.getElementById('emp-location').value,
+                date: new Date().toLocaleString()
+            };
+
+            inquiries.unshift(data);
+            document.getElementById('employerForm').reset();
+            document.getElementById('employerForm').classList.add('hidden');
+            document.getElementById('employer-success').classList.remove('hidden');
+
+            console.log("Employer inquiry saved:", data);
+        }
+
+        function updateAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            const noData = document.getElementById('no-data-msg');
+            
+            tbody.innerHTML = '';
+            
+            if (inquiries.length === 0) {
+                noData.classList.remove('hidden');
             } else {
-                document.getElementById('employerForm').classList.add('hidden');
-                document.getElementById('employer-success').classList.remove('hidden');
+                noData.classList.add('hidden');
+                inquiries.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-800/40 transition";
+                    tr.innerHTML = `
+                        <td class="p-4">
+                            <div class="font-bold text-white">${item.name}</div>
+                            <div class="text-xs text-slate-500">ID: ${item.id}</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="${item.type === 'Candidate' ? 'bg-blue-900/40 text-blue-400' : 'bg-green-900/40 text-green-400'} px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
+                                ${item.type}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-white">${item.email}</div>
+                            <div class="text-slate-400 text-xs">${item.phone}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-slate-300 font-medium">${item.meta}</div>
+                            <div class="text-slate-500 text-xs italic truncate max-w-[150px]">${item.notes}</div>
+                        </td>
+                        <td class="p-4 text-slate-400 text-xs">${item.date}</td>
+                        <td class="p-4">
+                            <button onclick="deleteInquiry(${item.id})" class="text-slate-600 hover:text-red-500 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
+
+            // Update stats
+            document.getElementById('stat-active').innerText = inquiries.length;
+            document.getElementById('stat-candidates').innerText = inquiries.filter(i => i.type === 'Candidate').length;
+            document.getElementById('stat-employers').innerText = inquiries.filter(i => i.type === 'Employer').length;
+            document.getElementById('stat-rows').innerText = inquiries.length;
+        }
+
+        function deleteInquiry(id) {
+            inquiries = inquiries.filter(i => i.id !== id);
+            updateAdminTable();
+        }
+
+        function downloadCSV() {
+            if (inquiries.length === 0) {
+                alert("No data to export yet.");
+                return;
+            }
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID,Type,Name,Email,Phone,Meta,Notes,Date\n";
+            
+            inquiries.forEach(i => {
+                const row = [i.id, i.type, i.name, i.email, i.phone, i.meta, i.notes, i.date]
+                    .map(v => `"${v}"`).join(",");
+                csvContent += row + "\n";
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "pathway_bridge_inquiries.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function checkAdmin() {
@@ -469,3 +576,4 @@
     </script>
 </body>
 </html>
+
