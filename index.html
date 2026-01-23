@@ -30,19 +30,14 @@
         }
 
         .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             position: fixed;
             inset: 0;
-            z-index: 50;
+            z-index: 100;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-        }
-
-        .active-tab {
-            border-bottom: 2px solid #3b82f6;
-            color: #3b82f6;
         }
 
         .hidden-section {
@@ -50,14 +45,19 @@
         }
 
         input, textarea, select {
-            background: rgba(15, 23, 42, 0.8) !important;
+            background: rgba(15, 23, 42, 0.9) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
         }
         
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: #3b82f6 !important;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        ::placeholder {
+            color: #64748b !important;
         }
     </style>
 </head>
@@ -148,7 +148,7 @@
                         <li><i class="fas fa-check text-green-500 mr-2"></i> Thorough Background Vetting</li>
                         <li><i class="fas fa-check text-green-500 mr-2"></i> Continuous Placement Support</li>
                     </ul>
-                    <button onclick="openEmployerForm()" class="accent-gradient py-4 rounded-xl font-bold">Request a Consultation</button>
+                    <button onclick="openEmployerForm()" class="accent-gradient py-4 rounded-xl font-bold hover:opacity-90 transition">Request a Consultation</button>
                 </div>
             </div>
         </section>
@@ -263,133 +263,136 @@
 
     </main>
 
+    <!-- MODALS (The interactive inquiry forms) -->
+
+    <!-- Step 1: Selection Modal -->
+    <div id="apply-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold mb-4">Start Your Pathway</h3>
+            <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
+            <div class="space-y-4">
+                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition">Apply as Candidate</button>
+                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold hover:bg-slate-800 transition">Partner as Employer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Form Modal -->
+    <div id="candidate-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold mb-2">Candidate Intake</h3>
+            <p class="text-slate-400 mb-6 text-sm">Strictly confidential in accordance with Arizona EEOC guidelines.</p>
+            
+            <form id="candidateForm" onsubmit="submitForm(event, 'candidate')" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="First Name" required class="w-full p-3 rounded-lg">
+                    <input type="text" placeholder="Last Name" required class="w-full p-3 rounded-lg">
+                </div>
+                <input type="email" placeholder="Email Address" required class="w-full p-3 rounded-lg">
+                <input type="tel" placeholder="Phone Number" required class="w-full p-3 rounded-lg">
+                <select class="w-full p-3 rounded-lg text-slate-400" required>
+                    <option value="" disabled selected>Work Category</option>
+                    <option value="warehouse">Warehouse & Logistics</option>
+                    <option value="construction">Construction & Trades</option>
+                    <option value="hospitality">Hospitality & Dining</option>
+                    <option value="admin">Admin & Office</option>
+                    <option value="general">General Labor</option>
+                </select>
+                <textarea placeholder="Tell us a little about your skills or goals..." class="w-full p-3 rounded-lg h-24" required></textarea>
+                <div class="flex items-start space-x-2 text-xs text-slate-400">
+                    <input type="checkbox" required id="cand-consent" class="mt-1">
+                    <label for="cand-consent">I consent to Pathway Bridge Solutions contacting me about job placement opportunities.</label>
+                </div>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20">Submit Application</button>
+            </form>
+            <div id="candidate-success" class="hidden text-center py-8">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+                <h4 class="text-2xl font-bold mb-2">Application Received</h4>
+                <p class="text-slate-400">Our team will reach out within 48 hours to discuss your pathway.</p>
+                <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employer Form Modal -->
+    <div id="employer-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold mb-2">Employer Consultation</h3>
+            <p class="text-slate-400 mb-6 text-sm">Request information about our 90-day trial and WOTC tax credits.</p>
+            
+            <form id="employerForm" onsubmit="submitForm(event, 'employer')" class="space-y-4">
+                <input type="text" placeholder="Company Name" required class="w-full p-3 rounded-lg">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Contact Person" required class="w-full p-3 rounded-lg">
+                    <input type="text" placeholder="Job Title" required class="w-full p-3 rounded-lg">
+                </div>
+                <input type="email" placeholder="Business Email" required class="w-full p-3 rounded-lg">
+                <input type="text" placeholder="City/Location (AZ)" required class="w-full p-3 rounded-lg">
+                <select class="w-full p-3 rounded-lg text-slate-400" required>
+                    <option value="" disabled selected>Est. Hiring Capacity</option>
+                    <option value="1-5">1-5 per month</option>
+                    <option value="5-20">5-20 per month</option>
+                    <option value="20+">20+ per month</option>
+                </select>
+                <div class="p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                    <p class="text-xs font-bold text-blue-400 mb-2 uppercase tracking-wide">Incentive Interests:</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                        <label class="flex items-center"><input type="checkbox" class="mr-2"> WOTC Tax Credit</label>
+                        <label class="flex items-center"><input type="checkbox" class="mr-2"> Federal Bonding</label>
+                        <label class="flex items-center"><input type="checkbox" class="mr-2"> 90-Day Guarantee</label>
+                        <label class="flex items-center"><input type="checkbox" class="mr-2"> Workforce Training</label>
+                    </div>
+                </div>
+                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20">Request My Consultation</button>
+            </form>
+            <div id="employer-success" class="hidden text-center py-8">
+                <i class="fas fa-paper-plane text-6xl text-blue-500 mb-4"></i>
+                <h4 class="text-2xl font-bold mb-2">Request Sent</h4>
+                <p class="text-slate-400">An Arizona account manager will contact you shortly to review your hiring needs.</p>
+                <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold mb-4">Admin Access</h3>
+            <input type="password" id="admin-pass" placeholder="Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500">
+            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold">Login</button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-2">
-                    <div class="text-2xl font-bold mb-6">Pathway Bridge Solutions</div>
-                    <p class="text-slate-400 mb-6">Empowering Arizona's workforce through second-chance employment strategies and dedicated employer support.</p>
+        <div class="container mx-auto px-6 text-center md:text-left">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div class="col-span-1">
+                    <div class="text-2xl font-bold mb-4">Pathway Bridge Solutions</div>
+                    <p class="text-slate-400">Connecting Arizona's businesses with reliable second-chance talent.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Legal</h4>
+                    <h4 class="font-bold mb-4 text-slate-500">Legal</h4>
                     <ul class="space-y-2 text-slate-400">
-                        <li><button onclick="showLegal('eeoc')" class="hover:text-blue-400">EEOC Disclosure</button></li>
-                        <li><button onclick="showLegal('privacy')" class="hover:text-blue-400">Privacy Policy</button></li>
-                        <li><button onclick="showLegal('tos')" class="hover:text-blue-400">Terms of Service</button></li>
+                        <li>EEOC Disclosure</li>
+                        <li>Privacy Policy</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Contact</h4>
+                    <h4 class="font-bold mb-4 text-slate-500">Contact</h4>
                     <p class="text-slate-400">contactpathwaybridgesolutions@gmail.com</p>
                     <p class="text-slate-400">Phoenix, Arizona</p>
                 </div>
             </div>
             <div class="border-t border-slate-800 pt-8 text-center text-slate-500 text-sm">
-                &copy; 2023 Pathway Bridge Solutions. All Rights Reserved.
+                &copy; 2023 Pathway Bridge Solutions.
             </div>
         </div>
     </footer>
-
-    <!-- MODALS -->
-
-    <!-- Apply Initial Choice Modal -->
-    <div id="apply-modal" class="modal-overlay">
-        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4">
-            <h3 class="text-2xl font-bold mb-4">Start Your Pathway</h3>
-            <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
-            <div class="space-y-4">
-                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Apply as Candidate</button>
-                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold">Partner as Employer</button>
-                <button onclick="closeModals()" class="w-full text-slate-500 py-2">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Candidate Inquiry Form Modal -->
-    <div id="candidate-form-modal" class="modal-overlay">
-        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-2xl font-bold mb-2">Candidate Intake Form</h3>
-            <p class="text-slate-400 mb-6 text-sm">Your information is handled with absolute confidentiality in accordance with EEOC guidelines.</p>
-            <form id="candidateForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" placeholder="First Name" required class="w-full p-3 rounded-lg bg-slate-800">
-                    <input type="text" placeholder="Last Name" required class="w-full p-3 rounded-lg bg-slate-800">
-                </div>
-                <input type="email" placeholder="Email Address" required class="w-full p-3 rounded-lg bg-slate-800">
-                <input type="tel" placeholder="Phone Number (Arizona preferred)" required class="w-full p-3 rounded-lg bg-slate-800">
-                <select class="w-full p-3 rounded-lg bg-slate-800 text-slate-400">
-                    <option value="" disabled selected>Primary Skills/Experience</option>
-                    <option value="logistics">Logistics/Warehouse</option>
-                    <option value="construction">Construction/Trades</option>
-                    <option value="hospitality">Hospitality/Service</option>
-                    <option value="admin">Admin/Clerical</option>
-                    <option value="other">Other</option>
-                </select>
-                <textarea placeholder="Briefly describe your career goals..." class="w-full p-3 rounded-lg bg-slate-800 h-24"></textarea>
-                <div class="flex items-center space-x-2 text-xs text-slate-400">
-                    <input type="checkbox" required id="cand-agree">
-                    <label for="cand-agree">I consent to Pathway Bridge Solutions contacting me regarding employment.</label>
-                </div>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold">Submit Application</button>
-                <button type="button" onclick="closeModals()" class="w-full text-slate-500 text-sm">Back</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Employer Inquiry Form Modal -->
-    <div id="employer-form-modal" class="modal-overlay">
-        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-2xl font-bold mb-2">Business Consultation Request</h3>
-            <p class="text-slate-400 mb-6 text-sm">Let us help you maximize WOTC and Federal Bonding benefits for your Arizona business.</p>
-            <form id="employerForm" class="space-y-4">
-                <input type="text" placeholder="Company Name" required class="w-full p-3 rounded-lg bg-slate-800">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" placeholder="Contact Name" required class="w-full p-3 rounded-lg bg-slate-800">
-                    <input type="text" placeholder="Job Title" required class="w-full p-3 rounded-lg bg-slate-800">
-                </div>
-                <input type="email" placeholder="Business Email" required class="w-full p-3 rounded-lg bg-slate-800">
-                <input type="text" placeholder="Business Location (City, AZ)" required class="w-full p-3 rounded-lg bg-slate-800">
-                <select class="w-full p-3 rounded-lg bg-slate-800 text-slate-400">
-                    <option value="" disabled selected>Est. Monthly Hiring Need</option>
-                    <option value="1-5">1-5 Employees</option>
-                    <option value="6-20">6-20 Employees</option>
-                    <option value="21+">21+ Employees</option>
-                </select>
-                <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-500/20">
-                    <p class="text-xs font-bold text-blue-400 mb-2 uppercase">Areas of Interest:</p>
-                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
-                        <label><input type="checkbox"> WOTC Tax Credits</label>
-                        <label><input type="checkbox"> Federal Bonding</label>
-                        <label><input type="checkbox"> 90-Day Trial</label>
-                        <label><input type="checkbox"> Skill Training</label>
-                    </div>
-                </div>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold">Request Consultation</button>
-                <button type="button" onclick="closeModals()" class="w-full text-slate-500 text-sm">Back</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Admin Login Modal -->
-    <div id="admin-modal" class="modal-overlay">
-        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4">
-            <h3 class="text-2xl font-bold mb-4">Administrator Login</h3>
-            <input type="password" id="admin-pass" placeholder="Enter Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500">
-            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold">Access Dashboard</button>
-            <button onclick="closeModals()" class="w-full text-slate-500 py-4">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Legal Disclosure Modal -->
-    <div id="legal-modal" class="modal-overlay" style="align-items: flex-start; overflow-y: auto; padding: 2rem 0;">
-        <div class="glass-card p-10 rounded-3xl max-w-4xl w-full mx-auto my-auto relative">
-            <button onclick="closeModals()" class="absolute top-6 right-6 text-2xl text-slate-500">&times;</button>
-            <div id="legal-content" class="prose prose-invert max-w-none">
-                <!-- Content injected via JS -->
-            </div>
-        </div>
-    </div>
 
     <script>
         const ADMIN_KEY = "Bellamylove-09";
@@ -404,26 +407,53 @@
             window.scrollTo(0, 0);
         }
 
+        // Modal Controls
         function openApplyModal() {
+            closeModals();
             document.getElementById('apply-modal').style.display = 'flex';
         }
 
         function openCandidateForm() {
             closeModals();
+            document.getElementById('candidateForm').classList.remove('hidden');
+            document.getElementById('candidate-success').classList.add('hidden');
             document.getElementById('candidate-form-modal').style.display = 'flex';
         }
 
         function openEmployerForm() {
             closeModals();
+            document.getElementById('employerForm').classList.remove('hidden');
+            document.getElementById('employer-success').classList.add('hidden');
             document.getElementById('employer-form-modal').style.display = 'flex';
         }
 
         function openAdminModal() {
+            closeModals();
             document.getElementById('admin-modal').style.display = 'flex';
         }
 
         function closeModals() {
             document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        }
+
+        function handleOutsideClick(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModals();
+            }
+        }
+
+        // Form Submission Logic
+        function submitForm(event, type) {
+            event.preventDefault();
+            
+            // Logic to show success message
+            if (type === 'candidate') {
+                document.getElementById('candidateForm').classList.add('hidden');
+                document.getElementById('candidate-success').classList.remove('hidden');
+            } else {
+                document.getElementById('employerForm').classList.add('hidden');
+                document.getElementById('employer-success').classList.remove('hidden');
+            }
         }
 
         function checkAdmin() {
@@ -434,60 +464,6 @@
                 document.getElementById('admin-pass').value = "";
             } else {
                 alert("Unauthorized Access Key.");
-            }
-        }
-
-        // Handle Form Submissions (Simulated)
-        document.getElementById('candidateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            this.innerHTML = `<div class="text-center py-10"><i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i><h3 class="text-xl font-bold">Application Received</h3><p class="text-slate-400 mt-2">Our specialists will contact you within 24-48 business hours.</p><button type="button" onclick="closeModals()" class="mt-6 text-blue-400">Close</button></div>`;
-        });
-
-        document.getElementById('employerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            this.innerHTML = `<div class="text-center py-10"><i class="fas fa-paper-plane text-5xl text-blue-500 mb-4"></i><h3 class="text-xl font-bold">Consultation Requested</h3><p class="text-slate-400 mt-2">A partnership manager will reach out to discuss your WOTC and bonding eligibility.</p><button type="button" onclick="closeModals()" class="mt-6 text-blue-400">Close</button></div>`;
-        });
-
-        const legalTexts = {
-            eeoc: `
-                <h2 class="text-3xl font-bold mb-6">Equal Employment Opportunity Commission (EEOC) Disclosure</h2>
-                <p class="mb-4">Pathway Bridge Solutions operates in strict adherence to the laws and regulations enforced by the Equal Employment Opportunity Commission (EEOC). We are a dedicated equal opportunity organization.</p>
-                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Our Commitment</h3>
-                <p class="mb-4">We do not discriminate against any candidate or employee based on race, color, religion, sex (including pregnancy, gender identity, and sexual orientation), national origin, age (40 or older), disability, or genetic information.</p>
-                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Second Chance Hiring Practices</h3>
-                <p class="mb-4">In accordance with Title VII of the Civil Rights Act, Pathway Bridge Solutions ensures that our second-chance hiring practices are conducted with individualized assessments. We recognize that a criminal record is not an automatic bar to employment. We evaluate the nature of the offense, the time passed, and the nature of the job to ensure fair and legal placement for all Arizona residents.</p>
-                <p class="text-slate-400 italic">This policy applies to all aspects of the employment relationship, including recruitment, hiring, placement, promotion, termination, layoff, recall, transfer, leaves of absence, compensation, and training.</p>
-            `,
-            privacy: `
-                <h2 class="text-3xl font-bold mb-6">Privacy Policy</h2>
-                <p class="mb-4">Pathway Bridge Solutions ("we", "our", or "us") is committed to protecting your privacy, especially given the sensitive nature of background information.</p>
-                <h3 class="text-xl font-bold mt-6 mb-4">Data Collection</h3>
-                <p class="mb-4">We collect personal information necessary for job placement, including contact details, work history, and relevant background information provided during the application process.</p>
-                <h3 class="text-xl font-bold mt-6 mb-4">Use of Information</h3>
-                <p class="mb-4">Your information is used exclusively to facilitate employment opportunities, process tax credit eligibility (WOTC), and manage federal bonding applications. We do not sell your personal data to third parties.</p>
-                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Security</h3>
-                <p>We implement industry-standard security measures to ensure your data remains confidential and protected from unauthorized access.</p>
-            `,
-            tos: `
-                <h2 class="text-3xl font-bold mb-6">Terms of Service</h2>
-                <p class="mb-4">By accessing the Pathway Bridge Solutions platform, you agree to the following terms:</p>
-                <ul class="list-disc pl-6 space-y-2 mb-6 text-slate-300">
-                    <li>Candidates must provide truthful and accurate information regarding their background and work history.</li>
-                    <li>Employers agree to provide a safe working environment and adhere to all Arizona labor laws.</li>
-                    <li>The "90-Day Risk Free" guarantee applies to initial recruitment fees and is subject to the specific terms outlined in the Partner Service Agreement (SOP).</li>
-                    <li>All incentive calculations (WOTC/Bonding) are estimates; final eligibility is determined by the respective government agencies.</li>
-                </ul>
-            `
-        };
-
-        function showLegal(type) {
-            document.getElementById('legal-content').innerHTML = legalTexts[type];
-            document.getElementById('legal-modal').style.display = 'flex';
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                closeModals();
             }
         }
     </script>
