@@ -3,229 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus | Creative Digital Agency</title>
+    <title>Pathway Bridge Solutions | Second Chance Staffing</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         
-        :root {
-            --brand-primary: #6366f1;
-            --brand-dark: #0f172a;
-        }
-
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .dark-theme {
+            background-color: #0f172a;
+            color: #f1f5f9;
         }
 
-        .hero-gradient {
-            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
-                        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.1), transparent);
+        .accent-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
         }
 
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .hidden-section {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-white text-slate-900 overflow-x-hidden">
+<body class="dark-theme">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-nav">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-                    <i data-lucide="zap" class="text-white w-6 h-6"></i>
-                </div>
-                <span class="text-2xl font-extrabold tracking-tight text-slate-900">NEXUS</span>
+    <nav class="sticky top-0 z-40 glass-card py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tight cursor-pointer" onclick="showPage('home')">
+                <span class="text-blue-500">Pathway</span>Bridge
             </div>
-            
-            <div class="hidden md:flex items-center gap-8 font-medium text-slate-600">
-                <a href="#services" class="hover:text-indigo-600 transition-colors">Services</a>
-                <a href="#work" class="hover:text-indigo-600 transition-colors">Work</a>
-                <a href="#about" class="hover:text-indigo-600 transition-colors">About</a>
-                <a href="#contact" class="bg-indigo-600 text-white px-6 py-2.5 rounded-full hover:bg-indigo-700 transition-all shadow-md">Get Started</a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <button onclick="showPage('home')" class="hover:text-blue-400 transition">Home</button>
+                <button onclick="showPage('employers')" class="hover:text-blue-400 transition">Employers</button>
+                <button onclick="showPage('candidates')" class="hover:text-blue-400 transition">Candidates</button>
+                <button onclick="showPage('about')" class="hover:text-blue-400 transition">About</button>
+                <button onclick="openAdminModal()" class="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700 transition">Admin</button>
             </div>
-
-            <button class="md:hidden text-slate-900">
-                <i data-lucide="menu"></i>
-            </button>
+            <button onclick="openApplyModal()" class="accent-gradient px-6 py-2 rounded-full font-semibold hover:opacity-90 transition">Apply Now</button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-40 pb-20 md:pt-52 md:pb-32 hero-gradient px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-semibold mb-6">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                Now accepting Q1 projects
-            </div>
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
-                We build <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">digital experiences</span><br>that drive growth.
-            </h1>
-            <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-                NEXUS is a full-service agency specializing in design, development, and strategy for forward-thinking brands.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all">View Our Work</a>
-                <a href="#contact" class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all">Book a Call</a>
-            </div>
-        </div>
-    </section>
+    <!-- Main Content Container -->
+    <main id="main-content">
 
-    <!-- Brands/Trust -->
-    <section class="py-12 border-y border-slate-100">
-        <div class="max-w-7xl mx-auto px-6">
-            <p class="text-center text-sm font-bold text-slate-400 uppercase tracking-widest mb-8">Trusted by industry leaders</p>
-            <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all">
-                <div class="font-bold text-2xl">VOYAGER</div>
-                <div class="font-bold text-2xl">LUMINA</div>
-                <div class="font-bold text-2xl">APEX</div>
-                <div class="font-bold text-2xl">VELOCITY</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Grid -->
-    <section id="services" class="py-24 md:py-32 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                <div class="max-w-xl">
-                    <h2 class="text-indigo-600 font-bold tracking-widest uppercase text-sm mb-4">Our Expertise</h2>
-                    <p class="text-3xl md:text-4xl font-extrabold text-slate-900">Solutions tailored for your business needs.</p>
+        <!-- LANDING PAGE -->
+        <section id="page-home">
+            <header class="py-24 container mx-auto px-6 text-center">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">Bridging the Gap to <span class="text-blue-500 text-gradient">Second Chances.</span></h1>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
+                    Pathway Bridge Solutions connects motivated talent with forward-thinking Arizona employers. We reduce risk, maximize incentives, and rebuild lives.
+                </p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <button onclick="showPage('employers')" class="accent-gradient px-8 py-4 rounded-xl text-lg font-bold">I Am An Employer</button>
+                    <button onclick="showPage('candidates')" class="border border-slate-700 px-8 py-4 rounded-xl text-lg font-bold hover:bg-slate-800">I Am A Candidate</button>
                 </div>
-                <p class="text-slate-500 max-w-sm">From brand identity to complex web applications, we cover the entire digital spectrum.</p>
-            </div>
+            </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
-                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
-                        <i data-lucide="layout" class="w-7 h-7"></i>
+            <section class="py-20 bg-slate-900/50">
+                <div class="container mx-auto px-6">
+                    <div class="grid md:grid-cols-3 gap-12">
+                        <div class="glass-card p-8 rounded-2xl text-center">
+                            <i class="fas fa-shield-alt text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">90-Day Risk Free</h3>
+                            <p class="text-slate-400">Our signature guarantee. No payment is required until the candidate has successfully completed 90 days of work.</p>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl text-center">
+                            <i class="fas fa-hand-holding-usd text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Maximum Incentives</h3>
+                            <p class="text-slate-400">We help you navigate WOTC, Federal Bonding, and Arizona-specific tax credits for every hire.</p>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl text-center">
+                            <i class="fas fa-users text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Proven Success</h3>
+                            <p class="text-slate-400">Targeted support systems ensure high retention rates and career longevity for our candidates.</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">UI/UX Design</h3>
-                    <p class="text-slate-600 mb-6">User-centric designs that are not only beautiful but conversion-optimized.</p>
-                    <ul class="space-y-3 text-sm font-medium text-slate-500">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500"></i> Interaction Design</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-500"></i> Prototyping</li>
-                    </ul>
                 </div>
+            </section>
+        </section>
 
-                <!-- Card 2 -->
-                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
-                    <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
-                        <i data-lucide="code-2" class="w-7 h-7"></i>
+        <!-- EMPLOYER PAGE -->
+        <section id="page-employers" class="hidden-section py-20 container mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-4">Empowering Arizona Business</h2>
+            <p class="text-xl text-slate-400 mb-12">Hiring second-chance talent isn't just a social good—it's an Arizona smart business strategy.</p>
+
+            <div class="grid md:grid-cols-2 gap-12 mb-20">
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-blue-400">Financial Incentives</h3>
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
+                        <h4 class="font-bold text-xl mb-2">Work Opportunity Tax Credit (WOTC)</h4>
+                        <p class="text-slate-300">Earn up to $2,400 to $9,600 in federal tax credits per eligible second-chance hire.</p>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Development</h3>
-                    <p class="text-slate-600 mb-6">High-performance web applications built with modern frameworks.</p>
-                    <ul class="space-y-3 text-sm font-medium text-slate-500">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-500"></i> React & Next.js</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-500"></i> E-commerce</li>
-                    </ul>
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
+                        <h4 class="font-bold text-xl mb-2">Federal Bonding Program</h4>
+                        <p class="text-slate-300">Immediate $5,000 fidelity bond coverage for the first 6 months of employment at no cost to you.</p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
+                        <h4 class="font-bold text-xl mb-2">Arizona Job Training Program</h4>
+                        <p class="text-slate-300">Potential reimbursement for customized training costs through state-funded workforce initiatives.</p>
+                    </div>
                 </div>
-
-                <!-- Card 3 -->
-                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 card-hover">
-                    <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 mb-6">
-                        <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Strategy</h3>
-                    <p class="text-slate-600 mb-6">Data-driven marketing strategies to scale your reach and impact.</p>
-                    <ul class="space-y-3 text-sm font-medium text-slate-500">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-500"></i> SEO Optimization</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-500"></i> Growth Hacking</li>
+                <div class="glass-card p-10 rounded-2xl flex flex-col justify-center">
+                    <h3 class="text-3xl font-bold mb-6">Our 90-Day "Peace of Mind" Promise</h3>
+                    <p class="text-lg text-slate-300 mb-8 italic">"We are so confident in our vetting process that you pay nothing—$0—until the employee has been on the job for 90 days. We take the risk, you get the talent."</p>
+                    <ul class="space-y-4 mb-8">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Zero Up-front Recruitment Fees</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Thorough Background Vetting</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Continuous Placement Support</li>
                     </ul>
+                    <button onclick="openApplyModal()" class="accent-gradient py-4 rounded-xl font-bold">Request a Consultation</button>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Newsletter/CTA Section -->
-    <section id="contact" class="py-24 px-6">
-        <div class="max-w-5xl mx-auto bg-slate-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
-            <!-- Decorative circle -->
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600 opacity-20 rounded-full blur-3xl"></div>
+        <!-- CANDIDATE PAGE -->
+        <section id="page-candidates" class="hidden-section py-20 container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold mb-6">Your Future Starts Here</h2>
+                <p class="text-xl text-slate-400 mb-12">At Pathway Bridge Solutions, your past does not define your potential. We provide the tools you need to succeed in the Arizona workforce.</p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-16">
+                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Skills Training</h3>
+                        <p class="text-slate-400">Access to industry-specific certifications and soft-skills training to help you stand out.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Job Matching</h3>
+                        <p class="text-slate-400">We don't just find jobs; we find careers with employers who value your growth and loyalty.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Success Coaching</h3>
+                        <p class="text-slate-400">90 days of direct mentorship to help you navigate your new workplace and overcome obstacles.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Legal Resources</h3>
+                        <p class="text-slate-400">Information on bonding and tax credit benefits that make you a high-value asset to employers.</p>
+                    </div>
+                </div>
+
+                <div class="text-center bg-blue-600/20 p-12 rounded-3xl border border-blue-500/30">
+                    <h3 class="text-3xl font-bold mb-4">Ready to Rebuild?</h3>
+                    <p class="text-lg text-slate-300 mb-8">Join the hundreds of Arizonans who have found their pathway back to professional success.</p>
+                    <button onclick="openApplyModal()" class="bg-white text-blue-900 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Apply for Placement</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section id="page-about" class="hidden-section py-20 container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-4xl font-bold mb-8">Our Vision</h2>
+                <p class="text-2xl font-light text-slate-300 leading-relaxed mb-12">
+                    "To create an Arizona where a previous conviction is a milestone of the past, not a barrier to the future. We believe in bridging the gap between untapped potential and industrial need through integrity, support, and proven business logic."
+                </p>
+                <div class="h-1 w-20 bg-blue-500 mx-auto mb-12"></div>
+                <h3 class="text-2xl font-bold mb-6">Contact Us</h3>
+                <div class="glass-card p-6 inline-block rounded-xl">
+                    <p class="text-xl">
+                        <i class="fas fa-envelope text-blue-400 mr-2"></i>
+                        contactpathwaybridgesolutions@gmail.com
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="page-admin" class="hidden-section py-20 container mx-auto px-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+                <button onclick="showPage('home')" class="text-slate-400 hover:text-white">Logout</button>
+            </div>
             
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">Ready to start your next project?</h2>
-            <p class="text-indigo-200 text-lg mb-10 max-w-lg mx-auto relative z-10">
-                Join 500+ brands that have scaled their digital presence with NEXUS.
-            </p>
-            
-            <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto relative z-10" onsubmit="event.preventDefault(); alert('Request received!');">
-                <input type="email" placeholder="Enter your email" class="flex-1 bg-white/10 border border-white/20 rounded-2xl px-6 py-4 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button type="submit" class="bg-indigo-500 text-white font-bold px-8 py-4 rounded-2xl hover:bg-indigo-400 transition-all">Submit</button>
-            </form>
-        </div>
-    </section>
+            <div class="grid md:grid-cols-4 gap-6 mb-12">
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-slate-400 text-sm">Total Candidates</p>
+                    <p class="text-3xl font-bold">1,284</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-slate-400 text-sm">Active 90-Day Trials</p>
+                    <p class="text-3xl font-bold text-blue-400">42</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-slate-400 text-sm">Successful Placements</p>
+                    <p class="text-3xl font-bold text-green-500">89%</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <p class="text-slate-400 text-sm">Bonding Applications</p>
+                    <p class="text-3xl font-bold">15</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-slate-700 bg-slate-800/50">
+                    <h3 class="font-bold">Recent Applications</h3>
+                </div>
+                <table class="w-full text-left">
+                    <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
+                        <tr>
+                            <th class="p-4">Name</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700">
+                        <tr>
+                            <td class="p-4">Michael R.</td>
+                            <td class="p-4">Candidate</td>
+                            <td class="p-4">Oct 12, 2023</td>
+                            <td class="p-4"><span class="bg-blue-900/50 text-blue-400 px-2 py-1 rounded text-xs">Reviewing</span></td>
+                        </tr>
+                        <tr>
+                            <td class="p-4">Sunstate Logistics</td>
+                            <td class="p-4">Employer</td>
+                            <td class="p-4">Oct 11, 2023</td>
+                            <td class="p-4"><span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Vetted</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-white pt-20 pb-10 border-t border-slate-100 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
-            <div class="max-w-xs">
-                <div class="flex items-center gap-2 mb-6">
-                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                        <i data-lucide="zap" class="text-white w-5 h-5"></i>
-                    </div>
-                    <span class="text-xl font-bold text-slate-900">NEXUS</span>
+    <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <div class="text-2xl font-bold mb-6">Pathway Bridge Solutions</div>
+                    <p class="text-slate-400 mb-6">Empowering Arizona's workforce through second-chance employment strategies and dedicated employer support.</p>
                 </div>
-                <p class="text-slate-500 mb-6">Transforming digital landscapes through design and innovation.</p>
-                <div class="flex gap-4">
-                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="twitter"></i></a>
-                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="instagram"></i></a>
-                    <a href="#" class="text-slate-400 hover:text-indigo-600"><i data-lucide="linkedin"></i></a>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Legal</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><button onclick="showLegal('eeoc')" class="hover:text-blue-400">EEOC Disclosure</button></li>
+                        <li><button onclick="showLegal('privacy')" class="hover:text-blue-400">Privacy Policy</button></li>
+                        <li><button onclick="showLegal('tos')" class="hover:text-blue-400">Terms of Service</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Contact</h4>
+                    <p class="text-slate-400">contactpathwaybridgesolutions@gmail.com</p>
+                    <p class="text-slate-400">Phoenix, Arizona</p>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-12">
-                <div>
-                    <h4 class="font-bold mb-6">Company</h4>
-                    <ul class="space-y-4 text-slate-500 font-medium">
-                        <li><a href="#" class="hover:text-indigo-600">About</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Careers</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Press</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-6">Product</h4>
-                    <ul class="space-y-4 text-slate-500 font-medium">
-                        <li><a href="#" class="hover:text-indigo-600">Features</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Pricing</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Showcase</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-6">Support</h4>
-                    <ul class="space-y-4 text-slate-500 font-medium">
-                        <li><a href="#" class="hover:text-indigo-600">Contact</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Help Center</a></li>
-                        <li><a href="#" class="hover:text-indigo-600">Terms</a></li>
-                    </ul>
-                </div>
+            <div class="border-t border-slate-800 pt-8 text-center text-slate-500 text-sm">
+                &copy; 2023 Pathway Bridge Solutions. All Rights Reserved.
             </div>
-        </div>
-        <div class="max-w-7xl mx-auto mt-20 pt-10 border-t border-slate-50 text-center text-slate-400 text-sm">
-            &copy; 2024 NEXUS Digital Agency. All rights reserved.
         </div>
     </footer>
 
+    <!-- MODALS -->
+
+    <!-- Apply Modal -->
+    <div id="apply-modal" class="modal-overlay">
+        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-4">Start Your Pathway</h3>
+            <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
+            <div class="space-y-4">
+                <button onclick="closeModals()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Apply as Candidate</button>
+                <button onclick="closeModals()" class="w-full border border-slate-600 py-3 rounded-xl font-bold">Partner as Employer</button>
+                <button onclick="closeModals()" class="w-full text-slate-500 py-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-4">Administrator Login</h3>
+            <input type="password" id="admin-pass" placeholder="Enter Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500">
+            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold">Access Dashboard</button>
+            <button onclick="closeModals()" class="w-full text-slate-500 py-4">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Legal Disclosure Modal -->
+    <div id="legal-modal" class="modal-overlay" style="align-items: flex-start; overflow-y: auto; padding: 2rem 0;">
+        <div class="glass-card p-10 rounded-3xl max-w-4xl w-full mx-auto my-auto relative">
+            <button onclick="closeModals()" class="absolute top-6 right-6 text-2xl text-slate-500">&times;</button>
+            <div id="legal-content" class="prose prose-invert max-w-none">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        const ADMIN_KEY = "Bellamylove-09";
+
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = ['home', 'employers', 'candidates', 'about', 'admin'];
+            pages.forEach(p => {
+                const el = document.getElementById(`page-${p}`);
+                if(el) el.classList.add('hidden-section');
+            });
+
+            // Show target page
+            document.getElementById(`page-${pageId}`).classList.remove('hidden-section');
+            window.scrollTo(0, 0);
+        }
+
+        function openApplyModal() {
+            document.getElementById('apply-modal').style.display = 'flex';
+        }
+
+        function openAdminModal() {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        }
+
+        function checkAdmin() {
+            const val = document.getElementById('admin-pass').value;
+            if(val === ADMIN_KEY) {
+                closeModals();
+                showPage('admin');
+                document.getElementById('admin-pass').value = "";
+            } else {
+                alert("Unauthorized Access Key.");
+            }
+        }
+
+        const legalTexts = {
+            eeoc: `
+                <h2 class="text-3xl font-bold mb-6">Equal Employment Opportunity Commission (EEOC) Disclosure</h2>
+                <p class="mb-4">Pathway Bridge Solutions operates in strict adherence to the laws and regulations enforced by the Equal Employment Opportunity Commission (EEOC). We are a dedicated equal opportunity organization.</p>
+                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Our Commitment</h3>
+                <p class="mb-4">We do not discriminate against any candidate or employee based on race, color, religion, sex (including pregnancy, gender identity, and sexual orientation), national origin, age (40 or older), disability, or genetic information.</p>
+                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Second Chance Hiring Practices</h3>
+                <p class="mb-4">In accordance with Title VII of the Civil Rights Act, Pathway Bridge Solutions ensures that our second-chance hiring practices are conducted with individualized assessments. We recognize that a criminal record is not an automatic bar to employment. We evaluate the nature of the offense, the time passed, and the nature of the job to ensure fair and legal placement for all Arizona residents.</p>
+                <p class="text-slate-400 italic">This policy applies to all aspects of the employment relationship, including recruitment, hiring, placement, promotion, termination, layoff, recall, transfer, leaves of absence, compensation, and training.</p>
+            `,
+            privacy: `
+                <h2 class="text-3xl font-bold mb-6">Privacy Policy</h2>
+                <p class="mb-4">Pathway Bridge Solutions ("we", "our", or "us") is committed to protecting your privacy, especially given the sensitive nature of background information.</p>
+                <h3 class="text-xl font-bold mt-6 mb-4">Data Collection</h3>
+                <p class="mb-4">We collect personal information necessary for job placement, including contact details, work history, and relevant background information provided during the application process.</p>
+                <h3 class="text-xl font-bold mt-6 mb-4">Use of Information</h3>
+                <p class="mb-4">Your information is used exclusively to facilitate employment opportunities, process tax credit eligibility (WOTC), and manage federal bonding applications. We do not sell your personal data to third parties.</p>
+                <h3 class="text-xl font-bold mt-6 mb-4 text-blue-400">Security</h3>
+                <p>We implement industry-standard security measures to ensure your data remains confidential and protected from unauthorized access.</p>
+            `,
+            tos: `
+                <h2 class="text-3xl font-bold mb-6">Terms of Service</h2>
+                <p class="mb-4">By accessing the Pathway Bridge Solutions platform, you agree to the following terms:</p>
+                <ul class="list-disc pl-6 space-y-2 mb-6 text-slate-300">
+                    <li>Candidates must provide truthful and accurate information regarding their background and work history.</li>
+                    <li>Employers agree to provide a safe working environment and adhere to all Arizona labor laws.</li>
+                    <li>The "90-Day Risk Free" guarantee applies to initial recruitment fees and is subject to the specific terms outlined in the Partner Service Agreement (SOP).</li>
+                    <li>All incentive calculations (WOTC/Bonding) are estimates; final eligibility is determined by the respective government agencies.</li>
+                </ul>
+            `
+        };
+
+        function showLegal(type) {
+            document.getElementById('legal-content').innerHTML = legalTexts[type];
+            document.getElementById('legal-modal').style.display = 'flex';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                closeModals();
+            }
+        }
     </script>
 </body>
 </html>
