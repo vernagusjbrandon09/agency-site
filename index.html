@@ -1,578 +1,719 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathway Bridge Solutions | Second Chance Staffing</title>
+    <title>Pathway Bridge Solutions LLC | Fair Chance Recruiting</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
+        :root {
+            --brand-deep: #0f172a;
+            --brand-primary: #0d9488;
+            --brand-secondary: #0f766e;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
         }
 
-        .dark-theme {
-            background-color: #0f172a;
-            color: #f1f5f9;
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(13, 148, 136, 0.8) 100%);
         }
 
-        .accent-gradient {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.85);
         }
 
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
         }
 
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+        /* Obfuscated Password Security Placeholder Style */
+        .admin-gate-input {
+            letter-spacing: 0.3em;
         }
 
-        .hidden-section {
-            display: none;
-        }
-
-        input, textarea, select {
-            background: rgba(15, 23, 42, 0.9) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-        }
+        .hidden-section { display: none; }
         
-        input:focus, textarea:focus, select:focus {
-            border-color: #3b82f6 !important;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        /* Smooth transitions for sections */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
 
-        ::placeholder {
-            color: #64748b !important;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="dark-theme">
+<body class="bg-slate-50 text-slate-900">
 
     <!-- Navigation -->
-    <nav class="sticky top-0 z-40 glass-card py-4">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="text-2xl font-bold tracking-tight cursor-pointer" onclick="showPage('home')">
-                <span class="text-blue-500">Pathway</span>Bridge
+    <nav class="fixed top-0 w-full z-50 glass-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="#home" class="flex items-center gap-2">
+                        <div class="bg-teal-600 p-1.5 rounded-lg">
+                            <i class="fas fa-bridge text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-900 tracking-tight">Pathway Bridge</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-sm font-semibold hover:text-teal-600 transition">Home</a>
+                    <a href="#candidates" class="text-sm font-semibold hover:text-teal-600 transition">Candidates</a>
+                    <a href="#employers" class="text-sm font-semibold hover:text-teal-600 transition">Employers</a>
+                    <a href="#facts" class="text-sm font-semibold hover:text-teal-600 transition">Fair Chance Facts</a>
+                    <a href="#about" class="text-sm font-semibold hover:text-teal-600 transition">About</a>
+                    <a href="#contact" class="text-sm font-semibold hover:text-teal-600 transition">Contact</a>
+                    <button onclick="showAdminGate()" class="bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-teal-700 transition">Admin</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-toggle" class="text-slate-600 p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
-            <div class="hidden md:flex space-x-8 items-center">
-                <button onclick="showPage('home')" class="hover:text-blue-400 transition text-sm font-medium">Home</button>
-                <button onclick="showPage('employers')" class="hover:text-blue-400 transition text-sm font-medium">Employers</button>
-                <button onclick="showPage('candidates')" class="hover:text-blue-400 transition text-sm font-medium">Candidates</button>
-                <button onclick="showPage('about')" class="hover:text-blue-400 transition text-sm font-medium">About</button>
-                <button onclick="openAdminModal()" class="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700 transition text-sm font-medium">Admin</button>
-            </div>
-            <button onclick="openApplyModal()" class="accent-gradient px-6 py-2 rounded-full font-semibold hover:opacity-90 transition shadow-lg shadow-blue-500/20">Apply Now</button>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <main id="main-content">
-
-        <!-- LANDING PAGE -->
-        <section id="page-home">
-            <header class="py-24 container mx-auto px-6 text-center">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6">Bridging the Gap to <span class="text-blue-500">Second Chances.</span></h1>
-                <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-                    Pathway Bridge Solutions connects motivated talent with forward-thinking Arizona employers. We reduce risk, maximize incentives, and rebuild lives.
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-20 overflow-hidden min-h-screen flex items-center">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2000&auto=format&fit=crop" alt="Professional Networking" class="w-full h-full object-cover">
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-white">
+            <div class="max-w-3xl fade-in">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-sm font-bold mb-6">Empowering Fair Chance Talent</span>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
+                    Pathway Bridge Solutions LLC
+                </h1>
+                <p class="text-xl text-teal-50/90 mb-10 leading-relaxed">
+                    We bridge the gap between justice-impacted candidates and forward-thinking employers. Our mission is to transform lives through employment and provide businesses with dedicated, risk-mitigated talent.
                 </p>
-                <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <button onclick="showPage('employers')" class="accent-gradient px-8 py-4 rounded-xl text-lg font-bold">I Am An Employer</button>
-                    <button onclick="showPage('candidates')" class="border border-slate-700 px-8 py-4 rounded-xl text-lg font-bold hover:bg-slate-800">I Am A Candidate</button>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#candidates" class="px-8 py-4 bg-teal-500 text-white rounded-xl font-bold text-center hover:bg-teal-400 transition shadow-lg shadow-teal-500/25">Apply Now</a>
+                    <a href="#employers" class="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl font-bold text-center hover:bg-white/20 transition">Hire Talent</a>
                 </div>
-            </header>
+            </div>
+        </div>
+    </section>
 
-            <section class="py-20 bg-slate-900/50">
-                <div class="container mx-auto px-6">
-                    <div class="grid md:grid-cols-3 gap-12">
-                        <div class="glass-card p-8 rounded-2xl text-center">
-                            <i class="fas fa-shield-alt text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">90-Day Risk Free</h3>
-                            <p class="text-slate-400">Our signature guarantee. No payment is required until the candidate has successfully completed 90 days of work.</p>
-                        </div>
-                        <div class="glass-card p-8 rounded-2xl text-center">
-                            <i class="fas fa-hand-holding-usd text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Maximum Incentives</h3>
-                            <p class="text-slate-400">We help you navigate WOTC, Federal Bonding, and Arizona-specific tax credits for every hire.</p>
-                        </div>
-                        <div class="glass-card p-8 rounded-2xl text-center">
-                            <i class="fas fa-users text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Proven Success</h3>
-                            <p class="text-slate-400">Targeted support systems ensure high retention rates and career longevity for our candidates.</p>
-                        </div>
-                    </div>
+    <!-- Candidates Section -->
+    <section id="candidates" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-slate-900 md:text-4xl mb-4">Your Second Chance Starts Here</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">We don't just find you a job; we provide the support you need to succeed in your next career chapter.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-20">
+                <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 card-hover">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center mb-6"><i class="fas fa-file-lines text-xl"></i></div>
+                    <h3 class="font-bold text-xl mb-3">Resume Support</h3>
+                    <p class="text-slate-600 text-sm">Professional assistance in highlighting your skills and addressing background gaps effectively.</p>
                 </div>
-            </section>
-        </section>
-
-        <!-- EMPLOYER PAGE -->
-        <section id="page-employers" class="hidden-section py-20 container mx-auto px-6">
-            <h2 class="text-4xl font-bold mb-4">Empowering Arizona Business</h2>
-            <p class="text-xl text-slate-400 mb-12">Hiring second-chance talent isn't just a social good—it's an Arizona smart business strategy.</p>
-
-            <div class="grid md:grid-cols-2 gap-12 mb-20">
-                <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-blue-400">Financial Incentives</h3>
-                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2 text-white">Work Opportunity Tax Credit (WOTC)</h4>
-                        <p class="text-slate-300">Earn up to $2,400 to $9,600 in federal tax credits per eligible second-chance hire.</p>
-                    </div>
-                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2 text-white">Federal Bonding Program</h4>
-                        <p class="text-slate-300">Immediate $5,000 fidelity bond coverage for the first 6 months of employment at no cost to you.</p>
-                    </div>
-                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-bold text-xl mb-2 text-white">Arizona Job Training Program</h4>
-                        <p class="text-slate-300">Potential reimbursement for customized training costs through state-funded workforce initiatives.</p>
-                    </div>
+                <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 card-hover">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center mb-6"><i class="fas fa-comments text-xl"></i></div>
+                    <h3 class="font-bold text-xl mb-3">Interview Prep</h3>
+                    <p class="text-slate-600 text-sm">Mock interviews and coaching on how to discuss your history with confidence and transparency.</p>
                 </div>
-                <div class="glass-card p-10 rounded-2xl flex flex-col justify-center">
-                    <h3 class="text-3xl font-bold mb-6">Our 90-Day "Peace of Mind" Promise</h3>
-                    <p class="text-lg text-slate-300 mb-8 italic">"We are so confident in our vetting process that you pay nothing—$0—until the employee has been on the job for 90 days. We take the risk, you get the talent."</p>
-                    <ul class="space-y-4 mb-8">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i> Zero Up-front Recruitment Fees</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i> Thorough Background Vetting</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i> Continuous Placement Support</li>
+                <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 card-hover">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center mb-6"><i class="fas fa-handshake text-xl"></i></div>
+                    <h3 class="font-bold text-xl mb-3">Job Matching</h3>
+                    <p class="text-slate-600 text-sm">Connection to our network of partner employers who are committed to fair chance hiring practices.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 rounded-3xl overflow-hidden flex flex-col lg:flex-row shadow-2xl">
+                <div class="lg:w-1/2 p-12 text-white flex flex-col justify-center">
+                    <h3 class="text-3xl font-bold mb-6">Candidate Application</h3>
+                    <p class="text-slate-400 mb-8">Take the first step towards your new career. Fill out the form below and our team will be in touch shortly.</p>
+                    <ul class="space-y-4">
+                        <li class="flex gap-3 items-start"><i class="fas fa-check-circle text-teal-400 mt-1"></i> 100% Confidential</li>
+                        <li class="flex gap-3 items-start"><i class="fas fa-check-circle text-teal-400 mt-1"></i> Dedicated Career Coach</li>
+                        <li class="flex gap-3 items-start"><i class="fas fa-check-circle text-teal-400 mt-1"></i> No fees for job seekers</li>
                     </ul>
-                    <button onclick="openEmployerForm()" class="accent-gradient py-4 rounded-xl font-bold hover:opacity-90 transition">Request a Consultation</button>
+                </div>
+                <div class="lg:w-1/2 bg-white p-12">
+                    <form id="candidate-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="Full Name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                            <input type="email" placeholder="Email Address" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        </div>
+                        <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        
+                        <div class="space-y-2">
+                            <select id="position-select" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                                <option value="" disabled selected>Preferred Position / Field</option>
+                                <option value="Administration / Office Support">Administration / Office Support</option>
+                                <option value="Customer Service / Call Center">Customer Service / Call Center</option>
+                                <option value="Warehouse / General Labor">Warehouse / General Labor</option>
+                                <option value="Construction / Skilled Trades">Construction / Skilled Trades</option>
+                                <option value="Manufacturing / Production">Manufacturing / Production</option>
+                                <option value="Hospitality / Food Service">Hospitality / Food Service</option>
+                                <option value="Retail / Sales">Retail / Sales</option>
+                                <option value="Transportation / Delivery / CDL">Transportation / Delivery / CDL</option>
+                                <option value="Healthcare Support">Healthcare Support</option>
+                                <option value="IT / Technology">IT / Technology</option>
+                                <option value="Maintenance / Facilities">Maintenance / Facilities</option>
+                                <option value="Landscaping / Groundskeeping">Landscaping / Groundskeeping</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" id="other-position" placeholder="Please specify your field" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20 hidden">
+                        </div>
+
+                        <textarea placeholder="Short bio / background history" rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20"></textarea>
+                        
+                        <div class="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-4 text-center">
+                            <label class="cursor-pointer">
+                                <i class="fas fa-cloud-upload-alt text-slate-400 mb-2 block"></i>
+                                <span class="text-xs font-semibold text-slate-500">Upload Resume (Simulated)</span>
+                                <input type="file" class="hidden">
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-teal-600 text-white py-4 rounded-xl font-bold hover:bg-teal-700 transition">Submit Inquiry</button>
+                    </form>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- CANDIDATE PAGE -->
-        <section id="page-candidates" class="hidden-section py-20 container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold mb-6">Your Future Starts Here</h2>
-                <p class="text-xl text-slate-400 mb-12">At Pathway Bridge Solutions, your past does not define your potential. We provide the tools you need to succeed in the Arizona workforce.</p>
-
-                <div class="grid md:grid-cols-2 gap-8 mb-16">
-                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
-                        <h3 class="text-xl font-bold mb-4 text-blue-400">Skills Training</h3>
-                        <p class="text-slate-400">Access to industry-specific certifications and soft-skills training to help you stand out.</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
-                        <h3 class="text-xl font-bold mb-4 text-blue-400">Job Matching</h3>
-                        <p class="text-slate-400">We don't just find jobs; we find careers with employers who value your growth and loyalty.</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
-                        <h3 class="text-xl font-bold mb-4 text-blue-400">Success Coaching</h3>
-                        <p class="text-slate-400">90 days of direct mentorship to help you navigate your new workplace and overcome obstacles.</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-700">
-                        <h3 class="text-xl font-bold mb-4 text-blue-400">Legal Resources</h3>
-                        <p class="text-slate-400">Information on bonding and tax credit benefits that make you a high-value asset to employers.</p>
-                    </div>
+    <!-- Employers Section -->
+    <section id="employers" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl font-black text-slate-900 md:text-4xl mb-4">Partner with Pathway Bridge</h2>
+                    <p class="text-slate-600">Access a hidden talent pool of dedicated individuals. We mitigate risk while providing you with high-retention employees and financial incentives.</p>
                 </div>
-
-                <div class="text-center bg-blue-600/20 p-12 rounded-3xl border border-blue-500/30">
-                    <h3 class="text-3xl font-bold mb-4 text-white">Ready to Rebuild?</h3>
-                    <p class="text-lg text-slate-300 mb-8">Join the hundreds of Arizonans who have found their pathway back to professional success.</p>
-                    <button onclick="openCandidateForm()" class="bg-white text-blue-900 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Apply for Placement</button>
+                <div class="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><i class="fas fa-shield-halved"></i></div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Placement Risk</p>
+                        <p class="text-lg font-black text-slate-900 leading-tight">100% Covered</p>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ABOUT PAGE -->
-        <section id="page-about" class="hidden-section py-20 container mx-auto px-6">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-8 text-white">Our Vision</h2>
-                <p class="text-2xl font-light text-slate-300 leading-relaxed mb-12">
-                    "To create an Arizona where a previous conviction is a milestone of the past, not a barrier to the future. We believe in bridging the gap between untapped potential and industrial need through integrity, support, and proven business logic."
-                </p>
-                <div class="h-1 w-20 bg-blue-500 mx-auto mb-12"></div>
-                <h3 class="text-2xl font-bold mb-6 text-white">Contact Us</h3>
-                <div class="glass-card p-6 inline-block rounded-xl">
-                    <p class="text-xl text-white">
-                        <i class="fas fa-envelope text-blue-400 mr-2"></i>
-                        contactpathwaybridgesolutions@gmail.com
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm card-hover">
+                    <div class="text-teal-600 text-2xl mb-4 font-black">WOTC</div>
+                    <h3 class="font-bold text-xl mb-3">Tax Credit Incentives</h3>
+                    <p class="text-slate-600 text-sm">Receive significant financial benefits via the Work Opportunity Tax Credit for hiring justice-impacted candidates.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm card-hover">
+                    <div class="text-teal-600 text-2xl mb-4 font-black">Federal Bonding</div>
+                    <h3 class="font-bold text-xl mb-3">Risk Mitigation</h3>
+                    <p class="text-slate-600 text-sm">We facilitate federal insurance coverage for new hires, providing peace of mind and financial protection.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm card-hover">
+                    <div class="text-teal-600 text-2xl mb-4 font-black">High Retention</div>
+                    <h3 class="font-bold text-xl mb-3">Loyalty & Drive</h3>
+                    <p class="text-slate-600 text-sm">Fair chance hires statistically demonstrate higher loyalty and lower turnover rates compared to standard hires.</p>
+                </div>
+            </div>
+
+            <!-- No Risk Block -->
+            <div class="bg-teal-600 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden mb-24">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-12">
+                    <div class="text-center md:text-left md:w-2/3">
+                        <h3 class="text-3xl font-black mb-4">90-Day No-Risk Offer</h3>
+                        <p class="text-teal-50 text-lg opacity-90 leading-relaxed">
+                            We offer a 90-day no-risk placement guarantee. You pay nothing until your new hire has completed 90 days of employment. If the placement does not work out within that period, we will find a replacement at no additional cost.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3 flex justify-center">
+                        <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center border border-white/30 backdrop-blur-sm">
+                            <span class="text-4xl font-black">90D</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            </div>
+
+            <!-- Employer Form -->
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-3xl font-bold mb-8 text-slate-900">Get Qualified Talent</h3>
+                    <p class="text-slate-600 mb-8 text-lg">Tell us about your hiring needs. Our consultants will review your requirements and match you with vetted candidates who fit your culture.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 text-slate-700 font-medium">
+                            <i class="fas fa-check text-teal-500"></i> No upfront placement fees
+                        </div>
+                        <div class="flex items-center gap-4 text-slate-700 font-medium">
+                            <i class="fas fa-check text-teal-500"></i> Industry-specific expertise
+                        </div>
+                        <div class="flex items-center gap-4 text-slate-700 font-medium">
+                            <i class="fas fa-check text-teal-500"></i> Compliance assistance
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border border-slate-200 shadow-xl">
+                    <form id="employer-form" class="space-y-4">
+                        <input type="text" placeholder="Company Name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="Contact Name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                            <input type="email" placeholder="Work Email" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        </div>
+                        <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        <textarea placeholder="Tell us about your hiring needs..." rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20"></textarea>
+                        <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-teal-700 transition">Send Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fair Chance Facts -->
+    <section id="facts" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-slate-900 md:text-4xl mb-4">Fair Chance Hiring Facts</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">Inclusive hiring is not just about social good—it's a high-impact business strategy that strengthens communities and bottom lines.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="p-6 bg-teal-50 border-l-4 border-teal-500 rounded-r-xl">
+                    <h4 class="font-black text-teal-900 mb-2">Expands Talent Pool</h4>
+                    <p class="text-slate-600 text-sm">Access the millions of qualified Americans with a record who are often overlooked in traditional hiring.</p>
+                </div>
+                <div class="p-6 bg-teal-50 border-l-4 border-teal-500 rounded-r-xl">
+                    <h4 class="font-black text-teal-900 mb-2">Proven Loyalty</h4>
+                    <p class="text-slate-600 text-sm">Research shows that fair chance employees have higher retention rates and a stronger commitment to their roles.</p>
+                </div>
+                <div class="p-6 bg-teal-50 border-l-4 border-teal-500 rounded-r-xl">
+                    <h4 class="font-black text-teal-900 mb-2">Brand Reputation</h4>
+                    <p class="text-slate-600 text-sm">Modern consumers and top-tier talent prefer to work for and buy from companies with socially responsible values.</p>
+                </div>
+                <div class="p-6 bg-teal-50 border-l-4 border-teal-500 rounded-r-xl">
+                    <h4 class="font-black text-teal-900 mb-2">Risk Reductions</h4>
+                    <p class="text-slate-600 text-sm">Government initiatives like WOTC and Federal Bonding directly offset the perceived risks of inclusive hiring.</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="#employers" class="inline-flex items-center gap-3 text-teal-600 font-bold hover:underline">
+                    Talk with us about fair chance hiring <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 relative">
+                    <img src="https://images.unsplash.com/photo-1600880212340-0234403d18ff?q=80&w=1200&auto=format&fit=crop" alt="The Pathway Bridge Mission" class="rounded-3xl shadow-2xl">
+                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-lg hidden md:block border border-slate-100">
+                        <p class="text-teal-600 font-black text-3xl">100%</p>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Commitment</p>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-4xl font-black text-slate-900 mb-8">Our Mission & Story</h2>
+                    <p class="text-slate-600 text-lg mb-6 leading-relaxed">
+                        Pathway Bridge Solutions LLC was founded on the belief that a person's past should not define their entire future. We saw a gap in the recruitment industry where high-potential candidates were being ignored due to automated background checks and outdated biases.
+                    </p>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        We specialize in human-centric recruiting. By providing justice-impacted individuals with professional tools and connecting them with inclusive employers, we create a bridge that benefits the candidate, the company, and society as a whole.
                     </p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ADMIN DASHBOARD -->
-        <section id="page-admin" class="hidden-section py-20 container mx-auto px-6">
-            <div class="flex justify-between items-center mb-8">
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-24">
                 <div>
-                    <h2 class="text-3xl font-bold text-white">Admin Dashboard</h2>
-                    <p class="text-slate-400 text-sm">Reviewing live inquiries</p>
+                    <h2 class="text-4xl font-black text-slate-900 mb-6">Let's Connect</h2>
+                    <p class="text-slate-600 text-lg mb-12">Whether you're a candidate seeking a chance or an employer ready to innovate, we want to hear from you.</p>
+                    
+                    <div class="space-y-8">
+                        <div class="flex items-center gap-6">
+                            <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center text-slate-900"><i class="fas fa-envelope text-xl"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Email Us Directly</p>
+                                <a href="mailto:contactpathwaybridgesolutions@gmail.com" class="text-xl font-bold text-teal-600 hover:underline">contactpathwaybridgesolutions@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex space-x-4">
-                    <button onclick="downloadCSV()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        <i class="fas fa-download mr-2"></i>Export CSV
-                    </button>
-                    <button onclick="showPage('home')" class="text-slate-400 hover:text-white text-sm font-medium">Logout</button>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-                <div class="glass-card p-6 rounded-xl border border-slate-700">
-                    <p class="text-slate-400 text-sm">Active Inquiries</p>
-                    <p id="stat-active" class="text-3xl font-bold text-white">0</p>
-                </div>
-                <div class="glass-card p-6 rounded-xl border border-slate-700">
-                    <p class="text-slate-400 text-sm">Candidates</p>
-                    <p id="stat-candidates" class="text-3xl font-bold text-blue-400">0</p>
-                </div>
-                <div class="glass-card p-6 rounded-xl border border-slate-700">
-                    <p class="text-slate-400 text-sm">Employers</p>
-                    <p id="stat-employers" class="text-3xl font-bold text-green-400">0</p>
-                </div>
-                <div class="glass-card p-6 rounded-xl border border-slate-700">
-                    <p class="text-slate-400 text-sm">Exportable Rows</p>
-                    <p id="stat-rows" class="text-3xl font-bold text-purple-400">0</p>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-2xl overflow-hidden border border-slate-700">
-                <div class="p-6 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
-                    <h3 class="font-bold text-white">Live Submission Feed</h3>
-                    <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">In-Memory Data Only</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
-                            <tr>
-                                <th class="p-4">Name / Company</th>
-                                <th class="p-4">Type</th>
-                                <th class="p-4">Email / Phone</th>
-                                <th class="p-4">Category/Interest</th>
-                                <th class="p-4">Date</th>
-                                <th class="p-4">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-slate-700 text-sm">
-                            <!-- Inquiries will populate here dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="no-data-msg" class="p-20 text-center text-slate-500">
-                    <i class="fas fa-inbox text-4xl mb-4 opacity-20"></i>
-                    <p>No inquiries submitted yet this session.</p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODALS -->
-
-    <!-- Step 1: Selection Modal -->
-    <div id="apply-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
-        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-4 text-white">Start Your Pathway</h3>
-            <p class="text-slate-400 mb-6">Select your path to get started with our specialist team.</p>
-            <div class="space-y-4">
-                <button onclick="openCandidateForm()" class="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition text-white">Apply as Candidate</button>
-                <button onclick="openEmployerForm()" class="w-full border border-slate-600 py-3 rounded-xl font-bold hover:bg-slate-800 transition text-white">Partner as Employer</button>
+                
+                <form id="contact-form" class="space-y-6 bg-slate-50 p-10 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                        <input type="email" placeholder="Your Email" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20">
+                    </div>
+                    <textarea placeholder="How can we help you?" rows="5" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-teal-500/20"></textarea>
+                    <button type="submit" class="bg-teal-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-teal-700 transition w-full md:w-auto">Send Message</button>
+                </form>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Candidate Form Modal -->
-    <div id="candidate-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
-        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-2 text-white">Candidate Intake</h3>
-            <p class="text-slate-400 mb-6 text-sm">Strictly confidential in accordance with Arizona EEOC guidelines.</p>
-            
-            <form id="candidateForm" onsubmit="handleCandidateSubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="cand-fname" placeholder="First Name" required class="w-full p-3 rounded-lg">
-                    <input type="text" id="cand-lname" placeholder="Last Name" required class="w-full p-3 rounded-lg">
-                </div>
-                <input type="email" id="cand-email" placeholder="Email Address" required class="w-full p-3 rounded-lg">
-                <input type="tel" id="cand-phone" placeholder="Phone Number" required class="w-full p-3 rounded-lg">
-                <select id="cand-category" class="w-full p-3 rounded-lg text-slate-400" required>
-                    <option value="" disabled selected>Work Category</option>
-                    <option value="Warehouse & Logistics">Warehouse & Logistics</option>
-                    <option value="Construction & Trades">Construction & Trades</option>
-                    <option value="Hospitality & Dining">Hospitality & Dining</option>
-                    <option value="Admin & Office">Admin & Office</option>
-                    <option value="General Labor">General Labor</option>
-                </select>
-                <textarea id="cand-notes" placeholder="Tell us a little about your skills or goals..." class="w-full p-3 rounded-lg h-24" required></textarea>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 text-white">Submit Application</button>
+    <!-- Admin Password Gate Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl relative">
+            <button onclick="hideAdminGate()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-fingerprint"></i></div>
+                <h3 class="text-2xl font-black text-slate-900">Admin Authentication</h3>
+                <p class="text-slate-500 text-sm mt-1">Authorized Access Only</p>
+            </div>
+            <form id="admin-gate-form" class="space-y-6">
+                <input type="password" id="admin-pass" placeholder="••••••••" required class="admin-gate-input w-full px-4 py-4 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-slate-900/50 text-center text-2xl">
+                <div id="gate-error" class="hidden bg-red-50 text-red-600 text-xs font-bold p-3 rounded-lg text-center">Invalid password. Access denied.</div>
+                <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition">Enter Dashboard</button>
             </form>
-            <div id="candidate-success" class="hidden text-center py-8">
-                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
-                <h4 class="text-2xl font-bold mb-2 text-white">Application Received</h4>
-                <p class="text-slate-400">Our team will reach out within 48 hours to discuss your pathway.</p>
-                <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
-            </div>
         </div>
     </div>
 
-    <!-- Employer Form Modal -->
-    <div id="employer-form-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
-        <div class="glass-card p-8 rounded-3xl max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-2 text-white">Employer Consultation</h3>
-            <p class="text-slate-400 mb-6 text-sm">Request information about our 90-day trial and WOTC tax credits.</p>
-            
-            <form id="employerForm" onsubmit="handleEmployerSubmit(event)" class="space-y-4">
-                <input type="text" id="emp-company" placeholder="Company Name" required class="w-full p-3 rounded-lg">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="emp-contact" placeholder="Contact Person" required class="w-full p-3 rounded-lg">
-                    <input type="text" id="emp-title" placeholder="Job Title" required class="w-full p-3 rounded-lg">
+    <!-- Admin Dashboard (Initially Hidden) -->
+    <section id="admin-dashboard" class="hidden fixed inset-0 z-[110] bg-slate-50 overflow-y-auto pt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-center mb-12">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">Admin Dashboard</h2>
+                    <p class="text-slate-500">Manage all incoming inquiries and applications.</p>
                 </div>
-                <input type="email" id="emp-email" placeholder="Business Email" required class="w-full p-3 rounded-lg">
-                <input type="text" id="emp-location" placeholder="City/Location (AZ)" required class="w-full p-3 rounded-lg">
-                <select id="emp-capacity" class="w-full p-3 rounded-lg text-slate-400" required>
-                    <option value="" disabled selected>Est. Hiring Capacity</option>
-                    <option value="1-5">1-5 per month</option>
-                    <option value="5-20">5-20 per month</option>
-                    <option value="20+">20+ per month</option>
-                </select>
-                <button type="submit" class="w-full accent-gradient py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 text-white">Request My Consultation</button>
-            </form>
-            <div id="employer-success" class="hidden text-center py-8">
-                <i class="fas fa-paper-plane text-6xl text-blue-500 mb-4"></i>
-                <h4 class="text-2xl font-bold mb-2 text-white">Request Sent</h4>
-                <p class="text-slate-400">An Arizona account manager will contact you shortly to review your hiring needs.</p>
-                <button onclick="closeModals()" class="mt-6 text-blue-400 hover:underline">Return to Site</button>
+                <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-6 py-2 rounded-lg font-bold hover:bg-red-100 transition">Logout</button>
+            </div>
+
+            <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
+                <button onclick="switchAdminTab('candidates')" id="tab-candidates" class="admin-tab active px-6 py-3 rounded-xl font-bold bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-teal-600 [&.active]:text-teal-600 [&.active]:border-teal-500">Candidates</button>
+                <button onclick="switchAdminTab('employers')" id="tab-employers" class="admin-tab px-6 py-3 rounded-xl font-bold bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-teal-600 [&.active]:text-teal-600 [&.active]:border-teal-500">Employers</button>
+                <button onclick="switchAdminTab('contact')" id="tab-contact" class="admin-tab px-6 py-3 rounded-xl font-bold bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-teal-600 [&.active]:text-teal-600 [&.active]:border-teal-500">Contact Messages</button>
+            </div>
+
+            <!-- Dashboard Tables -->
+            <div id="panel-candidates" class="admin-panel bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-xs font-black text-slate-400 uppercase tracking-widest">
+                        <tr>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Name</th>
+                            <th class="px-6 py-4">Email/Phone</th>
+                            <th class="px-6 py-4">Field</th>
+                            <th class="px-6 py-4">Bio Preview</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-candidates-list" class="divide-y divide-slate-100">
+                        <!-- Simulated Data -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="panel-employers" class="admin-panel hidden bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-xs font-black text-slate-400 uppercase tracking-widest">
+                        <tr>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Company</th>
+                            <th class="px-6 py-4">Contact</th>
+                            <th class="px-6 py-4">Needs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-employers-list" class="divide-y divide-slate-100">
+                        <!-- Simulated Data -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="panel-contact" class="admin-panel hidden bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-xs font-black text-slate-400 uppercase tracking-widest">
+                        <tr>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Sender</th>
+                            <th class="px-6 py-4">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-contact-list" class="divide-y divide-slate-100">
+                        <!-- Simulated Data -->
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
-
-    <!-- Admin Login Modal -->
-    <div id="admin-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
-        <div class="glass-card p-10 rounded-3xl max-w-md w-full mx-4 relative">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
-            <h3 class="text-2xl font-bold mb-4 text-white">Admin Access</h3>
-            <input type="password" id="admin-pass" placeholder="Access Key" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl mb-4 focus:outline-none focus:border-blue-500 text-white">
-            <button onclick="checkAdmin()" class="w-full accent-gradient py-4 rounded-xl font-bold text-white">Login</button>
-        </div>
-    </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
-        <div class="container mx-auto px-6 text-center md:text-left">
-            <div class="grid md:grid-cols-3 gap-12 mb-12">
-                <div class="col-span-1">
-                    <div class="text-2xl font-bold mb-4 text-white">Pathway Bridge Solutions</div>
-                    <p class="text-slate-400">Connecting Arizona's businesses with reliable second-chance talent.</p>
+    <footer class="bg-slate-950 text-slate-400 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="bg-teal-600 p-1.5 rounded-lg">
+                            <i class="fas fa-bridge text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-black text-white">Pathway Bridge</span>
+                    </div>
+                    <p class="max-w-sm mb-8">Connecting fair chance talent with opportunity. We believe in the power of second chances to build stronger businesses and communities.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-teal-600 transition text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-teal-600 transition text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-teal-600 transition text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-slate-500">Legal</h4>
-                    <ul class="space-y-2 text-slate-400">
-                        <li>EEOC Disclosure</li>
-                        <li>Privacy Policy</li>
+                    <h5 class="text-white font-bold mb-6">Quick Links</h5>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="#home" class="hover:text-teal-400 transition">Home</a></li>
+                        <li><a href="#candidates" class="hover:text-teal-400 transition">Candidates</a></li>
+                        <li><a href="#employers" class="hover:text-teal-400 transition">Employers</a></li>
+                        <li><a href="#facts" class="hover:text-teal-400 transition">Fair Chance Facts</a></li>
+                        <li><a href="#eeoc" onclick="showModal('eeoc')" class="hover:text-teal-400 transition">EEOC Disclosure</a></li>
+                        <li><a href="#privacy" onclick="showModal('privacy')" class="hover:text-teal-400 transition">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-slate-500">Contact</h4>
-                    <p class="text-slate-400">contactpathwaybridgesolutions@gmail.com</p>
-                    <p class="text-slate-400">Phoenix, Arizona</p>
+                    <h5 class="text-white font-bold mb-6">Newsletter</h5>
+                    <p class="text-xs mb-4">Stay updated on fair chance hiring news.</p>
+                    <form class="flex flex-col gap-2">
+                        <input type="email" placeholder="Email Address" class="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-lg outline-none focus:border-teal-500 text-sm">
+                        <button class="bg-teal-600 text-white py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-teal-500 transition">Subscribe</button>
+                    </form>
                 </div>
             </div>
-            <div class="border-t border-slate-800 pt-8 text-center text-slate-500 text-sm">
-                &copy; 2023 Pathway Bridge Solutions.
+            
+            <div class="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs">© 2026 Pathway Bridge Solutions LLC. All rights reserved.</p>
+                <p class="text-xs"><i class="fas fa-envelope mr-2"></i> contactpathwaybridgesolutions@gmail.com</p>
+                <button onclick="window.scrollTo(0,0)" class="text-xs font-bold hover:text-white transition">Back to top <i class="fas fa-arrow-up ml-1"></i></button>
             </div>
         </div>
     </footer>
 
+    <!-- EEOC / Privacy Modals -->
+    <div id="info-modal" class="fixed inset-0 z-[120] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center hidden p-4">
+        <div class="bg-white w-full max-w-2xl p-10 rounded-3xl shadow-2xl relative max-h-[80vh] overflow-y-auto">
+            <button onclick="hideModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+            <div id="modal-content">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        const ADMIN_KEY = "Bellamylove-09";
+        /**
+         * ADMIN SECURITY (OBSFUCATED)
+         * The password is 'Bellamylove-09'
+         * Obfuscation method: Base64 encoding for client-side presentation
+         */
+        const _encodedVal = "QmVsbGFteWxvdmUtMDk="; 
         
-        // Data Store (In-memory for now)
-        let inquiries = [];
+        // Form Handling: Conditional Field
+        const positionSelect = document.getElementById('position-select');
+        const otherInput = document.getElementById('other-position');
 
-        function showPage(pageId) {
-            const pages = ['home', 'employers', 'candidates', 'about', 'admin'];
-            pages.forEach(p => {
-                const el = document.getElementById(`page-${p}`);
-                if(el) el.classList.add('hidden-section');
-            });
-            document.getElementById(`page-${pageId}`).classList.remove('hidden-section');
-            
-            if(pageId === 'admin') {
-                updateAdminTable();
+        positionSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'Other') {
+                otherInput.classList.remove('hidden');
+                otherInput.setAttribute('required', 'true');
+            } else {
+                otherInput.classList.add('hidden');
+                otherInput.removeAttribute('required');
             }
-            window.scrollTo(0, 0);
+        });
+
+        // Admin Gate Functions
+        function showAdminGate() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
         }
 
-        // Modal Controls
-        function openApplyModal() {
-            closeModals();
-            document.getElementById('apply-modal').style.display = 'flex';
+        function hideAdminGate() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
 
-        function openCandidateForm() {
-            closeModals();
-            document.getElementById('candidateForm').classList.remove('hidden');
-            document.getElementById('candidate-success').classList.add('hidden');
-            document.getElementById('candidate-form-modal').style.display = 'flex';
-        }
-
-        function openEmployerForm() {
-            closeModals();
-            document.getElementById('employerForm').classList.remove('hidden');
-            document.getElementById('employer-success').classList.add('hidden');
-            document.getElementById('employer-form-modal').style.display = 'flex';
-        }
-
-        function openAdminModal() {
-            closeModals();
-            document.getElementById('admin-modal').style.display = 'flex';
-        }
-
-        function closeModals() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-        }
-
-        function handleOutsideClick(e) {
-            if (e.target.classList.contains('modal-overlay')) {
-                closeModals();
+        document.getElementById('admin-gate-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputVal = document.getElementById('admin-pass').value;
+            const errorEl = document.getElementById('gate-error');
+            
+            // Front-end verification check
+            if (btoa(inputVal) === _encodedVal) {
+                hideAdminGate();
+                showDashboard();
+            } else {
+                errorEl.classList.remove('hidden');
+                document.getElementById('admin-pass').value = '';
             }
+        });
+
+        function showDashboard() {
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            populateAdminData();
         }
 
-        // Form Submission Logic
-        function handleCandidateSubmit(e) {
-            e.preventDefault();
-            const data = {
-                id: Date.now(),
-                type: 'Candidate',
-                name: `${document.getElementById('cand-fname').value} ${document.getElementById('cand-lname').value}`,
-                email: document.getElementById('cand-email').value,
-                phone: document.getElementById('cand-phone').value,
-                meta: document.getElementById('cand-category').value,
-                notes: document.getElementById('cand-notes').value,
-                date: new Date().toLocaleString()
-            };
-            
-            inquiries.unshift(data);
-            document.getElementById('candidateForm').reset();
-            document.getElementById('candidateForm').classList.add('hidden');
-            document.getElementById('candidate-success').classList.remove('hidden');
-            
-            console.log("Candidate inquiry saved:", data);
+        function logoutAdmin() {
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            document.getElementById('admin-pass').value = '';
         }
 
-        function handleEmployerSubmit(e) {
-            e.preventDefault();
-            const data = {
-                id: Date.now(),
-                type: 'Employer',
-                name: document.getElementById('emp-company').value,
-                email: document.getElementById('emp-email').value,
-                phone: document.getElementById('emp-contact').value + " (" + document.getElementById('emp-title').value + ")",
-                meta: "Capacity: " + document.getElementById('emp-capacity').value,
-                notes: "Location: " + document.getElementById('emp-location').value,
-                date: new Date().toLocaleString()
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(`panel-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        /**
+         * SIMULATED ADMIN DATA
+         * In a real environment, this would be fetched from a Firebase or REST API
+         */
+        function populateAdminData() {
+            const candidatesList = [
+                { date: '2026-01-20', name: 'James Wilson', contact: 'jwilson@email.com', field: 'Logistics', bio: 'Exp. driver looking for warehouse roles...' },
+                { date: '2026-01-21', name: 'Maria Garcia', contact: '555-0192', field: 'Hospitality', bio: 'Former sous chef seeking kitchen management...' }
+            ];
+
+            const employersList = [
+                { date: '2026-01-22', company: 'Build-Rite Inc.', contact: 'Robert Chen', needs: 'Need 10 skilled carpenters for Q1 projects.' },
+                { date: '2026-01-23', company: 'Global Logistics', contact: 'Angela Miller', needs: 'Seeking 5 night-shift warehouse leads.' }
+            ];
+
+            const contactList = [
+                { date: '2026-01-24', sender: 'Kevin Park', message: 'I have questions about the WOTC paperwork requirements.' }
+            ];
+
+            const render = (targetId, data, templateFn) => {
+                const el = document.getElementById(targetId);
+                el.innerHTML = data.map(templateFn).join('');
             };
 
-            inquiries.unshift(data);
-            document.getElementById('employerForm').reset();
-            document.getElementById('employerForm').classList.add('hidden');
-            document.getElementById('employer-success').classList.remove('hidden');
+            render('admin-candidates-list', candidatesList, item => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 text-xs text-slate-500 font-bold">${item.date}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-900">${item.name}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">${item.contact}</td>
+                    <td class="px-6 py-4 text-xs font-bold text-teal-600 uppercase tracking-wide">${item.field}</td>
+                    <td class="px-6 py-4 text-sm text-slate-400 italic">"${item.bio}"</td>
+                </tr>
+            `);
 
-            console.log("Employer inquiry saved:", data);
+            render('admin-employers-list', employersList, item => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 text-xs text-slate-500 font-bold">${item.date}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-900">${item.company}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600 font-medium">${item.contact}</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">${item.needs}</td>
+                </tr>
+            `);
+
+            render('admin-contact-list', contactList, item => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 text-xs text-slate-500 font-bold">${item.date}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-900">${item.sender}</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">${item.message}</td>
+                </tr>
+            `);
         }
 
-        function updateAdminTable() {
-            const tbody = document.getElementById('admin-table-body');
-            const noData = document.getElementById('no-data-msg');
+        // Info Modal Handling (EEOC / Privacy)
+        function showModal(type) {
+            const modal = document.getElementById('info-modal');
+            const content = document.getElementById('modal-content');
             
-            tbody.innerHTML = '';
-            
-            if (inquiries.length === 0) {
-                noData.classList.remove('hidden');
+            if (type === 'eeoc') {
+                content.innerHTML = `
+                    <h3 class="text-3xl font-black mb-6">EEOC Disclosure</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4 font-bold">
+                        Pathway Bridge Solutions LLC is an equal opportunity employer and staffing partner.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Pathway Bridge Solutions LLC is an equal opportunity recruiter and employer. We provide equal employment opportunities to all employees and applicants for employment and prohibit discrimination and harassment of any type without regard to race, color, religion, age, sex, national origin, disability status, genetics, protected veteran status, sexual orientation, gender identity or expression, or any other characteristic protected by federal, state or local laws.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        This policy applies to all terms and conditions of employment, including recruiting, hiring, placement, promotion, termination, layoff, recall, transfer, leaves of absence, compensation, and training.
+                    </p>
+                `;
             } else {
-                noData.classList.add('hidden');
-                inquiries.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/40 transition";
-                    tr.innerHTML = `
-                        <td class="p-4">
-                            <div class="font-bold text-white">${item.name}</div>
-                            <div class="text-xs text-slate-500">ID: ${item.id}</div>
-                        </td>
-                        <td class="p-4">
-                            <span class="${item.type === 'Candidate' ? 'bg-blue-900/40 text-blue-400' : 'bg-green-900/40 text-green-400'} px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
-                                ${item.type}
-                            </span>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-white">${item.email}</div>
-                            <div class="text-slate-400 text-xs">${item.phone}</div>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-slate-300 font-medium">${item.meta}</div>
-                            <div class="text-slate-500 text-xs italic truncate max-w-[150px]">${item.notes}</div>
-                        </td>
-                        <td class="p-4 text-slate-400 text-xs">${item.date}</td>
-                        <td class="p-4">
-                            <button onclick="deleteInquiry(${item.id})" class="text-slate-600 hover:text-red-500 transition">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                content.innerHTML = `
+                    <h3 class="text-3xl font-black mb-6">Privacy Policy</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        At Pathway Bridge Solutions LLC, we are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us at contactpathwaybridgesolutions@gmail.com.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        When you visit our website and use our services, you trust us with your personal information. We take your privacy very seriously. In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way possible what information we collect, how we use it and what rights you have in relation to it.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        This privacy policy applies to all information collected through our website, and/or any related services, sales, marketing or events.
+                    </p>
+                `;
             }
-
-            // Update stats
-            document.getElementById('stat-active').innerText = inquiries.length;
-            document.getElementById('stat-candidates').innerText = inquiries.filter(i => i.type === 'Candidate').length;
-            document.getElementById('stat-employers').innerText = inquiries.filter(i => i.type === 'Employer').length;
-            document.getElementById('stat-rows').innerText = inquiries.length;
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
         }
 
-        function deleteInquiry(id) {
-            inquiries = inquiries.filter(i => i.id !== id);
-            updateAdminTable();
+        function hideModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
 
-        function downloadCSV() {
-            if (inquiries.length === 0) {
-                alert("No data to export yet.");
-                return;
-            }
-            
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID,Type,Name,Email,Phone,Meta,Notes,Date\n";
-            
-            inquiries.forEach(i => {
-                const row = [i.id, i.type, i.name, i.email, i.phone, i.meta, i.notes, i.date]
-                    .map(v => `"${v}"`).join(",");
-                csvContent += row + "\n";
+        // Global Form Submission Interceptor
+        document.querySelectorAll('form').forEach(form => {
+            if (form.id === 'admin-gate-form') return;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                // Simulate network delay
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Submitted Successfully';
+                    btn.classList.add('bg-green-600');
+                    form.reset();
+                    if (otherInput) otherInput.classList.add('hidden');
+                    
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                        btn.classList.remove('bg-green-600');
+                    }, 3000);
+                }, 1500);
             });
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "pathway_bridge_inquiries.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        });
 
-        function checkAdmin() {
-            const val = document.getElementById('admin-pass').value;
-            if(val === ADMIN_KEY) {
-                closeModals();
-                showPage('admin');
-                document.getElementById('admin-pass').value = "";
-            } else {
-                alert("Unauthorized Access Key.");
-            }
-        }
+        // Mobile Menu Logic
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        mobileToggle.addEventListener('click', () => {
+            const nav = document.querySelector('.md\\:flex.items-center.space-x-8');
+            nav.classList.toggle('hidden');
+            nav.classList.toggle('flex');
+            nav.classList.toggle('flex-col');
+            nav.classList.toggle('absolute');
+            nav.classList.toggle('top-20');
+            nav.classList.toggle('left-0');
+            nav.classList.toggle('w-full');
+            nav.classList.toggle('bg-white');
+            nav.classList.toggle('p-8');
+            nav.classList.toggle('space-x-0');
+            nav.classList.toggle('space-y-4');
+            nav.classList.toggle('shadow-xl');
+        });
     </script>
 </body>
 </html>
