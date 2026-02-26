@@ -3,81 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathway Bridge Solutions | Arizona Recruiting</title>
+    <title>Pathway Bridge Solutions | Arizona's Premier Recruiting Agency</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
     </style>
 </head>
-<body class="bg-white text-slate-900">
+<body class="bg-gray-50 text-gray-900">
 
-    <nav class="border-b border-slate-100 py-6 px-8 flex justify-between items-center bg-white sticky top-0 z-50">
-        <div class="text-2xl font-extrabold text-blue-900 uppercase tracking-tighter">
-            Pathway<span class="text-blue-600">Bridge</span>
-        </div>
-        <div class="hidden md:flex space-x-8 font-bold text-slate-600 text-sm uppercase tracking-widest">
-            <a href="#" class="hover:text-blue-900">Employers</a>
-            <a href="#" class="hover:text-blue-900">Job Seekers</a>
-            <a href="#" class="bg-blue-900 text-white px-5 py-2 rounded">Contact Brandon</a>
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-800">PATHWAY</span>
+                    <span class="text-2xl font-light text-gray-500">BRIDGE</span>
+                </div>
+                <div class="hidden md:flex space-x-8 font-medium">
+                    <a href="#seekers" class="hover:text-blue-600 transition">Job Seekers</a>
+                    <a href="#employers" class="hover:text-blue-600 transition">Employers</a>
+                    <a href="#fair-chance" class="hover:text-blue-600 transition">Fair Chance</a>
+                    <a href="#contact" class="hover:text-blue-600 transition">Contact</a>
+                </div>
+                <div class="flex items-center">
+                    <a href="#jobs" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">Search Jobs</a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <section class="py-24 px-8 bg-slate-50 text-center">
-        <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-tight">
-            Mesa's Premier <span class="text-blue-700">Recruiting</span> Partner.
-        </h1>
-        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-10">
-            Specialized staffing for IT, Healthcare, and Construction. We bridge the gap between Phoenix talent and Arizona's best companies.
-        </p>
-        <div class="flex justify-center gap-4">
-            <button class="bg-blue-900 text-white px-10 py-4 rounded-md font-bold text-lg">I Need Talent</button>
-            <button class="border-2 border-blue-900 text-blue-900 px-10 py-4 rounded-md font-bold text-lg">I Need Work</button>
-        </div>
-    </section>
-
-    <section class="py-20 px-8 max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center bg-blue-900 rounded-3xl p-12 text-white shadow-2xl">
-            <div>
-                <h2 class="text-4xl font-bold mb-6">The 90-Day Success Guarantee</h2>
-                <p class="text-blue-100 text-lg mb-8 leading-relaxed">
-                    We don't get paid until you're satisfied. Our placement fee is only due after the candidate completes 90 days of successful work. 
+    <header class="relative bg-white py-16 lg:py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
+            <div class="lg:w-1/2">
+                <h1 class="text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
+                    Bridging the gap between <span class="text-blue-600">talent and opportunity.</span>
+                </h1>
+                <p class="mt-6 text-xl text-gray-600 max-w-lg">
+                    Specialized recruiting in Mesa, Tempe, and Phoenix. We provide staffing solutions for IT, Healthcare, Warehouse, and Construction.
                 </p>
-                <ul class="space-y-4 font-bold">
-                    <li class="flex items-center gap-3"><i data-lucide="shield-check" class="text-green-400"></i> $0 Upfront Cost</li>
-                    <li class="flex items-center gap-3"><i data-lucide="refresh-cw" class="text-green-400"></i> Free Replacement Policy</li>
-                </ul>
+                <div class="mt-10 flex flex-col sm:flex-row gap-4">
+                    <a href="#seekers" class="px-8 py-4 bg-blue-600 text-white text-center rounded-lg font-bold shadow-lg hover:shadow-xl transition">Find Jobs</a>
+                    <a href="#employers" class="px-8 py-4 bg-white border-2 border-blue-600 text-blue-600 text-center rounded-lg font-bold hover:bg-blue-50 transition">Find Talent</a>
+                </div>
             </div>
-            <div class="bg-white/10 p-8 rounded-2xl border border-white/20">
-                <p class="italic text-lg mb-6">"If the bridge doesn't hold for 90 days, we haven't done our job. We stand by every hire."</p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold">B</div>
-                    <div>
-                        <p class="font-bold">Brandon</p>
-                        <p class="text-sm text-blue-300">Executive Recruiter</p>
-                    </div>
+            <div class="lg:w-1/2 mt-12 lg:mt-0 relative">
+                <div class="rounded-2xl shadow-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800" alt="Team meeting" class="w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-20 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-12">Industries We Serve</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">IT</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">Healthcare</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">Warehouse</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">Retail</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">Construction</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                    <p class="font-bold">Logistics</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-slate-900 text-slate-500 py-12 px-8 text-xs leading-relaxed">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
-            <div>
-                <h4 class="text-white font-bold mb-3">EEOC DISCLOSURE</h4>
-                <p>Pathway Bridge Solutions is an Equal Opportunity Employer. We do not discriminate on the basis of race, religion, color, sex, age, or disability. All employment is decided on the basis of qualifications, merit, and business need.</p>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-3">PRIVACY DISCLOSURE</h4>
-                <p>We collect information only to facilitate recruitment and placement services. We do not sell or lease your personal data. By submitting your information, you consent to being contacted by Brandon regarding potential opportunities.</p>
+    <section id="fair-chance" class="py-20 bg-blue-900 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Empowering Through Fair Chance Hiring</h2>
+                    <p class="text-blue-100 text-lg mb-8">
+                        Pathway Bridge Solutions is a proud advocate for Fair Chance employment. We believe in the power of second chances to build a stronger Arizona workforce.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="bg-blue-500 p-1 rounded-full mr-4 mt-1">✓</span>
+                            <span><strong>Work Opportunity Tax Credit (WOTC):</strong> Earn up to $9,600 per eligible hire.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-blue-500 p-1 rounded-full mr-4 mt-1">✓</span>
+                            <span><strong>Federal Bonding:</strong> Get $5,000+ in insurance protection at no cost to you.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-blue-500 p-1 rounded-full mr-4 mt-1">✓</span>
+                            <span><strong>Loyal Workforce:</strong> Fair chance employees often show higher retention rates.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white text-gray-900 p-8 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold mb-4">Did You Know?</h3>
+                    <p class="mb-6">70% of business leaders report that people with criminal records perform as well as or better than employees without records.</p>
+                    <a href="#contact" class="text-blue-600 font-bold hover:underline">Learn more about incentives →</a>
+                </div>
             </div>
         </div>
-    </footer>
+    </section>
 
-    <script>lucide.createIcons();</script>
-</body>
-</html>
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold">Partner With Us</h2>
+                <p class="text-gray-600 mt-4">Whether you are looking for your next career move or looking for top-tier talent in the Phoenix Valley, we are here to help.</p>
+            </div>
+            
+            <form action="https://api.web3forms.com/submit" method="POST" class
+
 
 
 
