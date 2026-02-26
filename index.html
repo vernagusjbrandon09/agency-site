@@ -120,10 +120,79 @@
                 <p class="text-gray-600 mt-4">Whether you are looking for your next career move or looking for top-tier talent in the Phoenix Valley, we are here to help.</p>
             </div>
             
-            <form action="https://api.web3forms.com/submit" method="POST" class
+            <form action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 gap-y-6">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                <input type="hidden" name="to_email" value="contactpathwaybridgesolutions@gmail.com">
 
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Name</label>
+                    <input type="text" name="name" required class="w-full border-gray-300 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Email</label>
+                    <input type="email" name="email" required class="w-full border-gray-300 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2">I am a...</label>
+                    <select name="type" class="w-full border-gray-300 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option>Job Seeker</option>
+                        <option>Employer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Message</label>
+                    <textarea name="message" rows="4" required class="w-full border-gray-300 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-md">Send Message</button>
+            </form>
+        </div>
+    </section>
 
+    <footer class="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <h3 class="text-white text-xl font-bold mb-4">Pathway Bridge Solutions</h3>
+                    <p class="mb-4">Dedicated to building a diverse and skilled workforce across Mesa, Tempe, and Phoenix, Arizona.</p>
+                    <p>Email: <a href="mailto:contactpathwaybridgesolutions@gmail.com" class="text-white">contactpathwaybridgesolutions@gmail.com</a></p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li>Temporary Staffing</li>
+                        <li>Permanent Placement</li>
+                        <li>Fair Chance Consulting</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Locations</h4>
+                    <ul class="space-y-2">
+                        <li>Mesa, AZ</li>
+                        <li>Tempe, AZ</li>
+                        <li>Phoenix, AZ</li>
+                    </ul>
+                </div>
+            </div>
 
+            <hr class="border-gray-800 mb-8">
 
+            <div class="text-sm space-y-8">
+                <div>
+                    <h5 class="text-white font-semibold mb-2">Privacy Disclosure</h5>
+                    <p>Pathway Bridge Solutions respects your privacy. We collect personal information (name, email, resume) solely for recruitment purposes. We do not sell your data to third parties. All data transmitted via our contact forms is encrypted and used only to facilitate employment matches between candidates and employers. By using this site, you consent to our data collection policies in accordance with Arizona state regulations.</p>
+                </div>
 
+                <div>
+                    <h5 class="text-white font-semibold mb-2">EEOC Statement</h5>
+                    <p>Pathway Bridge Solutions is an Equal Opportunity Employer (EEOC). We do not discriminate on the basis of race, color, religion, sex (including pregnancy and gender identity), national origin, political affiliation, sexual orientation, marital status, disability, genetic information, age, parental status, military service, or other non-merit factors. We are committed to a diverse and inclusive workplace and actively promote Fair Chance hiring practices.</p>
+                </div>
 
+                <div class="text-center pt-8 border-t border-gray-800">
+                    &copy; 2026 Pathway Bridge Solutions. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
