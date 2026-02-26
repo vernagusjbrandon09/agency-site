@@ -1,250 +1,81 @@
-import React, { useState } from 'react';
-import { 
-  Briefcase, 
-  Stethoscope, 
-  Warehouse, 
-  HardHat, 
-  ShoppingBag, 
-  ShieldCheck, 
-  Users, 
-  TrendingUp,
-  ChevronRight,
-  Menu,
-  X,
-  Phone,
-  Mail,
-  MapPin
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathway Bridge Solutions | Arizona Recruiting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-slate-900">
 
-const LandingPage = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
-      {/* Navigation */}
-      <nav className="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-blue-900 tracking-tight">
-                PATHWAY<span className="text-blue-600">BRIDGE</span>
-              </span>
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-900 tracking-tight">
+                PATHWAY<span class="text-blue-600">BRIDGE</span>
             </div>
-            
-            <div className="hidden md:flex space-x-8 items-center">
-              <a href="#seekers" className="text-slate-600 hover:text-blue-900 font-medium transition">Job Seekers</a>
-              <a href="#employers" className="text-slate-600 hover:text-blue-900 font-medium transition">Employers</a>
-              <a href="#about" className="text-slate-600 hover:text-blue-900 font-medium transition">About</a>
-              <a href="#contact" className="text-slate-600 hover:text-blue-900 font-medium transition">Contact</a>
-              <button className="bg-blue-900 text-white px-6 py-2.5 rounded-md font-semibold hover:bg-blue-800 transition shadow-lg shadow-blue-900/10">
-                Search Jobs
-              </button>
+            <div class="hidden md:flex space-x-8 items-center font-medium text-slate-600">
+                <a href="#" class="hover:text-blue-900">Job Seekers</a>
+                <a href="#" class="hover:text-blue-900">Employers</a>
+                <a href="#" class="hover:text-blue-900">About</a>
+                <button class="bg-blue-900 text-white px-6 py-2 rounded-md hover:bg-blue-800 transition">Search Jobs</button>
             </div>
-
-            <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X /> : <Menu />}
-              </button>
-            </div>
-          </div>
         </div>
-      </nav>
+    </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 lg:pt-48 lg:pb-32 bg-gradient-to-b from-slate-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
-              Bridging the Gap Between <span className="text-blue-800">Top Talent</span> and Great Arizona Companies.
+    <section class="pt-40 pb-20 bg-gradient-to-b from-slate-50 to-white text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6">
+                Bridging the Gap Between <span class="text-blue-800">Top Talent</span> and Great Arizona Companies.
             </h1>
-            <p className="text-xl text-slate-600 mb-10 leading-relaxed">
-              Specialized recruiting for Mesa, Tempe, and Phoenix. Whether you are looking for your next career move or the perfect hire, Brandon and the Pathway Bridge team are here to deliver.
+            <p class="text-xl text-slate-600 mb-10">
+                Specialized recruiting for Mesa, Tempe, and Phoenix. Brandon and the Pathway Bridge team are here to deliver the perfect hire.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-8 py-4 bg-blue-900 text-white rounded-md text-lg font-bold hover:bg-blue-800 transition flex items-center justify-center">
-                I Need Talent <ChevronRight className="ml-2 w-5 h-5" />
-              </button>
-              <button className="px-8 py-4 border-2 border-blue-900 text-blue-900 rounded-md text-lg font-bold hover:bg-blue-50 transition">
-                I Need a Job
-              </button>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#contact" class="bg-blue-900 text-white px-8 py-4 rounded-md font-bold text-lg hover:bg-blue-800 transition">I Need Talent</a>
+                <a href="#" class="border-2 border-blue-900 text-blue-900 px-8 py-4 rounded-md font-bold text-lg hover:bg-blue-50 transition">I Need a Job</a>
             </div>
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* Industry Specialization */}
-      <section id="sectors" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-blue-900">Industry Specialization</h2>
-            <div className="h-1.5 w-20 bg-blue-600 mt-4"></div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-            {[
-              { icon: <Briefcase className="w-8 h-8"/>, title: "IT & Tech" },
-              { icon: <Stethoscope className="w-8 h-8"/>, title: "Healthcare" },
-              { icon: <Warehouse className="w-8 h-8"/>, title: "Warehouse" },
-              { icon: <ShoppingBag className="w-8 h-8"/>, title: "Retail" },
-              { icon: <HardHat className="w-8 h-8"/>, title: "Construction" },
-            ].map((item, idx) => (
-              <div key={idx} className="p-8 border border-slate-100 rounded-xl hover:shadow-xl transition-shadow bg-slate-50 group">
-                <div className="text-blue-700 mb-4 group-hover:scale-110 transition-transform">{item.icon}</div>
-                <h3 className="text-xl font-bold text-slate-800">{item.title}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* The 90-Day Guarantee (USP Section) */}
-      <section className="py-20 bg-blue-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section class="py-20 bg-blue-900 text-white">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="uppercase tracking-widest text-blue-300 font-bold text-sm">Our Commitment</span>
-              <h2 className="text-4xl font-bold mt-4 mb-6">The 90-Day Success Guarantee</h2>
-              <p className="text-lg text-blue-100 mb-8 leading-relaxed">
-                We believe in the quality of our candidates. That’s why we’ve removed the risk for employers.
-              </p>
-              <ul className="space-y-4">
-                <li className="flex items-start">
-                  <ShieldCheck className="w-6 h-6 text-green-400 mr-3 flex-shrink-0" />
-                  <span><strong>$0 Upfront Cost:</strong> You don't pay a dime until the candidate has been on the job for 90 days.</span>
-                </li>
-                <li className="flex items-start">
-                  <ShieldCheck className="w-6 h-6 text-green-400 mr-3 flex-shrink-0" />
-                  <span><strong>Free Replacement Policy:</strong> If they leave or are terminated within the first 90 days, we provide a replacement at no extra charge.</span>
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white/10 p-8 rounded-2xl border border-white/20 backdrop-blur-sm">
-              <h3 className="text-2xl font-bold mb-4 italic">"Quality over everything."</h3>
-              <p className="text-blue-100 mb-6">
-                "Our goal isn't just to fill a seat; it's to build a bridge between talent and long-term success. If the bridge doesn't hold for 90 days, we haven't done our job."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold">B</div>
-                <div className="ml-4">
-                  <p className="font-bold">Brandon</p>
-                  <p className="text-sm text-blue-300">Executive Recruiter</p>
+                <h2 class="text-4xl font-bold mb-6">The 90-Day Success Guarantee</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start bg-white/10 p-4 rounded-lg">
+                        <i data-lucide="shield-check" class="text-green-400 mr-4"></i>
+                        <p><strong>$0 Upfront Cost:</strong> No fees until your candidate finishes 90 days.</p>
+                    </div>
+                    <div class="flex items-start bg-white/10 p-4 rounded-lg">
+                        <i data-lucide="refresh-cw" class="text-green-400 mr-4"></i>
+                        <p><strong>Free Replacement:</strong> If they leave within 90 days, we replace them for free.</p>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="bg-white p-8 rounded-xl text-slate-900 shadow-2xl">
+                <p class="italic text-lg mb-4 text-slate-600">"If the bridge doesn't hold for 90 days, we haven't done our job. Quality over everything."</p>
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">B</div>
+                    <div class="ml-3">
+                        <p class="font-bold">Brandon</p>
+                        <p class="text-xs text-slate-500 uppercase font-semibold">Executive Recruiter</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </section>
+    </section>
 
-      {/* Fair Chance Hiring Section */}
-      <section className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">The Fair Chance Advantage</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">We specialize in Fair Chance hiring, helping businesses tap into a loyal, motivated workforce while maximizing federal benefits.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-10 rounded-xl shadow-sm border-b-4 border-blue-600">
-              <TrendingUp className="w-12 h-12 text-blue-600 mb-6" />
-              <h3 className="text-2xl font-bold mb-4 text-slate-800">WOTC Tax Credits</h3>
-              <p className="text-slate-600">Earn up to <strong>$9,600</strong> in potential tax savings per eligible hire through the Work Opportunity Tax Credit.</p>
-            </div>
-            <div className="bg-white p-10 rounded-xl shadow-sm border-b-4 border-blue-600">
-              <ShieldCheck className="w-12 h-12 text-blue-600 mb-6" />
-              <h3 className="text-2xl font-bold mb-4 text-slate-800">Federal Bonding</h3>
-              <p className="text-slate-600">Gain peace of mind with up to <strong>$5,000</strong> in zero-cost insurance for employers through the Federal Bonding Program.</p>
-            </div>
-            <div className="bg-white p-10 rounded-xl shadow-sm border-b-4 border-blue-600">
-              <Users className="w-12 h-12 text-blue-600 mb-6" />
-              <h3 className="text-2xl font-bold mb-4 text-slate-800">Unmatched Retention</h3>
-              <p className="text-slate-600">Fair Chance hires statistically show <strong>higher loyalty</strong> and significantly lower turnover rates than traditional hires.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section id="contact" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <h2 className="text-4xl font-bold text-blue-900 mb-6">Let’s Start the Conversation</h2>
-              <p className="text-lg text-slate-600 mb-10">
-                Ready to find your next star employee or your next career milestone? Reach out to Brandon today.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-center">
-                  <MapPin className="text-blue-600 mr-4" />
-                  <span className="text-slate-700">Serving Mesa, Tempe, & Phoenix, AZ</span>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="text-blue-600 mr-4" />
-                  <span className="text-slate-700">contactpathwaybridgesolutions@gmail.com</span>
-                </div>
-              </div>
-            </div>
-
-            <form action="https://api.web3forms.com/submit" method="POST" className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
-              <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2">Name</label>
-                  <input type="text" name="name" required className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2">Email</label>
-                  <input type="email" name="email" required className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none" />
-                </div>
-              </div>
-              <div className="mb-6">
-                <label className="block text-sm font-bold text-slate-700 mb-2">I am a...</label>
-                <select name="type" className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                  <option>Employer looking for talent</option>
-                  <option>Job Seeker looking for work</option>
-                </select>
-              </div>
-              <div className="mb-6">
-                <label className="block text-sm font-bold text-slate-700 mb-2">Message</label>
-                <textarea name="message" rows="4" className="w-full px-4 py-3 rounded-md border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
-              </div>
-              <button type="submit" className="w-full bg-blue-900 text-white font-bold py-4 rounded-md hover:bg-blue-800 transition">
-                Send Inquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 mb-12">
-            <div>
-              <h4 className="text-white font-bold mb-4 uppercase tracking-widest text-sm">EEOC Disclosure</h4>
-              <p className="text-xs leading-relaxed">
-                Pathway Bridge Solutions is an Equal Opportunity Employer. We do not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 uppercase tracking-widest text-sm">Privacy Disclosure</h4>
-              <p className="text-xs leading-relaxed">
-                Your privacy is critical to us. Pathway Bridge Solutions collects information only to facilitate recruitment and placement services. We do not sell or lease your personal data to third parties. By submitting your information via this website, you consent to being contacted by our executive recruiters regarding potential opportunities.
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
-            <p>© 2026 Pathway Bridge Solutions. All Rights Reserved.</p>
-            <p>Executive Recruiter: Brandon</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default LandingPage;
-
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
 
 
 
