@@ -62,8 +62,160 @@
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-5 gap-6">
                 <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center feature-card shadow-sm">
-                    <i data-
+                    <i data-lucide="terminal" class="mx-auto mb-4 text-blue-600"></i>
+                    <p class="font-bold">IT & Tech</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center feature-card shadow-sm">
+                    <i data-lucide="heart-pulse" class="mx-auto mb-4 text-blue-600"></i>
+                    <p class="font-bold">Healthcare</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center feature-card shadow-sm">
+                    <i data-lucide="package" class="mx-auto mb-4 text-blue-600"></i>
+                    <p class="font-bold">Warehouse</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center feature-card shadow-sm">
+                    <i data-lucide="shopping-bag" class="mx-auto mb-4 text-blue-600"></i>
+                    <p class="font-bold">Retail</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center feature-card shadow-sm">
+                    <i data-lucide="hard-hat" class="mx-auto mb-4 text-blue-600"></i>
+                    <p class="font-bold">Construction</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section id="marketing" class="py-24 bg-white px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-blue-600 font-bold uppercase tracking-widest text-sm mb-4">The Pathway Advantage</h2>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">Zero Pay. <br>Zero Worry.</h3>
+                    <p class="text-slate-600 text-lg mb-8">We are the only Arizona agency that puts your bottom line first. We believe so strongly in our vetting process that we assume all the risk.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="clock-9" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl">90-Day Success Guarantee</h4>
+                                <p class="text-slate-500">You pay nothing until the candidate successfully completes 90 days of employment. If they leave or don't fit, you owe us $0.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="user-plus" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl">No-Charge Replacements</h4>
+                                <p class="text-slate-500">If a candidate quits during the guarantee period, we find a new replacement immediately at no additional charge.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="employers" class="bg-slate-900 rounded-3xl p-10 text-white relative shadow-2xl">
+                    <h4 class="text-2xl font-bold mb-8 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="text-blue-400"></i> Fair Chance Hiring Facts
+                    </h4>
+                    <p class="text-slate-400 mb-8 italic">"Fair Chance hires are proven to have higher retention rates and greater loyalty than average employees."</p>
+                    
+                    <ul class="space-y-6">
+                        <li class="flex items-center gap-4">
+                            <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                            <span><strong>Federal Bonding:</strong> Zero-cost insurance up to $5,000 for employers.</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                            <span><strong>Tax Incentives:</strong> Save up to $9,600 per hire through WOTC.</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                            <span><strong>Retention:</strong> Build a stable workforce with motivated professionals.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-10 pt-8 border-t border-slate-800 text-center">
+                        <a href="#contact" class="inline-block bg-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-500 transition">Get Started with Brandon</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-slate-50 px-4 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-extrabold mb-12">Submit an Inquiry</h2>
+            <form action="https://api.web3forms.com/submit" method="POST" class="bg-white p-8 md:p-12 rounded-3xl shadow-xl text-left border border-slate-200">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Full Name</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:border-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:border-blue-600 outline-none">
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">I am interested in...</label>
+                    <select name="type" class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:border-blue-600 outline-none appearance-none">
+                        <option>Finding a Job (Job Seeker)</option>
+                        <option>Hiring Talent (Employer)</option>
+                        <option>Learning about Tax Incentives</option>
+                    </select>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Message</label>
+                    <textarea name="message" rows="5" required class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:border-blue-600 outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition shadow-lg">Send Message to Brandon</button>
+                <p class="text-center text-xs text-slate-400 mt-4">Direct Contact: contactpathwaybridgesolutions@gmail.com</p>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-white pt-20 pb-10 px-4 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-4 gap-12 mb-16">
+            <div class="col-span-1 lg:col-span-2">
+                <span class="text-2xl font-black text-blue-700 uppercase tracking-tighter">Pathway Bridge</span>
+                <p class="mt-6 text-slate-500 max-w-sm leading-relaxed">Connecting Mesa, Tempe, and Phoenix to a stronger, more inclusive workforce through risk-free recruiting and Fair Chance hiring.</p>
+            </div>
+            <div>
+                <h5 class="font-bold text-slate-900 mb-6 uppercase text-xs tracking-widest">Compliance</h5>
+                <ul class="text-sm text-slate-500 space-y-3">
+                    <li><a href="#privacy" class="hover:text-blue-600">Privacy Policy</a></li>
+                    <li><a href="#eeoc" class="hover:text-blue-600">EEOC Disclosure</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold text-slate-900 mb-6 uppercase text-xs tracking-widest">Connect</h5>
+                <p class="text-sm text-slate-900 font-bold mb-2">Brandon</p>
+                <p class="text-sm text-slate-500 break-all">contactpathwaybridgesolutions@gmail.com</p>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto border-t border-slate-100 pt-10">
+            <div id="privacy" class="mb-8">
+                <h6 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-2">Privacy Policy Disclosure</h6>
+                <p class="text-[10px] text-slate-400 leading-relaxed uppercase">Pathway Bridge Solutions collects personal and employment data for the purpose of recruitment services. We do not sell user data to third parties. Information provided via inquiry forms is used solely to facilitate employer-employee matching and incentive consultations. By using this site, you consent to our data collection practices as regulated by Arizona state law.</p>
+            </div>
+            <div id="eeoc" class="mb-8">
+                <h6 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-2">EEOC Disclosure</h6>
+                <p class="text-[10px] text-slate-400 leading-relaxed uppercase">Pathway Bridge Solutions is an Equal Opportunity Employer. We do not discriminate on the basis of race, color, religion, sex, sexual orientation, gender identity, national origin, veteran, or disability status. We actively promote Fair Chance hiring practices and support the reintegration of motivated individuals into the Arizona workforce.</p>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-10">© 2026 Pathway Bridge Solutions. All Rights Reserved. Brandon | Mesa, AZ</p>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
 
 
 
